@@ -32,6 +32,10 @@
 
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
+  --color-muted: rgba(60, 60, 60, 0.66);
+
+  --color-above: #c0392b;
+  --color-below: #2980b9;
 
   --section-gap: 160px;
 }
@@ -47,6 +51,10 @@
 
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
+    --color-muted: rgba(235, 235, 235, 0.6);
+
+    --color-above: #e74c3c;
+    --color-below: #3498db;
   }
 }
 
@@ -67,17 +75,10 @@ body {
     background-color 0.5s;
   line-height: 1.6;
   font-family:
-    Inter,
+    'DM Sans',
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
     sans-serif;
   font-size: 15px;
   text-rendering: optimizeLegibility;
