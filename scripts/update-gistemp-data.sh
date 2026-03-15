@@ -16,7 +16,18 @@ if [[ ! -d "$(dirname "$OUTPUT_FILE")" ]]; then
 fi
 
 echo "Downloading Global-mean temperature data from NASA GISS..."
-if curl -f -L -o "$OUTPUT_FILE" "$SOURCE_URL"; then
+OUTPUT_DIR="$(dirname "$OUTPUT_FILE")"
+TMP_FILE="$(mktemp "${OUTPUT_DIR}/GLB.Ts+dSST.csv.tmp.XXXXXX")"
+
+# Ensure temp file is removed on failure or interruption.
+cleanup() {
+    rm -f "$TMP_FILE"
+}
+trap cleanup EXIT
+
+if curl -f -L -o "$TMP_FILE" "$SOURCE_URL"; then
+    mv "$TMP_FILE" "$OUTPUT_FILE"
+    trap - EXIT
     echo "Saved to $OUTPUT_FILE"
 else
     echo "Error: download failed." >&2

@@ -20,10 +20,10 @@ Run the data update script **once per month** to pull the latest global-mean mon
 ./scripts/update-gistemp-data.sh
 ```
 
-If needed, you can also run it from anywhere with an absolute path:
+If you are not in the project root, run it from the repository directory:
 
 ```sh
-/Users/morgantrotter/workspace/personal/climate-change/scripts/update-gistemp-data.sh
+bash scripts/update-gistemp-data.sh
 ```
 
 ### Update Checklist
