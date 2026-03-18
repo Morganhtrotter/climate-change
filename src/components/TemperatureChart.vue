@@ -148,18 +148,21 @@ function renderChart(container, data, isMonthly) {
                 <span class="tooltip-value">${sign}${anomaly.toFixed(2)}°C</span>
                 <span class="tooltip-label">Global mean temp. index</span>
             `
-            const cursorX = event.clientX
-            const cursorY = event.clientY
             const offset = 12
+            const svgRect = svg.node()?.getBoundingClientRect()
             const ttRect = tooltip.getBoundingClientRect()
-            const left = Math.min(
-                Math.max(cursorX + offset, 8),
-                window.innerWidth - ttRect.width - 8,
-            )
-            const top = Math.min(
-                Math.max(cursorY + offset, 8),
-                window.innerHeight - ttRect.height - 8,
-            )
+            if (!svgRect) return
+            const plotLeft = svgRect.left + margin.left
+            const plotRight = plotLeft + width
+            const lineX = plotLeft + xPos
+
+            let left = lineX + offset
+            if (left + ttRect.width > plotRight) {
+                left = lineX - offset - ttRect.width
+            }
+            left = Math.max(plotLeft, left)
+
+            const top = Math.max(8, svgRect.top + margin.top + 8)
             tooltip.style.left = `${left}px`
             tooltip.style.top = `${top}px`
         })
@@ -346,8 +349,8 @@ figcaption {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
     font-family: 'DM Sans', system-ui, sans-serif;
-    color: var(--color-bg);
-    background: var(--color-text);
+    color: var(--color-text);
+    background: var(--color-border);
     border-radius: 6px;
     white-space: nowrap;
     pointer-events: none;
