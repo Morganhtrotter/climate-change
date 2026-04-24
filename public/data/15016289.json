@@ -1,0 +1,1182 @@
+{
+  "access": {
+    "embargo": {
+      "active": false,
+      "reason": null
+    },
+    "files": "public",
+    "record": "public",
+    "status": "open"
+  },
+  "created": "2025-03-19T13:53:54.994206+00:00",
+  "custom_fields": {},
+  "deletion_status": {
+    "is_deleted": false,
+    "status": "P"
+  },
+  "files": {
+    "count": 17,
+    "enabled": true,
+    "entries": {
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.csv": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:09b9c61629f87e16012222e5b303bc36",
+        "ext": "csv",
+        "id": "6d9a8d69-c53d-4c80-9109-c4ae5aa9f630",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.csv",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.csv/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.csv"
+        },
+        "metadata": {},
+        "mimetype": "text/csv",
+        "size": 74692621,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.nc": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:8f92fa03c87100509892adeda4dd9eea",
+        "ext": "cdf",
+        "id": "9f903b26-06a3-42dc-9a8a-2e2db32f4afc",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.nc",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.nc/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.nc"
+        },
+        "metadata": {},
+        "mimetype": "application/x-netcdf",
+        "size": 28844355,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.yaml": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:9b98c2719d7e083bff64faff2faff480",
+        "ext": "yaml",
+        "id": "d6c1f8a8-7573-416e-8753-395497250200",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.yaml",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.yaml/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.yaml"
+        },
+        "metadata": {},
+        "mimetype": "application/octet-stream",
+        "size": 657,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.csv": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:9ce2fe40856e63d914ed5ab5d81a7f1f",
+        "ext": "csv",
+        "id": "8a7910a6-b8d4-41ac-a649-bf3cb794b55f",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.csv",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.csv/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.csv"
+        },
+        "metadata": {},
+        "mimetype": "text/csv",
+        "size": 70671328,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.nc": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:afff67d50a5135631e4383584b27a74e",
+        "ext": "cdf",
+        "id": "a714ab2c-48ab-43c8-9102-407ca819913f",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.nc",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.nc/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.nc"
+        },
+        "metadata": {},
+        "mimetype": "application/x-netcdf",
+        "size": 27239350,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.yaml": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:58cbd8c7f9106dad39711bd93eacdfce",
+        "ext": "yaml",
+        "id": "ef92095f-2f0e-4f14-b108-8001da2846e6",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.yaml",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.yaml/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.yaml"
+        },
+        "metadata": {},
+        "mimetype": "application/octet-stream",
+        "size": 620,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.csv": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:388d317f54052d3dc6cf2f97eea5f81d",
+        "ext": "csv",
+        "id": "0e579b24-bd70-4f2e-ab08-e59054e7f90c",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.csv",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.csv/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.csv"
+        },
+        "metadata": {},
+        "mimetype": "text/csv",
+        "size": 126748124,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.nc": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:f1cd972fcae7ce2af02929f3dbbab65a",
+        "ext": "cdf",
+        "id": "d3abd002-5e3b-49a4-bb75-937a708dd4d4",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.nc",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.nc/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.nc"
+        },
+        "metadata": {},
+        "mimetype": "application/x-netcdf",
+        "size": 68139052,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.yaml": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:a91b3da060a372632be825635f4a8f36",
+        "ext": "yaml",
+        "id": "aa986b56-3d2b-42d2-9273-7b714b5eaa3d",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.yaml",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.yaml/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.yaml"
+        },
+        "metadata": {},
+        "mimetype": "application/octet-stream",
+        "size": 636,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:3ca1d72f9d67ea27e89f9b791726745b",
+        "ext": "csv",
+        "id": "7f3530e6-41e6-4333-ac02-279ddf2d01df",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.csv"
+        },
+        "metadata": {},
+        "mimetype": "text/csv",
+        "size": 133268733,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.nc": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:9ff44bbb4d415cc2e9f69a1c43ab5058",
+        "ext": "cdf",
+        "id": "9c8e2d3a-d18a-46d0-9d1d-f29486e9717c",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.nc",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.nc/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.nc"
+        },
+        "metadata": {},
+        "mimetype": "application/x-netcdf",
+        "size": 71842406,
+        "storage_class": "L"
+      },
+      "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.yaml": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:8bb5e8b767309938762f51ae74200848",
+        "ext": "yaml",
+        "id": "37aa85f4-21e5-454a-91bf-fc2aa6267dd2",
+        "key": "Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.yaml",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.yaml/content",
+          "self": "https://zenodo.org/api/records/15016289/files/Guetschow_et_al_2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.yaml"
+        },
+        "metadata": {},
+        "mimetype": "application/octet-stream",
+        "size": 670,
+        "storage_class": "L"
+      },
+      "PRIMAP-hist_v2.6.1_data-description.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:d4f2051459c362522e44a5a8c304f88a",
+        "ext": "pdf",
+        "id": "d6efdc19-abcd-4116-a1c9-f6780e37c159",
+        "key": "PRIMAP-hist_v2.6.1_data-description.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/PRIMAP-hist_v2.6.1_data-description.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_data-description.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_data-description.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:15016289/canvas/PRIMAP-hist_v2.6.1_data-description.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_data-description.pdf/info.json",
+          "self": "https://zenodo.org/api/records/15016289/files/PRIMAP-hist_v2.6.1_data-description.pdf"
+        },
+        "metadata": {},
+        "mimetype": "application/pdf",
+        "size": 464275,
+        "storage_class": "L"
+      },
+      "PRIMAP-hist_v2.6.1_updated_figures.pdf": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:85107d6faf5856d97ab6166d16ce57a5",
+        "ext": "pdf",
+        "id": "1c9a3aee-dffb-4793-b08c-f65b1e99a6b3",
+        "key": "PRIMAP-hist_v2.6.1_updated_figures.pdf",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/PRIMAP-hist_v2.6.1_updated_figures.pdf/content",
+          "iiif_api": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf/full/full/0/default.png",
+          "iiif_base": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf",
+          "iiif_canvas": "https://zenodo.org/api/iiif/record:15016289/canvas/PRIMAP-hist_v2.6.1_updated_figures.pdf",
+          "iiif_info": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf/info.json",
+          "self": "https://zenodo.org/api/records/15016289/files/PRIMAP-hist_v2.6.1_updated_figures.pdf"
+        },
+        "metadata": {},
+        "mimetype": "application/pdf",
+        "size": 627203,
+        "storage_class": "L"
+      },
+      "changelog_v2.6_final_to_v2.6.1_final.zip": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:86426901668a790b990095ec4b05a03d",
+        "ext": "zip",
+        "id": "3d08e022-2cc6-4436-9915-7a013582151a",
+        "key": "changelog_v2.6_final_to_v2.6.1_final.zip",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/changelog_v2.6_final_to_v2.6.1_final.zip/content",
+          "self": "https://zenodo.org/api/records/15016289/files/changelog_v2.6_final_to_v2.6.1_final.zip"
+        },
+        "metadata": {},
+        "mimetype": "application/zip",
+        "size": 298895806,
+        "storage_class": "L"
+      },
+      "changes_PRIMAP-hist_v2.6.1_final_nr_CR_to_TP.xlsx": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:b9357fec6a44e15ba8e9f99f88f5dd83",
+        "ext": "xlsx",
+        "id": "e2440702-5d7b-4119-857d-8736cdb580f5",
+        "key": "changes_PRIMAP-hist_v2.6.1_final_nr_CR_to_TP.xlsx",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/changes_PRIMAP-hist_v2.6.1_final_nr_CR_to_TP.xlsx/content",
+          "self": "https://zenodo.org/api/records/15016289/files/changes_PRIMAP-hist_v2.6.1_final_nr_CR_to_TP.xlsx"
+        },
+        "metadata": {},
+        "mimetype": "application/octet-stream",
+        "size": 7934340,
+        "storage_class": "L"
+      },
+      "changes_PRIMAP-hist_v2.6.1_final_nr_to_PRIMAP-hist_v2.6_final_nr.xlsx": {
+        "access": {
+          "hidden": false
+        },
+        "checksum": "md5:d8c83d769a8809064f09e387b3bb2a45",
+        "ext": "xlsx",
+        "id": "c850ae3c-4a89-47c2-bf7d-7b3b629076d7",
+        "key": "changes_PRIMAP-hist_v2.6.1_final_nr_to_PRIMAP-hist_v2.6_final_nr.xlsx",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/changes_PRIMAP-hist_v2.6.1_final_nr_to_PRIMAP-hist_v2.6_final_nr.xlsx/content",
+          "self": "https://zenodo.org/api/records/15016289/files/changes_PRIMAP-hist_v2.6.1_final_nr_to_PRIMAP-hist_v2.6_final_nr.xlsx"
+        },
+        "metadata": {},
+        "mimetype": "application/octet-stream",
+        "size": 1588370,
+        "storage_class": "L"
+      }
+    },
+    "order": [],
+    "total_bytes": 910958546
+  },
+  "id": "15016289",
+  "is_draft": false,
+  "is_published": true,
+  "links": {
+    "access": "https://zenodo.org/api/records/15016289/access",
+    "access_grants": "https://zenodo.org/api/records/15016289/access/grants",
+    "access_links": "https://zenodo.org/api/records/15016289/access/links",
+    "access_request": "https://zenodo.org/api/records/15016289/access/request",
+    "access_users": "https://zenodo.org/api/records/15016289/access/users",
+    "archive": "https://zenodo.org/api/records/15016289/files-archive",
+    "archive_media": "https://zenodo.org/api/records/15016289/media-files-archive",
+    "communities": "https://zenodo.org/api/records/15016289/communities",
+    "communities-suggestions": "https://zenodo.org/api/records/15016289/communities-suggestions",
+    "doi": "https://doi.org/10.5281/zenodo.15016289",
+    "draft": "https://zenodo.org/api/records/15016289/draft",
+    "file_modification": "https://zenodo.org/api/records/15016289/file-modification",
+    "files": "https://zenodo.org/api/records/15016289/files",
+    "latest": "https://zenodo.org/api/records/15016289/versions/latest",
+    "latest_html": "https://zenodo.org/records/15016289/latest",
+    "media_files": "https://zenodo.org/api/records/15016289/media-files",
+    "parent": "https://zenodo.org/api/records/4479171",
+    "parent_doi": "https://doi.org/10.5281/zenodo.4479171",
+    "parent_doi_html": "https://zenodo.org/doi/10.5281/zenodo.4479171",
+    "parent_html": "https://zenodo.org/records/4479171",
+    "preview_html": "https://zenodo.org/records/15016289?preview=1",
+    "request_deletion": "https://zenodo.org/api/records/15016289/request-deletion",
+    "requests": "https://zenodo.org/api/records/15016289/requests",
+    "reserve_doi": "https://zenodo.org/api/records/15016289/draft/pids/doi",
+    "self": "https://zenodo.org/api/records/15016289",
+    "self_doi": "https://doi.org/10.5281/zenodo.15016289",
+    "self_doi_html": "https://zenodo.org/doi/10.5281/zenodo.15016289",
+    "self_html": "https://zenodo.org/records/15016289",
+    "self_iiif_manifest": "https://zenodo.org/api/iiif/record:15016289/manifest",
+    "self_iiif_sequence": "https://zenodo.org/api/iiif/record:15016289/sequence/default",
+    "thumbnails": {
+      "10": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf/full/%5E10,/0/default.jpg",
+      "100": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf/full/%5E100,/0/default.jpg",
+      "1200": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf/full/%5E1200,/0/default.jpg",
+      "250": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf/full/%5E250,/0/default.jpg",
+      "50": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf/full/%5E50,/0/default.jpg",
+      "750": "https://zenodo.org/api/iiif/record:15016289:PRIMAP-hist_v2.6.1_updated_figures.pdf/full/%5E750,/0/default.jpg"
+    },
+    "versions": "https://zenodo.org/api/records/15016289/versions"
+  },
+  "media_files": {
+    "count": 2,
+    "enabled": true,
+    "entries": {
+      "PRIMAP-hist_v2.6.1_data-description.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "41028545-6969-480c-8dd6-1c7ba2ee865f",
+        "key": "PRIMAP-hist_v2.6.1_data-description.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/PRIMAP-hist_v2.6.1_data-description.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/15016289/files/PRIMAP-hist_v2.6.1_data-description.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "d6efdc19-abcd-4116-a1c9-f6780e37c159",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      },
+      "PRIMAP-hist_v2.6.1_updated_figures.pdf.ptif": {
+        "access": {
+          "hidden": true
+        },
+        "ext": "ptif",
+        "id": "6b508ab0-e0ee-4766-a1e2-c287745690dd",
+        "key": "PRIMAP-hist_v2.6.1_updated_figures.pdf.ptif",
+        "links": {
+          "content": "https://zenodo.org/api/records/15016289/files/PRIMAP-hist_v2.6.1_updated_figures.pdf.ptif/content",
+          "self": "https://zenodo.org/api/records/15016289/files/PRIMAP-hist_v2.6.1_updated_figures.pdf.ptif"
+        },
+        "metadata": null,
+        "mimetype": "application/octet-stream",
+        "processor": {
+          "source_file_id": "1c9a3aee-dffb-4793-b08c-f65b1e99a6b3",
+          "status": "finished",
+          "type": "image-tiles"
+        },
+        "size": 0,
+        "storage_class": "L"
+      }
+    },
+    "order": [],
+    "total_bytes": 0
+  },
+  "metadata": {
+    "creators": [
+      {
+        "affiliations": [
+          {
+            "name": "Climate Resource"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "G\u00fctschow",
+          "given_name": "Johannes",
+          "identifiers": [
+            {
+              "identifier": "0000-0001-9944-3685",
+              "scheme": "orcid"
+            }
+          ],
+          "name": "G\u00fctschow, Johannes",
+          "type": "personal"
+        },
+        "role": {
+          "id": "contactperson",
+          "title": {
+            "de": "Kontaktperson",
+            "en": "Contact person"
+          }
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "name": "Climate Resource"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Busch",
+          "given_name": "Daniel",
+          "name": "Busch, Daniel",
+          "type": "personal"
+        },
+        "role": {
+          "id": "other",
+          "title": {
+            "de": "Andere",
+            "en": "Other"
+          }
+        }
+      },
+      {
+        "affiliations": [
+          {
+            "name": "Climate Resource"
+          }
+        ],
+        "person_or_org": {
+          "family_name": "Pfl\u00fcger",
+          "given_name": "Mika",
+          "identifiers": [
+            {
+              "identifier": "0000-0002-7814-8916",
+              "scheme": "orcid"
+            }
+          ],
+          "name": "Pfl\u00fcger, Mika",
+          "type": "personal"
+        },
+        "role": {
+          "id": "other",
+          "title": {
+            "de": "Andere",
+            "en": "Other"
+          }
+        }
+      }
+    ],
+    "description": "<p><strong>Recommended citation</strong></p>\n<p>G&uuml;tschow, J.; Busch, D.; Pfl&uuml;ger, M. (2025): The PRIMAP-hist national historical emissions time series v2.6.1 (1750-2023). zenodo. doi:10.5281/zenodo.<em>15016289</em>.</p>\n<p>G&uuml;tschow, J.; Jeffery, L.; Gieseke, R.; Gebel, R.; Stevens, D.; Krapp, M.; Rocha, M. (2016): The PRIMAP-hist national historical emissions time series, Earth Syst. Sci. Data, 8, 571-603, doi:10.5194/essd-8-571-2016</p>\n<p><strong>Content</strong></p>\n<ul>\n<li><a href=\"#use-of-the-dataset-and-full-description\">Use of the dataset and full description</a></li>\n<li><a href=\"#abstract\">Abstract</a></li>\n<li><a href=\"#support\">Support</a></li>\n<li><a href=\"#sources\">Sources</a></li>\n<li><a href=\"#files-included-in-the-dataset\">Files included in the dataset</a></li>\n<li><a href=\"#notes\">Notes</a></li>\n<li><a href=\"#data-format-description-columns\">Data format description (columns)</a></li>\n<li><a href=\"#references\">References</a></li>\n<li><a href=\"#changelog\">Changelog</a></li>\n</ul>\n<p><strong>Abstract</strong></p>\n<p>The PRIMAP-hist dataset combines several published datasets to create a comprehensive set of greenhouse gas emission pathways for every country and Kyoto gas, covering the years 1750 to 2023, and almost all UNFCCC (United Nations Framework Convention on Climate Change) member states as well as most non-UNFCCC territories. The data resolves the main IPCC (Intergovernmental Panel on Climate Change) 2006 categories. For CO2, CH4, and N2O subsector data for Energy, Industrial Processes and Product Use (IPPU), and Agriculture are available. The \"country reported data priority\" (CR) scenario of the PRIMAP-hist datset prioritizes data that individual countries report to the UNFCCC.</p>\n<p>For developed countries, AnnexI in terms of the UNFCCC, this is the data submitted anually in the \"National Inventory Submissions\". Until 2023 data was submitted in the \"Common Reporting Format\" (CRF). Since 2024 the new \"Common Reporting Tables\" (CRT) are used. For developing countries, non-AnnexI in terms of the UNFCCC, we use the \"Biannial Transparency Reports\" (BTR) which mostly come with data also using the \"Common Reporting Tables\". We also use older data available through the UNFCCC DI portal (di.unfccc.int) and additional country submissions from \"Biannial Update Reports\" (BUR), \"National Communications\" (NC), and \"National Inventory Reports\" (NIR) read from pdf and where available xls(x) or csv files. For a list of these submissions please see below. For South Korea the 2023 official GHG inventory has not yet been submitted to the UNFCCC but is included in PRIMAP-hist. PRIMAP-hist also includes official data for Taiwan which is not recognized as a party to the UNFCCC. We have mostly replaced the official data that has not been submitted to the UNFCCC used in v2.6 as countries have now submitted their data in CRT format, but had to make some exceptions as the CRT data was not usable for all countries.</p>\n<p>Gaps in the country reported data are filled using third party data such as CDIAC, EI (fossil CO2), Andrew cement emissions data (cement), FAOSTAT (agriculture), and EDGAR 2024 (all sectors for CO2, CH4, N2O, HFCs, PFCs, SF6, NF3, except energy CO2). Lower priority data are harmonized to higher priority data in the gap-filling process.</p>\n<p>For the third party priority time series gaps in the third party data are filled from country reported data sources.</p>\n<p>Data for earlier years which are not available in the above mentioned sources are sourced from EDGAR-HYDE, CEDS, and RCP (N2O only) historical emissions.</p>\n<p>The v2.4 release of PRIMAP-hist reduced the time-lag from 2 to 1 years for the October release. Thus the present version 2.6.1 includes data for 2023. For energy CO2 growth rates from the EI Statistical Review of World Energy are used to extend the country reported (CR) or CDIAC (TP) data to 2023. For CO2 from cement production Andrew cement data are used. For other gases and sectors we use EDGAR 2024 data. In a few cases we have to rely on numerical methods to estimate emissions for 2023.</p>\n<p>Version 2.6.1 of the PRIMAP-hist dataset does not include emissions from Land Use, Land-Use Change, and Forestry (LULUCF) in the main file. LULUCF data are included in the file with increased number of significant digits and have to be used with care as they are constructed from different sources using different methodologies and are not harmonized.</p>\n<p>The PRIMAP-hist v2.6.1 dataset is an updated version of</p>\n<p>G&uuml;tschow, J.; Pfl&uuml;ger, M.; Busch, D. (2024): The PRIMAP-hist national historical emissions time series v2.6 (1750-2023). zenodo. doi:10.5281/zenodo.13752654.</p>\n<p>The <a href=\"#changelog\">Changelog</a> indicates the most important changes. You can also check the issue tracker on <a href=\"https://github.com/JGuetschow/PRIMAP-hist\">github.com/JGuetschow/PRIMAP-hist</a> for additional information on issues found after the release of the dataset. Detailed per country information is available from the detailed changelog which is available on the <a href=\"https://primap.org/primap-hist\">primap.org</a> website and on zenodo.</p>\n<p><strong>Use of the dataset and full description</strong></p>\n<p>Before using the dataset, please read this document and the article describing the methodology, especially the section on uncertainties and the section on limitations of the method and use of the dataset.</p>\n<p>G&uuml;tschow, J.; Jeffery, L.; Gieseke, R.; Gebel, R.; Stevens, D.; Krapp, M.; Rocha, M. (2016): The PRIMAP-hist national historical emissions time series, Earth Syst. Sci. Data, 8, 571-603, doi:10.5194/essd-8-571-2016</p>\n<p>Please notify us (johannes.guetschow@climate-resource.com) if you use the dataset so that we can keep track of how it is used and take that into consideration when updating and improving the dataset.</p>\n<p>When using this dataset or one of its updates, please cite the DOI of the precise version of the dataset used and also the data description article which this dataset is supplement to (see above). Please consider also citing the relevant original sources when using the PRIMAP-hist dataset. See the full citations in the References section further below.</p>\n<p>Since version 2.3 we use the data formats developed for the PRIMAP2 climate policy analysis suite: <a href=\"https://github.com/pik-primap/primap2\">PRIMAP2 on GitHub</a>. The data are published both in the interchange format which consists of a csv file with the data and a yaml file with additional metadata and the native NetCDF based format. For a detailed description of the data format we refer to the <a href=\"https://primap2.readthedocs.io/en/stable/\">PRIMAP2 documentation</a>.</p>\n<p>We have also included files with more than three significant digits. These files are mainly aimed at people doing policy analysis using the country reported data scenario (HISTCR). Using the high precision data they can avoid questions on discrepancies with the reported data. The uncertainties of emissions data do not justify the additional significant digits and they might give a false sense of accuracy, so please use this version of the dataset with extra care.</p>\n<p><strong>Support</strong></p>\n<p>If you encounter possible errors or other things that should be noted, please check our issue tracker at <a href=\"https://github.com/JGuetschow/PRIMAP-hist\">github.com/JGuetschow/PRIMAP-hist</a> and report your findings there. Please use the tag \"v2.6.1\" in any issue you create regarding this dataset.</p>\n<p>If you need support in using the dataset or have any other questions regarding the dataset, please contact johannes.guetschow@climate-resource.com.</p>\n<p>Climate Resource makes this data available CC BY 4.0 licence. Free support is limited to simple questions and non-commercial users. We also provide additional data, and data support services to clients wanting more frequent updates, additional metadata or to integrate these datasets into their workflows. Get in touch at contact@climate-resource.com if you are interested.</p>\n<p><strong>Sources</strong></p>\n<ul>\n<li><strong>Global CO2 emissions from cement production v250226</strong> <a href=\"https://doi.org/10.5281/zenodo.14931651\">data</a>, <a href=\"https://doi.org/10.5194/essd-11-1675-2019\">paper</a>: Andrew<br>(2025), Andrew (2019)</li>\n<li><strong>EI Statistical Review of World Energy</strong> <a href=\"https://www.energyinst.org/statistical-review\">website</a>: Energy Institute (2024)</li>\n<li><strong>CDIAC</strong> <a href=\"https://energy.appstate.edu/cdiac-appstate/data-products\">data</a>: Hefner and Marland (2023), <a href=\"https://doi.org/10.5281/zenodo.10607882\">data</a>: Hefner (2024), <a href=\"https://essd.copernicus.org/articles/13/1667/2021/\">paper</a>: Gilfillan and Marland (2021)</li>\n<li><strong>CEDS</strong>: <a href=\"http://doi.org/10.5281/zenodo.3606753\">data:</a> Hoesly et al. (2020), <a href=\"https://gmd.copernicus.org/articles/11/369/2018/\">paper</a>:&nbsp; Hoesly et al. (2018)</li>\n<li><strong>EDGAR 2024</strong>: <a href=\"https://edgar.jrc.ec.europa.eu/report_2024\">data/website</a>: European Commission, European Commision, JRC (2024), report: European Commission. Joint Research Centre &amp; IEA. (2024)</li>\n<li><strong>EDGAR-HYDE 1.4</strong> <a href=\"http://themasites.pbl.nl/tridion/en/themasites/edgar/emission_data/edgar-hyde-100yr/edgar-hyde-1-4.html\">data</a>: Van Aardenne et al. (2001), Olivier and Berdowski (2001)</li>\n<li><strong>FAOSTAT database</strong> <a href=\"http://www.fao.org/faostat/en/#data\">data</a>: Food and Agriculture Organization of the United Nations (2024)</li>\n<li><strong>RCP historical data</strong> <a href=\"http://www.pik-potsdam.de/~mmalte/rcps/\">data</a>, <a href=\"https://doi.org/10.1007/s10584-011-0156-z\">paper</a>: Meinshausen et al. (2011)</li>\n<li><strong>UNFCCC National Communications and National Inventory Reports for developing countries available from the UNFCCC DI portal</strong> <a href=\"http://di.unfccc.int/detailed_data_by_party\">website</a>, <a href=\"https://doi.org/10.5281/zenodo.12664477\">data</a>: UNFCCC (2024e), Pfl&uuml;ger and G&uuml;tschow (2024), <a href=\"https://github.com/primap-community/FAOSTAT_data_primap/\">github</a></li>\n<li><strong>UNFCCC Bnnial Update Reports, National Communications, and National Inventory&nbsp;</strong><br><strong>Reports for developing countries</strong> <a href=\"https://unfccc.int/BURs\">website-BURs</a>, <a href=\"https://unfccc.int/non-annex-I-NCs\">website-NCs</a>, <a href=\"https://github.com/JGuetschow/UNFCCC_non-AnnexI_data/tree/main/extracted_data/UNFCCC\">data</a>: UNFCCC (2024d), UNFCCC (2024b). &nbsp;\n<ul>\n<li>Notes:\n<ol>\n<li>Not all BUR and NC submissions are included as reading the data is time consuming and not all submission contain sufficient data to be used in PRIMAP-hist.</li>\n<li>Not all submissions included in PRIMAP-hist are available in the github repository as we do not (yet) have code that we can publish for all submissions.</li>\n<li>No submissions have been added for PRIMAP-hist v2.6.1</li>\n</ol>\n</li>\n</ul>\n</li>\n<li><strong>UNFCCC First Biannial Transparency Reports</strong> <a href=\"https://unfccc.int/first-biennial-transparency-reports\">website</a>, [<a href=\"https://github.com/JGuetschow/UNFCCC_non-AnnexI_data/tree/main/extracted_data/UNFCCC\">data</a>] UNFCCC (2025)\n<ul>\n<li>Notes:\n<ol>\n<li>For a list of added submissions see section \"Data source updates (v2.6.1)\" in the changelog in the pdf data description.&nbsp;</li>\n</ol>\n</li>\n</ul>\n</li>\n<li><strong>UNFCCC Common Reporting Format (CRF)</strong> <a href=\"https://unfccc.int/ghg-inventories-annex-i-parties/2023\">website</a>, <a href=\"https://doi.org/10.5194/essd-10-1427-2018\">paper</a>, <a href=\"https://github.com/JGuetschow/UNFCCC_non-AnnexI_data/tree/master/datasets/UNFCCC/CRF2023\">data (24-01-08)</a>: UNFCCC (2024c) (processed as described in Jeffery et al. (2018))</li>\n<li><strong>Official country repositories (non-UNFCCC)</strong>\n<ul>\n<li><strong>Belarus</strong>: Greenhouse gas statistics (1990-2022) <a href=\"https://www.belstat.gov.by/ofitsialnaya-statistika/makroekonomika-i-okruzhayushchaya-sreda/okruzhayuschaya-sreda/sovmestnaya-sistema-ekologicheskoi-informatsii2/b-izmenenie-klimata/b-3-vybrosy-parnikovyh-gazov/?_x_tr_sl=zh-TW&amp;_x_tr_tl=en&amp;_x_tr_hl=en-US&amp;_x_tr_pto=wapp\">website</a>: National Statistical Committee of the<br>Republic of Belarus (2024)</li>\n<li><strong>EU, Iceland, Norway, Switzerland</strong>: National emissions reported to the UNFCCC and to the EU Greenhouse Gas Monitoring Mechanism, April 2024 <a href=\"https://www.eea.europa.eu/en/datahub/datahubitem-view/3b7fe76c-524a-439a-bfd2-a6e4046302a2\">website</a>: European Environment Agency<br>(2024)</li>\n<li><strong>South Korea</strong>: 2023 Inventory <a href=\"https://www.gir.go.kr/home/board/read.do?pagerOffset=0&amp;maxPageItems=10&amp;maxIndexPages=10&amp;searchKey=&amp;searchValue=&amp;menuId=36&amp;boardId=62&amp;boardMasterId=2&amp;boardCategoryId=\">website</a>, <a href=\"https://github.com/JGuetschow/UNFCCC_non-AnnexI_data/tree/master/extracted_data/non-UNFCCC/Republic_of_Korea\">data</a>: Republic of Korea (2023)</li>\n<li><strong>Taiwan / Republic of China</strong>: 2023 Inventory <a href=\"https://www.cca.gov.tw/information-service/publications/national-ghg-inventory-report/1851.html\">website</a>, <a href=\"https://github.com/JGuetschow/UNFCCC_non-AnnexI_data/tree/master/extracted_data/non-UNFCCC/Taiwan\">data</a>: Republic of China - Environmental<br>Protection Administration (2023)</li>\n</ul>\n</li>\n</ul>\n<p>For the pre-1990 LULUCF time-series we use the following additional data sources:</p>\n<ul>\n<li><strong>Houghton land use CO2</strong> <a href=\"http://cdiac.ornl.gov/trends/landuse/houghton/houghton.html\">website</a>: Houghton (2008)</li>\n<li><strong>HYDE land cover data</strong> <a href=\"http://themasites.pbl.nl/tridion/en/themasites/hyde/download/index-2.html\">website</a>: Klein Goldewijk et al. (2010), Klein Goldewijk et al. (2011)</li>\n<li><strong>SAGE Global Potential Vegetation Dataset</strong> <a href=\"https://nelson.wisc.edu/sage/data-and-models/global-potential-vegetation/index.php\">website</a>: Ramankutty and Foley (1999)</li>\n<li><strong>FAO Country Boundaries</strong> <a href=\"http://ref.data.fao.org/map?entryId=18329470-472d-11db-88e0-000d939bc5d8\">website</a>: Food and Agriculture Organization of the United Nations<br>(2015)</li>\n</ul>\n<p>&nbsp;</p>\n<p><strong>Files included in the dataset</strong></p>\n<p>For each dataset we have three files: the <em>.nc</em> file contains the data and metadata in the native PRIMAP2 netCDF based format. The <em>.csv</em> file contains the data in a csv format following the specifications of the PRIMAP2 interchange format. The metadata for the interchange format file is included in the <em>.yaml</em> file.</p>\n<ul>\n<li><strong>Guetschow-et-al-2025-PRIMAP-hist_v2.6.1_final_13-Mar-2025.X</strong>: The main dataset with numerical extrapolation of all time series to 2023 and three significant digits.</li>\n<li><strong>Guetschow-et-al-2025-PRIMAP-hist_v2.6.1_final_no_extrap_13-Mar-2025.X</strong>: Variant without numerical extrapolation of missing values and not including the country groups mentioned in section [\"area (ISO3)\"] (three significant digits).</li>\n<li><strong>Guetschow-et-al-2025-PRIMAP-hist_v2.6.1_final_no_rounding_13-Mar-2025.X</strong>: The main dataset with numerical extrapolation of all time series to 2023 and eleven significant digits.</li>\n<li><strong>Guetschow-et-al-2025-PRIMAP-hist_v2.6.1_final_no_extrap_no_rounding_13-Mar-2025.X</strong>: Variant without numerical extrapolation of missing values and not including the country groups mentioned in section [\"area (ISO3)\"] (eleven significant digits).</li>\n<li><strong>PRIMAP-hist_v2.6.1_data-description.pdf</strong>: Data description including changelog.</li>\n<li><strong>PRIMAP-hist_v2.6.1_updated_figures.pdf</strong>: Updated figures from the PRIMAP-hist paper published in ESSD.</li>\n<li><strong>changes_PRIMAP-hist_v2.6.1_final_nr_to_v2.6_final_nr.xlsx</strong>: xlsx file which lists relative changes per country, gas and main sector for 2005, 2015, 2020, 2021, 2022, 2023, and 1990-2023 (cumulative) from v2.5.1 to v2.6 (comparison between latest version and current version).</li>\n<li><strong>changes_PRIMAP-hist_v2.6.1_final_nr_CR_to_TP.xlsx</strong>: xlsx file which lists relative differences per country, gas and main sector for 2005, 2015, 2020, 2021, 2022, 2023, and 1990-2023 (cumulative) between country reported priority and third party priority scenarios.</li>\n<li><strong>changelog_v2.6_final_to_v2.6.1_final.zip</strong>: Detailed changelog in html format containing plots and a breakdown of changes to sectors and gases for all countries. Country specific notes ar also included. To use the changelog locally unpack the zip file and open the file in the \"html\" directory in your browser. The changelog is also available on the <a href=\"https://primap.org/primap-hist/\">primap.org</a> website.</li>\n</ul>\n<p><strong>Notes</strong></p>\n<ul>\n<li>Emissions from international aviation and shipping are not included in the dataset.</li>\n<li>Emissions from Land Use, Land-Use Change, and Forestry (LULUCF) are not included in the main version of this dataset. They are included in the version without rounding as users need to take extra care when using LULUCF data because changes some of the year-to-year changes in the data come from using different sources or methodology changes within a source rather than changes in actual emissions.</li>\n</ul>\n<p><strong>Data format description</strong></p>\n<p>The PRIMAP-hist data in the comma-separated values (CSV) files is formatted consistently with the PRIMAP2 interchange format.</p>\n<p>The data contained in each column are as follows:</p>\n<p><em>\"source\"</em></p>\n<p>Name of the data source. Here: <em>PRIMAP-hist_v2.6.1</em> with suffixes <em>_ne</em> for no extrapolation and <em>_nr</em> for no rounding.</p>\n<p><em>\"scenario (PRIMAP)\"</em></p>\n<ul>\n<li>HISTCR: In this scenario country-reported data (CRT, BUR / NIR / NC / UNFCCCDI) are prioritized over third-party data (CDIAC, FAO, Andrew, EDGAR, BP).</li>\n<li>HISTTP: In this scenario third-party data (CDIAC, FAO, Andrew, EDGAR, BP) are prioritized over country-reported data (CRT, BUR / NIR / NC / UNFCCCDI)</li>\n</ul>\n<p><em>\"provenance\"</em></p>\n<p>Provenance of the data. Here: \"derived\" as it is a composite source.</p>\n<p><em>\"country\"</em></p>\n<p>ISO 3166 three-letter country codes or custom codes for groups:</p>\n<table>\n<tbody>\n<tr>\n<td><strong>Code</strong></td>\n<td><strong>Region description</strong></td>\n</tr>\n<tr>\n<td>EARTH</td>\n<td>Aggregated emissions for all countries.</td>\n</tr>\n<tr>\n<td>ANNEXI</td>\n<td>Annex I Parties to the Convention</td>\n</tr>\n<tr>\n<td>NONANNEXI</td>\n<td>Non-Annex I Parties to the Convention</td>\n</tr>\n<tr>\n<td>AOSIS</td>\n<td>Alliance of Small Island States</td>\n</tr>\n<tr>\n<td>BASIC</td>\n<td>BASIC countries (Brazil, South Africa, India and China)</td>\n</tr>\n<tr>\n<td>EU27BX</td>\n<td>European Union post Brexit</td>\n</tr>\n<tr>\n<td>LDC</td>\n<td>Least Developed Countries</td>\n</tr>\n<tr>\n<td>UMBRELLA</td>\n<td>Umbrella Group</td>\n</tr>\n</tbody>\n</table>\n<p>Table: Additional \"country\" codes.</p>\n<p><em>\"category\"</em></p>\n<p>IPCC (Intergovernmental Panel on Climate Change) 2006 categories for emissions. Some aggregate sectors have been added to the hierarchy. These begin with the prefix <em>M</em>.</p>\n<table>\n<tbody>\n<tr>\n<td><strong>Code</strong></td>\n<td><strong>Description</strong></td>\n<td><strong>Gases covered</strong></td>\n</tr>\n<tr>\n<td>M.0.EL</td>\n<td>National Total excluding LULUCF</td>\n<td>all</td>\n</tr>\n<tr>\n<td>1</td>\n<td>Energy</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>1.A</td>\n<td>Fuel Combustion Activities</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>1.B</td>\n<td>Fugitive Emissions from Fuels</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>1.B.1</td>\n<td>Solid Fuels</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>1.B.2</td>\n<td>Oil and Natural Gas</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>1.B.3</td>\n<td>Other Emissions from Energy Production</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>1.C</td>\n<td>Carbon Dioxide Transport and Storage</td>\n<td>CO2</td>\n</tr>\n<tr>\n<td>2</td>\n<td>Industrial Processes and Product Use (IPPU)</td>\n<td>CO2, CH4, N2O, f-gases</td>\n</tr>\n<tr>\n<td>2.A</td>\n<td>Mineral Industry</td>\n<td>CO2</td>\n</tr>\n<tr>\n<td>2.B</td>\n<td>Chemical Industry</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>2.C</td>\n<td>Metal Industry</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>2.D</td>\n<td>Non-Energy Prod. from Fuels and Solvent Use</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>2.E</td>\n<td>Electronics Industry</td>\n<td>N2O (f-gases emitted but not resolved)</td>\n</tr>\n<tr>\n<td>2.F</td>\n<td>\n<p>Product uses as Substitutes for Ozone Depleting Substances&nbsp;</p>\n<p>(no data available as the category is only used for fluorinated gases which are only resolved at the level of category 2)</p>\n</td>\n<td>--</td>\n</tr>\n<tr>\n<td>2.G</td>\n<td>Other Product Manufacture and Use</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>2.H</td>\n<td>Other</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>M.AG</td>\n<td>Agriculture, sum of 3.A and M.AG.ELV</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>3.A</td>\n<td>Livestock</td>\n<td>CH4, N2O</td>\n</tr>\n<tr>\n<td>M.AG.ELV</td>\n<td>Agriculture excluding Livestock</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>4</td>\n<td>Waste</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>5</td>\n<td>Other</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n</tbody>\n</table>\n<p>Table: Category descriptions using IPCC 2006 terminology.</p>\n<p>The categories are organized in a hierarchy where children of each category sum to the parent category. The full IPCC2006 category hierarchy contains many more subcategories, but data availability is not sufficient to resolve the full IPCC category tree in PRIMAP-hist. However, we will regularly assess if the available data allows for resolving addition subcategories. The categories currently resoved by PRIMAP-hist are organized as follows.<br><br>&nbsp; &nbsp; M.0.EL Total emissions excluding LULUCF<br>&nbsp; &nbsp; \u251c1 Energy<br>&nbsp; &nbsp; \u2502\u251c1.A Fuel Combustion Activities &nbsp; &nbsp; &nbsp;&nbsp;<br>&nbsp; &nbsp; \u2502\u251c1.B Fugitive Emissions from Fuels<br>&nbsp; &nbsp; \u2502\u2502\u251c1.B.1 Solid Fuels<br>&nbsp; &nbsp; \u2502\u2502\u251c1.B.2 Oil and Natural Gas<br>&nbsp; &nbsp; \u2502\u2502\u25701.B.3 Other Emissions from Energy Production<br>&nbsp; &nbsp; \u2502\u25701.C Carbon Dioxide Transport and Storage<br>&nbsp; &nbsp; \u251c2 Industrial Processes and Product Use<br>&nbsp; &nbsp; \u2502\u251c2.A Mineral Industry<br>&nbsp; &nbsp; \u2502\u251c2.B Chemical Industry<br>&nbsp; &nbsp; \u2502\u251c2.C Metal Industry<br>&nbsp; &nbsp; \u2502\u251c2.D Non-Energy Products from Fuels and Solvent Use<br>&nbsp; &nbsp; \u2502\u251c2.E Electronics Industry<br>&nbsp; &nbsp; \u2502\u251c2.F Product Uses as Substitutes for Ozone Depleting Substances<br>&nbsp; &nbsp; \u2502\u251c2.G Other Product Manufacture and Use<br>&nbsp; &nbsp; \u2502\u25702.H Other<br>&nbsp; &nbsp; \u251c4 Waste<br>&nbsp; &nbsp; \u251c5 Other<br>&nbsp; &nbsp; \u2570M.AG Agriculture<br>&nbsp; &nbsp; &nbsp;\u251c3.A Livestock<br>&nbsp; &nbsp; &nbsp;\u2570M.AG.ELV Agriculture excluding Livestock<br><br><br>The \"no_rounding\" version of the dataset additionally contains data for the \"Land Use, Land Use Change, and Forestry\" sector and sectors sums including this sectors</p>\n<table>\n<tbody>\n<tr>\n<td><strong>Code</strong></td>\n<td><strong>Description</strong></td>\n<td><strong>Gases covered</strong></td>\n</tr>\n<tr>\n<td>0</td>\n<td>National Total including LULUCF</td>\n<td>CO2, CH4, N2O, f-gases</td>\n</tr>\n<tr>\n<td>3</td>\n<td>Agriculture, Forestry and Other Land Use (AFOLU)</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n<tr>\n<td>M.LULUCF</td>\n<td>Land Use, Land Use Change, and Forestry</td>\n<td>CO2, CH4, N2O</td>\n</tr>\n</tbody>\n</table>\n<p>Table: Additional category descriptions using IPCC 2006 terminology.<br><br>PRIMAP-hist uses a distinction between agriculture and Land Use, Land Use Change and Forestry which are combined into the AFOLU sector in IPCC2006 categories. Thus, in contrast to the standard IPCC 2006 categories, category &nbsp;3 \"Agriculture, Forestry, and Other Land Use\" is subdivided as follows:<br><br>&nbsp; &nbsp; 3 Agriculture, Forestry, and Other Land Use<br>&nbsp; &nbsp; \u251cM.AG Agriculture<br>&nbsp; &nbsp; \u2502\u251c3.A Livestock<br>&nbsp; &nbsp; \u2502\u2570M.AG.ELV Agriculture excluding Livestock<br>&nbsp; &nbsp; \u2570M.LULUCF Land Use, Land Use Change, and Forestry<br><br>Where a national total including LULUCF is reported, it is calculated as the sum of \"M.0.EL Total emissions excluding LULUCF\" and \"M.LULUCF Land Use, Land Use Change, and Forestry\":<br><br>&nbsp; &nbsp; 0 National Total<br>&nbsp; &nbsp; \u251cM.0.EL Total emissions excluding LULUCF<br>&nbsp; &nbsp; \u2502\u251c1 Energy<br>&nbsp; &nbsp; \u2502\u251c2 Industrial Processes and Product Use<br>&nbsp; &nbsp; \u2502\u251c4 Waste<br>&nbsp; &nbsp; \u2502\u251c5 Other<br>&nbsp; &nbsp; \u2502\u2570M.AG Agriculture<br>&nbsp; &nbsp; \u2570M.LULUCF Land Use, Land Use Change, and Forestry<br><br><br>\"<em>entity</em>\"<br><br>Gas baskets using global warming potentials (GWP) from the Second Assessment Report (SAR), Fourth Assessment Report (AR4), Fifth Assessment Report (AR5), Sixth Assessment Report (AR6).</p>\n<table>\n<tbody>\n<tr>\n<td><strong>Code</strong></td>\n<td><strong>Description</strong></td>\n</tr>\n<tr>\n<td>CH4</td>\n<td>Methane</td>\n</tr>\n<tr>\n<td>CO2</td>\n<td>Carbon Dioxide</td>\n</tr>\n<tr>\n<td>N2O</td>\n<td>Nitrous Oxide</td>\n</tr>\n<tr>\n<td>HFCS (SARGWP100)</td>\n<td>Hydrofluorocarbons (SAR)</td>\n</tr>\n<tr>\n<td>HFCS (AR4GWP100)</td>\n<td>Hydrofluorocarbons (AR4)</td>\n</tr>\n<tr>\n<td>HFCS (AR5GWP100)</td>\n<td>Hydrofluorocarbons (AR5)</td>\n</tr>\n<tr>\n<td>HFCS (AR6GWP100)</td>\n<td>Hydrofluorocarbons (AR6)</td>\n</tr>\n<tr>\n<td>PFCS (SARGWP100)</td>\n<td>Perfluorocarbons (SAR)</td>\n</tr>\n<tr>\n<td>PFCS (AR4GWP100)</td>\n<td>Perfluorocarbons (AR4)</td>\n</tr>\n<tr>\n<td>PFCS (AR5GWP100)</td>\n<td>Perfluorocarbons (AR5)</td>\n</tr>\n<tr>\n<td>PFCS (AR6GWP100)</td>\n<td>Perfluorocarbons (AR6)</td>\n</tr>\n<tr>\n<td>SF6</td>\n<td>Sulfur Hexafluoride</td>\n</tr>\n<tr>\n<td>NF3</td>\n<td>Nitrogen Trifluoride</td>\n</tr>\n<tr>\n<td>FGASES (SARGWP100)</td>\n<td>Fluorinated Gases (SAR): HFCs, PFCs, SF6, NF3</td>\n</tr>\n<tr>\n<td>FGASES (AR4GWP100)</td>\n<td>Fluorinated Gases (AR4): HFCs, PFCs, SF6, NF3</td>\n</tr>\n<tr>\n<td>FGASES (AR5GWP100)</td>\n<td>Fluorinated Gases (AR5): HFCs, PFCs, SF6, NF3</td>\n</tr>\n<tr>\n<td>FGASES (AR6GWP100)</td>\n<td>Fluorinated Gases (AR6): HFCs, PFCs, SF6, NF3</td>\n</tr>\n<tr>\n<td>KYOTOGHG (SARGWP100)</td>\n<td>Kyoto greenhouse gases (SAR)</td>\n</tr>\n<tr>\n<td>KYOTOGHG (AR4GWP100)</td>\n<td>Kyoto greenhouse gases (AR4)</td>\n</tr>\n<tr>\n<td>KYOTOGHG (AR5GWP100)</td>\n<td>Kyoto greenhouse gases (AR5)</td>\n</tr>\n<tr>\n<td>KYOTOGHG (AR6GWP100)</td>\n<td>Kyoto greenhouse gases (AR6)</td>\n</tr>\n</tbody>\n</table>\n<p>Table: Gas categories and underlying global warming potentials</p>\n<p><em>\"unit\"</em></p>\n<p>Unit is either <em>&lt;substance&gt; * gigagram / a</em> where substance is the entity or for CO2 equivalent units <em>CO2 * gigagram / a</em>. The CO2-equivalent is calculated according to the global warming potential indicated by the entity (see above).</p>\n<p><em>Remaining columns</em></p>\n<p>Years from 1750-2023.</p>\n<p><strong>Changelog</strong></p>\n<p>For the changelog we refer to the pdf version of the data description available for download here</p>\n<p><strong>References</strong></p>\n<p>For the full references we refer to the references section and the pdf version of the data description available for download here.</p>",
+    "languages": [
+      {
+        "id": "eng",
+        "title": {
+          "en": "English"
+        }
+      }
+    ],
+    "publication_date": "2025-03-13",
+    "publisher": "Zenodo",
+    "references": [
+      {
+        "reference": "Andrew, R. M.: Global CO2 emissions from cement production, 1928\u20132018, Earth System Science Data, 11(4), 1675\u20131710, doi:10.5194/essd-11-1675-2019, 2019."
+      },
+      {
+        "reference": "Andrew, R. M. Global CO2 emissions from cement production. (2025) doi:10.5281/zenodo.14931651."
+      },
+      {
+        "reference": "Energy Institute: EI Statistical Review of World Energy 2024. [online] Available from: https://www.ener gyinst.org/statistical-review (Accessed 18 October 2023), 2024."
+      },
+      {
+        "reference": "European Commission, JRC. EDGAR (Emissions Database for Global Atmospheric Research) Community GHG Database, a collaboration between the European Commission, Joint Research Centre (JRC), the International Energy Agency (IEA), and comprising IEA-EDGAR CO2, EDGAR CH4, EDGAR N2O, EDGAR F-GASES version 2024. (2024)."
+      },
+      {
+        "reference": "European Commission. Joint Research Centre. & IEA. GHG Emissions of All World Countries: 2024. (Publications Office, LU, 2024)."
+      },
+      {
+        "reference": "European Environment Agency: National emissions reported to the UNFCCC and to the EU Greenhouse Gas Monitoring Mechanism, April 2024, doi:10.2909/6331F651-8863-4656-A911-669F2A332A1E, 2024."
+      },
+      {
+        "reference": "Food and Agriculture Organization of the United Nations: FAO GEONETWORK. Country boundaries of the world (vector version) (FGGD) (GeoLayer). (Latest update: 04 Jun 2015), [online] Available from: http://ref.data.fao.org/map?entryId=18329470-472d-11db-88e0-000d939bc5d8 (Accessed 13 July 2015), 2015."
+      },
+      {
+        "reference": "Gilfillan, D. and Marland, G.: CDIAC-FF: Global and national CO2 emissions from fossil fuel combustion and cement manufacture: 1751\u20132017, Earth System Science Data, 13(4), 1667\u20131680, doi:10.5194/essd-13- 1667-2021, 2021."
+      },
+      {
+        "reference": "Hefner, M. and Marland, G.: Global, Regional, and National Fossil-Fuel CO2 Emissions: 1751-2020 CDIAC-FF, [online] Available from: https://energy.appstate.edu/research/work-areas/cdiac-appstate (Accessed 6 January 2024), 2023."
+      },
+      {
+        "reference": "Hefner, M. W.: The CDIAC at AppState Dashboard, doi:10.5281/zenodo.10607882, 2024."
+      },
+      {
+        "reference": "Hoesly, R. M., Smith, S. J., Feng, L., Klimont, Z., Janssens-Maenhout, G., Pitkanen, T., Seibert, J. J., Vu, L., Andres, R. J., Bolt, R. M., Bond, T. C., Dawidowski, L., Kholod, N., Kurokawa, J., Li, M., Liu, L., Lu, Z., Moura, M. C. P., O'Rourke, P. R. and Zhang, Q.: Historical (1750\u20132014) anthropogenic emissions of reactive gases and aerosols from the Community Emissions Data System (CEDS), Geoscientific Model Development, 11(1), 369\u2013408, doi:10.5194/gmd-11-369-2018, 2018."
+      },
+      {
+        "reference": "Hoesly, R. M., O'Rourke, P. R., Smith, S. J., Feng, L., Klimont, Z., Janssens-Maenhout, G., Pitkanen, T., Seibert, J. J., Vu, L., Andres, R. J., Bolt, R. M., Bond, T. C., Dawidowski, L., Kholod, N., Kurokawa, J., Li, M., Liu, L., Lu, Z., Moura, M. C. P., Zhang, Q., Goldstein, B. and Muwan, P.: CEDS v_2019_12_23 Emission Data, doi:10.5281/zenodo.3606753, 2020."
+      },
+      {
+        "reference": "Houghton, R. A.: Carbon Flux to the Atmosphere from Land-Use Changes: 1850-2005, TRENDS online: A Compendium of Data on Global Change [online] Available from: http://cdiac.ornl.gov/trends/landuse/ houghton/houghton.html (Accessed 3 November 2016), 2008."
+      },
+      {
+        "reference": "Jeffery, M. L., G\u00fctschow, J., Gieseke, R. and Gebel, R.: PRIMAP-crf: UNFCCC CRF data in IPCC 2006 categories, Earth System Science Data, 10(3), 1427\u20131438, doi:10.5194/essd-10-1427-2018, 2018."
+      },
+      {
+        "reference": "JRC: Emission Database for Global Atmospheric Research (EDGAR), release version 7.0, doi:10.2904/EDGARv4.2, 2022."
+      },
+      {
+        "reference": "Klein Goldewijk, K., Beusen, a. and Janssen, P.: Long-term dynamic modeling of global pop- ulation and built-up area in a spatially explicit way: HYDE 3.1, The Holocene, 20(4), 565\u2013573, doi:10.1177/0959683609356587, 2010."
+      },
+      {
+        "reference": "Klein Goldewijk, K., Beusen, A., Van Drecht, G. and De Vos, M.: The HYDE 3.1 spatially explicit database of human-induced global land-use change over the past 12,000 years, Global Ecology and Biogeography, 20(1), 73\u201386, doi:10.1111/j.1466-8238.2010.00587.x, 2011."
+      },
+      {
+        "reference": "Meinshausen, M., Smith, S. J., Calvin, K., Daniel, J. S., Kainuma, M. L. T., Lamarque, J.-F., Matsumoto, K., Montzka, S. a., Raper, S. C. B., Riahi, K., Thomson, A., Velders, G. J. M. and Vuuren, D. P. P.: The RCP greenhouse gas concentrations and their extensions from 1765 to 2300, Climatic Change, 109(1-2), 213\u2013241, doi:10.1007/s10584-011-0156-z, 2011."
+      },
+      {
+        "reference": "National Statistical Committee of the Republic of Belarus: Greenhouse gas emissions, [online] Available from: https://www.belstat.gov.by/ofitsialnaya-statistika/makroekonomika-i-okruzhayushchaya-sreda/ okruzhayuschaya-sreda/sovmestnaya-sistema-ekologicheskoi-informatsii2/b-izmenenie-klimata/b-3- vybrosy-parnikovyh-gazov/?_x_tr_sl=zh-TW&_x_tr_tl=en&_x_tr_hl=en-US&_x_tr_pto=wapp (Accessed 23 September 2024), 2024."
+      },
+      {
+        "reference": "Olivier, J. G. J. and Berdowski, J. J. M.: Global Emissions sources and sinks, in The Climate System, edited by J. Berdowski, R. Guicherit, and B. J. Heij, pp. 33\u201378, Balkema Publishers/Swets & Zeitlinger Publishers, Lisse, The Netherlands., 2001."
+      },
+      {
+        "reference": "Pfl\u00fcger, M. and G\u00fctschow, J.: UNFCCC country-submitted greenhouse gas emissions data until 2024-07- 05, doi:10.5281/ZENODO.12664477, 2024."
+      },
+      {
+        "reference": "Ramankutty, N. and Foley, J. A.: Estimating historical changes in global land cover: Croplands from 1700 to 1992, Global Biogeochemical Cycles, 13(4), 997\u20131027, doi:10.1029/1999GB900046, 1999."
+      },
+      {
+        "reference": "Republic of China - Environmental Protection Administration: 2023 Republic of China - National Greenhouse Gas Report, Republic of China - Environmental Protection Administration. [online] Available from: https://www.cca.gov.tw/information-service/publications/national-ghg-inventory-report/1851. html (Accessed 25 April 2023), 2023."
+      },
+      {
+        "reference": "Republic of Korea: National Greenhouse Gas Inventory Report of Korea - 2023, Republic of Korea. [online] Available from: https://www.gir.go.kr/home/board/read.do?pagerOffset=0&maxPageItems=10 &maxIndexPages=10&searchKey=&searchValue=&menuId=36&boardId=62&boardMasterId=2&boa rdCategoryId= (Accessed 3 April 2024), 2023."
+      },
+      {
+        "reference": "UNFCCC. First Biannial Transparency Reports. Mar 2025. (2025). [online] Available from: https://unfccc.int/first- biennial-transparency-reports"
+      },
+      {
+        "reference": "UNFCCC: National Communication submissions from Non-Annex I Parties, [online] Available from: https://unfccc.int/non-annex-I-NCs (Accessed 1 September 2023b), 2024."
+      },
+      {
+        "reference": "UNFCCC: National Inventory Submissions 2023 Jan24, [online] Available from: https://unfccc.int/ghg- inventories-annex-i-parties/2023 (Accessed 8 January 2024c), 2024."
+      },
+      {
+        "reference": "UNFCCC: Submitted biennial update reports (BURs) from non-Annex I Parties, [online] Available from: https://unfccc.int/BURs (Accessed 27 June 2024d), 2024."
+      },
+      {
+        "reference": "UNFCCC: UNFCCC Greenhouse Gas Inventory Data - Detailed data by Party, [online] Available from: http://di.unfccc.int/detailed_data_by_party (Accessed 5 July 2024e), 2024."
+      },
+      {
+        "reference": "US EPA, O.: Inventory of U.S. Greenhouse Gas Emissions and Sinks: 1990-2022, [online] Available from: https://www.epa.gov/ghgemissions/inventory-us-greenhouse-gas-emissions-and-sinks-1990-2022 (Accessed 23 September 2024), 2024."
+      },
+      {
+        "reference": "Van Aardenne, J. A., Dentener, F. J., Olivier, J. G. J., Goldewijk, C. G. M. K. and Lelieveld, J.: A 1 x 1 deg resolution data set of historical anthropogenic trace gas emissions for the period 1890-1990, Global Biogeochemical Cycles, 15(4), 909\u2013928, doi:10.1029/2000GB001265, 2001."
+      },
+      {
+        "reference": "G\u00fctschow, J., Busch, D. & Pfl\u00fcger, M. The PRIMAP-hist national historical emissions time series (1750-2023) v2.6. Zenodo https://doi.org/10.5281/zenodo.13752654 (2024)."
+      },
+      {
+        "reference": "G\u00fctschow, J., Jeffery, M. L., Gieseke, R., Gebel, R., Stevens, D., Krapp, M. and Rocha, M.: The PRIMAP-hist national historical emissions time series, Earth System Science Data, 8(2), 571\u2013603, doi:10.5194/essd-8-571-2016, 2016."
+      },
+      {
+        "reference": "Food and Agriculture Organization of the United Nations. FAOSTAT database. (2024)."
+      },
+      {
+        "reference": "primap-community/FAOSTAT_data_primap. PRIMAP (2025)."
+      }
+    ],
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.13752654",
+        "relation_type": {
+          "id": "isnewversionof",
+          "title": {
+            "de": "Ist eine neue Version von",
+            "en": "Is new version of"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5194/essd-8-571-2016",
+        "relation_type": {
+          "id": "isdocumentedby",
+          "title": {
+            "de": "Wird dokumentiert von",
+            "en": "Is documented by"
+          }
+        },
+        "resource_type": {
+          "id": "publication-article",
+          "title": {
+            "de": "Zeitschriftenartikel",
+            "en": "Journal article"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://www.energyinst. org/statistical-review",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5281/zenodo.10607882",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5194/essd-2017-79",
+        "relation_type": {
+          "id": "cites",
+          "title": {
+            "de": "Zitiert",
+            "en": "Cites"
+          }
+        },
+        "resource_type": {
+          "id": "publication-article",
+          "title": {
+            "de": "Zeitschriftenartikel",
+            "en": "Journal article"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5194/essd-11-1675-2019",
+        "relation_type": {
+          "id": "cites",
+          "title": {
+            "de": "Zitiert",
+            "en": "Cites"
+          }
+        },
+        "resource_type": {
+          "id": "publication-article",
+          "title": {
+            "de": "Zeitschriftenartikel",
+            "en": "Journal article"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "http://themasites.pbl.nl/tridion/en/themasites/edgar/emission_data/edgar-hyde-100yr/edgar-hyde-1-4.html",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.1029/2000GB001265",
+        "relation_type": {
+          "id": "cites",
+          "title": {
+            "de": "Zitiert",
+            "en": "Cites"
+          }
+        },
+        "resource_type": {
+          "id": "publication-article",
+          "title": {
+            "de": "Zeitschriftenartikel",
+            "en": "Journal article"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "http://www.fao.org/faostat/en/#data",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "http://www.pik-potsdam.de/~mmalte/rcps/",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.1007/s10584-011-0156-z",
+        "relation_type": {
+          "id": "cites",
+          "title": {
+            "de": "Zitiert",
+            "en": "Cites"
+          }
+        },
+        "resource_type": {
+          "id": "publication-article",
+          "title": {
+            "de": "Zeitschriftenartikel",
+            "en": "Journal article"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://unfccc.int/BURs",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5194/essd-10-1427-2018",
+        "relation_type": {
+          "id": "cites",
+          "title": {
+            "de": "Zitiert",
+            "en": "Cites"
+          }
+        },
+        "resource_type": {
+          "id": "publication-article",
+          "title": {
+            "de": "Zeitschriftenartikel",
+            "en": "Journal article"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5281/zenodo.3606753",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "10.5194/gmd-11-369-2018",
+        "relation_type": {
+          "id": "cites",
+          "title": {
+            "de": "Zitiert",
+            "en": "Cites"
+          }
+        },
+        "resource_type": {
+          "id": "publication-article",
+          "title": {
+            "de": "Zeitschriftenartikel",
+            "en": "Journal article"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://github.com/JGuetschow/UNFCCC_non-AnnexI_data",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5880/pik-2019.018",
+        "relation_type": {
+          "id": "isnewversionof",
+          "title": {
+            "de": "Ist eine neue Version von",
+            "en": "Is new version of"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://energy.appstate.edu/research/work-areas/cdiac-appstate",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "https://edgar.jrc.ec.europa.eu/dataset_ghg2024",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "https://unfccc.int/first- biennial-transparency-reports",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "https://unfccc.int/non-annex-I-NCs",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "url"
+      },
+      {
+        "identifier": "10.5281/zenodo.14931651",
+        "relation_type": {
+          "id": "isderivedfrom",
+          "title": {
+            "de": "Wird abgeleitet von",
+            "en": "Is derived from"
+          }
+        },
+        "resource_type": {
+          "id": "dataset",
+          "title": {
+            "de": "Datensatz",
+            "en": "Dataset"
+          }
+        },
+        "scheme": "doi"
+      }
+    ],
+    "resource_type": {
+      "id": "dataset",
+      "title": {
+        "de": "Datensatz",
+        "en": "Dataset"
+      }
+    },
+    "rights": [
+      {
+        "description": {
+          "en": "The Creative Commons Attribution license allows re-distribution and re-use of a licensed work on the condition that the creator is appropriately credited."
+        },
+        "icon": "cc-by-icon",
+        "id": "cc-by-4.0",
+        "props": {
+          "scheme": "spdx",
+          "url": "https://creativecommons.org/licenses/by/4.0/legalcode"
+        },
+        "title": {
+          "en": "Creative Commons Attribution 4.0 International"
+        }
+      }
+    ],
+    "subjects": [
+      {
+        "subject": "climate change"
+      },
+      {
+        "subject": "greenhouse gas"
+      },
+      {
+        "subject": "CO2"
+      },
+      {
+        "subject": "N2O"
+      },
+      {
+        "subject": "CH4"
+      },
+      {
+        "subject": "Fluorinated gases"
+      }
+    ],
+    "title": "The PRIMAP-hist national historical emissions time series (1750-2023) v2.6.1",
+    "version": "v2.6.1"
+  },
+  "parent": {
+    "access": {
+      "owned_by": {
+        "user": "90196"
+      },
+      "settings": {
+        "accept_conditions_text": null,
+        "allow_guest_requests": false,
+        "allow_user_requests": false,
+        "secret_link_expiration": 0
+      }
+    },
+    "communities": {
+      "entries": [
+        {
+          "access": {
+            "member_policy": "open",
+            "members_visibility": "public",
+            "record_submission_policy": "open",
+            "review_policy": "open",
+            "visibility": "public"
+          },
+          "children": {
+            "allow": false
+          },
+          "created": "2015-03-18T17:11:12+00:00",
+          "custom_fields": {},
+          "deletion_status": {
+            "is_deleted": false,
+            "status": "P"
+          },
+          "id": "23341c30-18a7-4dc9-8662-70798a0bd19a",
+          "links": {},
+          "metadata": {
+            "curation_policy": "This community accepts data and software releases related to climate change associated with the publication of peer-reviewed scientific journal articles. ",
+            "description": "The goal of this community is to assemble data and code releases associated with the publication of peer-reviewed scientific journal articles.",
+            "page": "",
+            "title": "Climate Change"
+          },
+          "revision_id": 0,
+          "slug": "climatechange",
+          "updated": "2015-05-08T20:21:20+00:00"
+        },
+        {
+          "access": {
+            "member_policy": "open",
+            "members_visibility": "public",
+            "record_submission_policy": "open",
+            "review_policy": "open",
+            "visibility": "public"
+          },
+          "children": {
+            "allow": false
+          },
+          "created": "2020-11-19T07:53:14.655778+00:00",
+          "custom_fields": {},
+          "deletion_status": {
+            "is_deleted": false,
+            "status": "P"
+          },
+          "id": "3bf50958-5b9a-4b99-8914-297f53908bd4",
+          "links": {},
+          "metadata": {
+            "description": "zenodo Community for the Potsdam Institute for Climate Impact Research (PIK) / Potsdam-Institut f\u00fcr Klimafolgenforschung, a member of the Leibniz Association and a leader in its field.",
+            "organizations": [
+              {
+                "id": "03e8s1d88"
+              }
+            ],
+            "title": "Potsdam Institute for Climate Impact Research (PIK)",
+            "type": {
+              "id": "organization"
+            },
+            "website": "https://www.pik-potsdam.de"
+          },
+          "revision_id": 2,
+          "slug": "pikpotsdam",
+          "updated": "2024-12-12T12:32:05.779008+00:00"
+        }
+      ],
+      "ids": [
+        "23341c30-18a7-4dc9-8662-70798a0bd19a",
+        "3bf50958-5b9a-4b99-8914-297f53908bd4"
+      ]
+    },
+    "id": "4479171",
+    "pids": {
+      "doi": {
+        "client": "datacite",
+        "identifier": "10.5281/zenodo.4479171",
+        "provider": "datacite"
+      }
+    }
+  },
+  "pids": {
+    "doi": {
+      "client": "datacite",
+      "identifier": "10.5281/zenodo.15016289",
+      "provider": "datacite"
+    },
+    "oai": {
+      "identifier": "oai:zenodo.org:15016289",
+      "provider": "oai"
+    }
+  },
+  "revision_id": 6,
+  "stats": {
+    "all_versions": {
+      "data_volume": 3317616342635.0,
+      "downloads": 75176,
+      "unique_downloads": 63986,
+      "unique_views": 55011,
+      "views": 62330
+    },
+    "this_version": {
+      "data_volume": 315613554980.0,
+      "downloads": 5393,
+      "unique_downloads": 5049,
+      "unique_views": 3531,
+      "views": 4179
+    }
+  },
+  "status": "published",
+  "swh": {},
+  "updated": "2025-09-10T06:13:20.453660+00:00",
+  "versions": {
+    "index": 10,
+    "is_latest": false
+  }
+}

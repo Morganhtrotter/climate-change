@@ -1,5 +1,6 @@
 <script setup>
 import TemperatureChart from './components/TemperatureChart.vue'
+import GreenhouseGasChart from './components/GreenhouseGasChart.vue'
 </script>
 
 <template>
@@ -21,10 +22,24 @@ import TemperatureChart from './components/TemperatureChart.vue'
                 </p>
                 <TemperatureChart />
             </section>
+
+            <section class="section">
+                <h2 class="section-title">Global greenhouse gas emissions (EARTH)</h2>
+                <p class="section-description">
+                    Annual emissions for the PRIMAP-hist aggregate <strong>EARTH</strong> (world
+                    total), shown as the Kyoto basket in CO₂ equivalent using AR5 GWP100. The dashed
+                    line marks the 1951–1980 average of that series so you can see how quickly totals
+                    have risen past the mid‑century baseline.
+                </p>
+                <GreenhouseGasChart />
+            </section>
         </main>
 
         <footer class="footer">
-            <p>Data: NASA GISS Land-Ocean Temperature Index (GLB.Ts+dSST). Portfolio piece.</p>
+            <p>
+                Data: NASA GISS Land-Ocean Temperature Index (GLB.Ts+dSST); PRIMAP-hist v2.6.1
+                (Zenodo 15016289) for global GHG totals. Portfolio piece.
+            </p>
         </footer>
     </div>
 </template>

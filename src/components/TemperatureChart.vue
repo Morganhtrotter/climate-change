@@ -123,8 +123,7 @@ function renderChart(container, data, isMonthly) {
     const tooltip = tooltipEl.value
     if (!tooltip) return
 
-    const overlay = g
-        .append('rect')
+    g.append('rect')
         .attr('class', 'chart-overlay')
         .attr('width', width)
         .attr('height', height)
