@@ -1,6 +1,7 @@
 <script setup>
 import TemperatureChart from './components/TemperatureChart.vue'
 import GreenhouseGasChart from './components/GreenhouseGasChart.vue'
+import WorldEmissionsMap from './components/WorldEmissionsMap.vue'
 </script>
 
 <template>
@@ -32,6 +33,16 @@ import GreenhouseGasChart from './components/GreenhouseGasChart.vue'
                     have risen past the mid‑century baseline.
                 </p>
                 <GreenhouseGasChart />
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Country greenhouse gas emissions world map</h2>
+                <p class="section-description">
+                    Annual country-level greenhouse gas totals from PRIMAP-hist (Kyoto basket, AR5
+                    GWP100). Use the year slider to see how national emissions patterns shift over
+                    time, then hover a country for gas-level details in the tooltip.
+                </p>
+                <WorldEmissionsMap />
             </section>
         </main>
 
