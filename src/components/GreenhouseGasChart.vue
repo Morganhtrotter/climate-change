@@ -259,9 +259,10 @@ function renderChart(container, data, baselineGg) {
             }).join('')
 
             tooltip.innerHTML = `
-                <span class="tooltip-header">annual</span>
-                <span class="tooltip-year">${escapeHtml(String(point.year))}</span>
-                <span class="tooltip-area">Aggregate: ${escapeHtml('EARTH')}</span>
+                <div class="tooltip-top-row">
+                    <span class="tooltip-area">Aggregate: ${escapeHtml('EARTH')}</span>
+                    <span class="tooltip-year">${escapeHtml(String(point.year))}</span>
+                </div>
                 <span class="tooltip-total">Total (Kyoto, AR5): ${escapeHtml(fmtGt(totalGt))} Gt CO₂-eq / yr</span>
                 <span class="tooltip-sub">By gas</span>
                 <ul class="tooltip-breakdown">${rows}</ul>
@@ -396,6 +397,7 @@ onBeforeUnmount(() => {
     stroke: var(--color-muted);
     stroke-width: 1;
     stroke-opacity: 0.9;
+    stroke-dasharray: 6 4;
     pointer-events: none;
 }
 
@@ -439,19 +441,21 @@ figcaption a {
     max-width: min(320px, calc(100vw - 24px));
 }
 
-.chart-tooltip.chart-tooltip--ghg .tooltip-header {
-    display: block;
-    font-size: 0.7rem;
-    text-transform: lowercase;
-    letter-spacing: 0.04em;
-    opacity: 0.9;
-    margin-bottom: 0.15rem;
+.chart-tooltip.chart-tooltip--ghg .tooltip-top-row {
+    margin-bottom: 0.35rem;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-top-row .tooltip-area {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+    text-align: left;
 }
 
 .chart-tooltip.chart-tooltip--ghg .tooltip-year {
     display: block;
     font-weight: 600;
-    margin-bottom: 0.2rem;
+    margin-bottom: 0;
 }
 
 .chart-tooltip.chart-tooltip--ghg .tooltip-area {

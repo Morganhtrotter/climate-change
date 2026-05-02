@@ -215,14 +215,14 @@ function renderChart(container, data, isMonthly) {
             hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
             const anomaly = point.anomaly
             const sign = anomaly >= 0 ? '+' : ''
-            const period = isMonthly ? point.monthName : 'Annual'
             const yearLabel = isMonthly ? `${point.monthName} ${point.year}` : String(point.year)
-            tooltip.innerHTML = `
-                <span class="tooltip-period">${period}</span>
-                <span class="tooltip-year">${yearLabel}</span>
-                <span class="tooltip-value">${sign}${anomaly.toFixed(2)}°C</span>
-                <span class="tooltip-label">Global mean temp. index</span>
-            `
+            const valueStr = `${sign}${anomaly.toFixed(2)}°C`
+            const topRow = isMonthly
+                ? `<div class="tooltip-top-row"><span class="tooltip-period">${point.monthName}</span><span class="tooltip-year">${yearLabel}</span></div>`
+                : `<div class="tooltip-top-row"><span class="tooltip-value">${valueStr}</span><span class="tooltip-year">${yearLabel}</span></div>`
+            tooltip.innerHTML = isMonthly
+                ? `${topRow}<span class="tooltip-value">${valueStr}</span><span class="tooltip-label">Global mean temp. index</span>`
+                : `${topRow}<span class="tooltip-label">Global mean temp. index</span>`
             const offset = 12
             const svgRect = svg.node()?.getBoundingClientRect()
             const ttRect = tooltip.getBoundingClientRect()
@@ -423,6 +423,7 @@ onBeforeUnmount(() => {
     stroke: var(--color-text);
     stroke-width: 1;
     stroke-opacity: 0.55;
+    stroke-dasharray: 4 4;
     pointer-events: none;
 }
 
@@ -473,6 +474,15 @@ figcaption {
     visibility: visible;
 }
 
+.chart-tooltip .tooltip-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+    margin-bottom: 0.15rem;
+}
+
 .chart-tooltip .tooltip-period {
     display: block;
     font-size: 0.7rem;
@@ -480,10 +490,28 @@ figcaption {
     margin-bottom: 0.1rem;
 }
 
+.chart-tooltip .tooltip-top-row .tooltip-period {
+    margin-bottom: 0;
+}
+
 .chart-tooltip .tooltip-year {
     display: block;
     font-weight: 600;
     margin-bottom: 0.15rem;
+}
+
+.chart-tooltip .tooltip-top-row .tooltip-year {
+    margin-bottom: 0;
+    margin-left: auto;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.chart-tooltip .tooltip-top-row .tooltip-value {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+    text-align: left;
 }
 
 .chart-tooltip .tooltip-value {
