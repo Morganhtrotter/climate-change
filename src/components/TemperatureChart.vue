@@ -60,13 +60,23 @@ function renderChart(container, data, isMonthly) {
         .call(xAxis)
 
     const zeroY = y(0)
-    if (zeroY >= 0 && zeroY <= height) {
-        g.append('line')
+    const baselineInView = zeroY >= 0 && zeroY <= height
+    const BASELINE_HIT_PX = 10
+    let baselineLine = null
+    let baselineLabel = null
+    let refLine1951 = null
+    let refLine1980 = null
+    let refYearLabel1951 = null
+    let refYearLabel1980 = null
+    if (baselineInView) {
+        baselineLine = g
+            .append('line')
             .attr('class', 'baseline')
             .attr('x1', 0)
             .attr('x2', width)
             .attr('y1', zeroY)
             .attr('y2', zeroY)
+            .attr('stroke-dasharray', '4 4')
     }
 
     const minAnomaly = d3.min(data, (d) => d.anomaly)
@@ -106,6 +116,55 @@ function renderChart(container, data, isMonthly) {
         .attr('stroke-linecap', 'round')
         .attr('stroke-linejoin', 'round')
 
+    if (baselineInView && baselineLine) {
+        baselineLabel = g
+            .append('text')
+            .attr('class', 'baseline-label')
+            .attr('x', width - 4)
+            .attr('y', zeroY - 6)
+            .attr('text-anchor', 'end')
+            .attr('dominant-baseline', 'auto')
+            .attr('visibility', 'hidden')
+            .text('1951–1980 average')
+        const x1951 = isMonthly ? x(new Date(1951, 0, 1)) : x(1951)
+        const x1980 = isMonthly ? x(new Date(1980, 0, 1)) : x(1980)
+        refLine1951 = g
+            .append('line')
+            .attr('class', 'baseline-ref-year')
+            .attr('y1', 0)
+            .attr('y2', height)
+            .attr('x1', x1951)
+            .attr('x2', x1951)
+            .attr('visibility', 'hidden')
+        refLine1980 = g
+            .append('line')
+            .attr('class', 'baseline-ref-year')
+            .attr('y1', 0)
+            .attr('y2', height)
+            .attr('x1', x1980)
+            .attr('x2', x1980)
+            .attr('visibility', 'hidden')
+        const refYearLabelY = height - 8
+        refYearLabel1951 = g
+            .append('text')
+            .attr('class', 'baseline-ref-year-label')
+            .attr('x', x1951 + 4)
+            .attr('y', refYearLabelY)
+            .attr('text-anchor', 'start')
+            .attr('dominant-baseline', 'auto')
+            .attr('visibility', 'hidden')
+            .text('1951')
+        refYearLabel1980 = g
+            .append('text')
+            .attr('class', 'baseline-ref-year-label')
+            .attr('x', x1980 + 4)
+            .attr('y', refYearLabelY)
+            .attr('text-anchor', 'start')
+            .attr('dominant-baseline', 'auto')
+            .attr('visibility', 'hidden')
+            .text('1980')
+    }
+
     const bisect = isMonthly
         ? d3.bisector((d) => d.date).left
         : d3.bisector((d) => d.year).left
@@ -131,7 +190,24 @@ function renderChart(container, data, isMonthly) {
         .attr('pointer-events', 'all')
         .on('mouseenter', () => tooltip.classList.add('visible'))
         .on('mousemove', function (event) {
-            const [mx] = d3.pointer(event, this)
+            const [mx, my] = d3.pointer(event, this)
+            const onBaseline =
+                baselineLine && baselineLabel && Math.abs(my - zeroY) <= BASELINE_HIT_PX
+            if (onBaseline) {
+                baselineLine.attr('stroke-dasharray', null)
+                baselineLabel.attr('visibility', 'visible')
+                refLine1951?.attr('visibility', 'visible')
+                refLine1980?.attr('visibility', 'visible')
+                refYearLabel1951?.attr('visibility', 'visible')
+                refYearLabel1980?.attr('visibility', 'visible')
+            } else if (baselineLine && baselineLabel) {
+                baselineLine.attr('stroke-dasharray', '4 4')
+                baselineLabel.attr('visibility', 'hidden')
+                refLine1951?.attr('visibility', 'hidden')
+                refLine1980?.attr('visibility', 'hidden')
+                refYearLabel1951?.attr('visibility', 'hidden')
+                refYearLabel1980?.attr('visibility', 'hidden')
+            }
             const xVal = x.invert(mx)
             const i = Math.max(0, Math.min(bisect(data, xVal), data.length - 1))
             const point = data[i]
@@ -168,6 +244,14 @@ function renderChart(container, data, isMonthly) {
         .on('mouseleave', () => {
             hoverLine.attr('visibility', 'hidden')
             tooltip.classList.remove('visible')
+            if (baselineLine && baselineLabel) {
+                baselineLine.attr('stroke-dasharray', '4 4')
+                baselineLabel.attr('visibility', 'hidden')
+            }
+            refLine1951?.attr('visibility', 'hidden')
+            refLine1980?.attr('visibility', 'hidden')
+            refYearLabel1951?.attr('visibility', 'hidden')
+            refYearLabel1980?.attr('visibility', 'hidden')
         })
 }
 
@@ -324,8 +408,31 @@ onBeforeUnmount(() => {
 
 .chart-container :deep(.baseline) {
     stroke: var(--color-text);
-    stroke-dasharray: 4 4;
     stroke-opacity: 0.5;
+}
+
+.chart-container :deep(.baseline-label) {
+    fill: var(--color-text);
+    font-size: 0.68rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.chart-container :deep(.baseline-ref-year) {
+    stroke: var(--color-text);
+    stroke-width: 1;
+    stroke-opacity: 0.55;
+    pointer-events: none;
+}
+
+.chart-container :deep(.baseline-ref-year-label) {
+    fill: var(--color-text);
+    font-size: 0.68rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 600;
+    pointer-events: none;
+    opacity: 0.85;
 }
 
 .chart-container :deep(.line) {
