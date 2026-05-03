@@ -19,12 +19,12 @@ const BREAKDOWN_ORDER = [
 
 /** Matches stacked hover column and tooltip gas labels. */
 const GAS_COLOR = {
-    co2: '#5d6d7e',
+    co2: '#c0392b',
     ch4: '#e67e22',
     n2o: '#8e44ad',
     hfcs: '#16a085',
     pfcs: '#2980b9',
-    sf6: '#c0392b',
+    sf6: '#5d6d7e',
     nf3: '#27ae60',
 }
 
