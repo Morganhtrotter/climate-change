@@ -17,6 +17,19 @@ const BREAKDOWN_ORDER = [
     ['nf3', 'NF₃', 'Gt NF₃ / yr'],
 ]
 
+/** Matches stacked hover column and tooltip gas labels. */
+const GAS_COLOR = {
+    co2: '#5d6d7e',
+    ch4: '#e67e22',
+    n2o: '#8e44ad',
+    hfcs: '#16a085',
+    pfcs: '#2980b9',
+    sf6: '#c0392b',
+    nf3: '#27ae60',
+}
+
+const HOVER_STACK_WIDTH = 10
+
 /** IPCC AR5 Table 8.A.1, 100-yr GWP (no climate–carbon feedback). HFC/PFC rows are already CO₂-eq in PRIMAP. */
 const GWP_AR5_100 = {
     co2: 1,
@@ -202,6 +215,13 @@ function renderChart(container, data, baselineGg) {
             .text('1980')
     }
 
+    const hoverStack = g
+        .append('g')
+        .attr('class', 'hover-stack')
+        .attr('visibility', 'hidden')
+        .attr('aria-hidden', 'true')
+        .style('pointer-events', 'none')
+
     const hoverLine = g
         .append('line')
         .attr('class', 'hover-line')
@@ -249,23 +269,77 @@ function renderChart(container, data, baselineGg) {
             hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
 
             const totalGt = ggToGt(point.total)
-            const rows = BREAKDOWN_ORDER.map(([key, sym, unit]) => {
+            const rows = BREAKDOWN_ORDER.map(([key, sym]) => {
                 const raw = point.breakdown?.[key]
                 if (raw == null) return ''
-                const gtRaw = ggToGt(raw)
                 const gtCo2e = ggToGt(breakdownGgToGgCo2e(key, raw))
-                const co2eLabel = `(${fmtGt(gtCo2e)} Gt CO₂-eq/yr)`
-                return `<li><span class="tt-gas">${escapeHtml(sym)}</span> <span class="tt-amt">${escapeHtml(fmtGt(gtRaw))}</span> <span class="tt-unit">${escapeHtml(unit)}</span> <span class="tt-co2e">${escapeHtml(co2eLabel)}</span></li>`
+                const col = GAS_COLOR[key] || '#888'
+                return `<li><span class="tt-gas" style="color:${col}">${escapeHtml(sym)}</span> <span class="tt-co2e">${escapeHtml(fmtGt(gtCo2e))} Gt CO₂-eq / yr</span></li>`
             }).join('')
+
+            const yTotal = y(totalGt)
+            const stackSpan = height - yTotal
+            if (
+                !Number.isFinite(yTotal) ||
+                stackSpan <= 0 ||
+                totalGt <= 0 ||
+                !Number.isFinite(totalGt)
+            ) {
+                hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
+            } else {
+                const parts = []
+                for (const [key] of BREAKDOWN_ORDER) {
+                    const raw = point.breakdown?.[key]
+                    if (raw == null) continue
+                    const v = ggToGt(breakdownGgToGgCo2e(key, raw))
+                    parts.push({ key, v })
+                }
+                if (!parts.length) {
+                    hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
+                } else {
+                    const heights = parts.map(({ v }) => (v / totalGt) * stackSpan)
+                    const hSum = d3.sum(heights)
+                    heights[heights.length - 1] += stackSpan - hSum
+
+                    const xLeft = xPos - HOVER_STACK_WIDTH / 2
+                    let acc = 0
+                    const rects = parts.map((p, i) => {
+                        const h = Math.max(0, heights[i])
+                        const yRect = height - acc - h
+                        acc += h
+                        return {
+                            key: p.key,
+                            x: xLeft,
+                            y: yRect,
+                            w: HOVER_STACK_WIDTH,
+                            h,
+                        }
+                    })
+
+                    hoverStack.attr('visibility', 'visible')
+                    hoverStack
+                        .selectAll('rect')
+                        .data(rects)
+                        .join('rect')
+                        .attr('x', (d) => d.x)
+                        .attr('y', (d) => d.y)
+                        .attr('width', (d) => d.w)
+                        .attr('height', (d) => d.h)
+                        .attr('fill', (d) => GAS_COLOR[d.key] || '#888')
+                        .attr('stroke', 'var(--color-border)')
+                        .attr('stroke-width', 0.75)
+                }
+            }
 
             tooltip.innerHTML = `
                 <div class="tooltip-top-row">
-                    <span class="tooltip-area">Aggregate: ${escapeHtml('EARTH')}</span>
+                    <div class="tooltip-ghg-main">
+                        <span class="tooltip-total">${escapeHtml(fmtGt(totalGt))} Gt CO₂-eq / yr</span>
+                        <span class="tooltip-sub">By gas</span>
+                        <ul class="tooltip-breakdown">${rows}</ul>
+                    </div>
                     <span class="tooltip-year">${escapeHtml(String(point.year))}</span>
                 </div>
-                <span class="tooltip-total">Total (Kyoto, AR5): ${escapeHtml(fmtGt(totalGt))} Gt CO₂-eq / yr</span>
-                <span class="tooltip-sub">By gas</span>
-                <ul class="tooltip-breakdown">${rows}</ul>
             `
 
             const offset = 12
@@ -288,6 +362,7 @@ function renderChart(container, data, baselineGg) {
         })
         .on('mouseleave', () => {
             hoverLine.attr('visibility', 'hidden')
+            hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
             tooltip.classList.remove('visible')
             if (baselineLine && baselineLabel) {
                 baselineLine.attr('stroke-dasharray', '6 4')
@@ -359,6 +434,10 @@ onBeforeUnmount(() => {
 }
 
 .chart-container :deep(.hover-line) {
+    pointer-events: none;
+}
+
+.chart-container :deep(.hover-stack) {
     pointer-events: none;
 }
 
@@ -442,27 +521,26 @@ figcaption a {
 }
 
 .chart-tooltip.chart-tooltip--ghg .tooltip-top-row {
-    margin-bottom: 0.35rem;
+    margin-bottom: 0;
+    align-items: flex-start;
 }
 
-.chart-tooltip.chart-tooltip--ghg .tooltip-top-row .tooltip-area {
+.chart-tooltip.chart-tooltip--ghg .tooltip-ghg-main {
     flex: 1;
     min-width: 0;
-    margin-bottom: 0;
-    text-align: left;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-top-row .tooltip-year {
+    margin-left: auto;
+    flex-shrink: 0;
+    text-align: right;
 }
 
 .chart-tooltip.chart-tooltip--ghg .tooltip-year {
     display: block;
     font-weight: 600;
     margin-bottom: 0;
-}
-
-.chart-tooltip.chart-tooltip--ghg .tooltip-area {
-    display: block;
-    font-size: 0.75rem;
-    margin-bottom: 0.35rem;
-    opacity: 0.95;
+    line-height: 1.2;
 }
 
 .chart-tooltip.chart-tooltip--ghg .tooltip-total {
@@ -489,14 +567,8 @@ figcaption a {
     line-height: 1.45;
 }
 
-.chart-tooltip.chart-tooltip--ghg .tt-unit {
-    opacity: 0.75;
-    font-size: 0.68rem;
-}
-
 .chart-tooltip.chart-tooltip--ghg .tt-co2e {
-    opacity: 0.88;
-    font-size: 0.72rem;
+    opacity: 0.95;
     white-space: nowrap;
 }
 </style>

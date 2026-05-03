@@ -1,17 +1,12 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as d3 from 'd3'
-
-const MONTH_COLS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 const chartRef = ref(null)
 const tooltipEl = ref(null)
-const viewMode = ref('annual')
 let annualData = []
-let monthlyData = []
-let renderChartFn = null
 
-function renderChart(container, data, isMonthly) {
+function renderChart(container, data) {
     if (!container || !data.length) return
     d3.select(container).selectAll('*').remove()
 
@@ -19,9 +14,7 @@ function renderChart(container, data, isMonthly) {
     const width = Math.max(320, container.clientWidth) - margin.left - margin.right
     const height = 360 - margin.top - margin.bottom
 
-    const x = isMonthly
-        ? d3.scaleTime().domain(d3.extent(data, (d) => d.date)).range([0, width])
-        : d3.scaleLinear().domain(d3.extent(data, (d) => d.year)).range([0, width])
+    const x = d3.scaleLinear().domain(d3.extent(data, (d) => d.year)).range([0, width])
     const yExtent = d3.extent(data, (d) => d.anomaly)
     const yPadding = 0.15
     const yMin = Math.min(yExtent[0], 0) - yPadding
@@ -30,7 +23,7 @@ function renderChart(container, data, isMonthly) {
 
     const line = d3
         .line()
-        .x((d) => (isMonthly ? x(d.date) : x(d.year)))
+        .x((d) => x(d.year))
         .y((d) => y(d.anomaly))
         .curve(d3.curveMonotoneX)
 
@@ -49,9 +42,7 @@ function renderChart(container, data, isMonthly) {
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
 
     const yAxis = d3.axisLeft(y).ticks(6).tickFormat((v) => `${v}°C`)
-    const xAxis = isMonthly
-        ? d3.axisBottom(x).ticks(10).tickFormat(d3.timeFormat('%Y'))
-        : d3.axisBottom(x).ticks(10).tickFormat(d3.format('d'))
+    const xAxis = d3.axisBottom(x).ticks(10).tickFormat(d3.format('d'))
 
     g.append('g').attr('class', 'axis axis-y').call(yAxis)
     g.append('g')
@@ -81,7 +72,7 @@ function renderChart(container, data, isMonthly) {
 
     const minAnomaly = d3.min(data, (d) => d.anomaly)
     const maxAnomaly = d3.max(data, (d) => d.anomaly)
-    const gradientId = `temp-gradient-${isMonthly ? 'monthly' : 'annual'}`
+    const gradientId = 'temp-gradient-annual'
     const defs = g.append('defs')
     const gradient = defs
         .append('linearGradient')
@@ -96,7 +87,7 @@ function renderChart(container, data, isMonthly) {
 
     const area = d3
         .area()
-        .x((d) => (isMonthly ? x(d.date) : x(d.year)))
+        .x((d) => x(d.year))
         .y0(height)
         .y1((d) => y(d.anomaly))
         .curve(d3.curveMonotoneX)
@@ -126,8 +117,8 @@ function renderChart(container, data, isMonthly) {
             .attr('dominant-baseline', 'auto')
             .attr('visibility', 'hidden')
             .text('1951–1980 average')
-        const x1951 = isMonthly ? x(new Date(1951, 0, 1)) : x(1951)
-        const x1980 = isMonthly ? x(new Date(1980, 0, 1)) : x(1980)
+        const x1951 = x(1951)
+        const x1980 = x(1980)
         refLine1951 = g
             .append('line')
             .attr('class', 'baseline-ref-year')
@@ -165,9 +156,7 @@ function renderChart(container, data, isMonthly) {
             .text('1980')
     }
 
-    const bisect = isMonthly
-        ? d3.bisector((d) => d.date).left
-        : d3.bisector((d) => d.year).left
+    const bisect = d3.bisector((d) => d.year).left
     const hoverLine = g
         .append('line')
         .attr('class', 'hover-line')
@@ -211,18 +200,14 @@ function renderChart(container, data, isMonthly) {
             const xVal = x.invert(mx)
             const i = Math.max(0, Math.min(bisect(data, xVal), data.length - 1))
             const point = data[i]
-            const xPos = isMonthly ? x(point.date) : x(point.year)
+            const xPos = x(point.year)
             hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
             const anomaly = point.anomaly
             const sign = anomaly >= 0 ? '+' : ''
-            const yearLabel = isMonthly ? `${point.monthName} ${point.year}` : String(point.year)
+            const yearLabel = String(point.year)
             const valueStr = `${sign}${anomaly.toFixed(2)}°C`
-            const topRow = isMonthly
-                ? `<div class="tooltip-top-row"><span class="tooltip-period">${point.monthName}</span><span class="tooltip-year">${yearLabel}</span></div>`
-                : `<div class="tooltip-top-row"><span class="tooltip-value">${valueStr}</span><span class="tooltip-year">${yearLabel}</span></div>`
-            tooltip.innerHTML = isMonthly
-                ? `${topRow}<span class="tooltip-value">${valueStr}</span><span class="tooltip-label">Global mean temp. index</span>`
-                : `${topRow}<span class="tooltip-label">Global mean temp. index</span>`
+            const topRow = `<div class="tooltip-top-row"><span class="tooltip-value">${valueStr}</span><span class="tooltip-year">${yearLabel}</span></div>`
+            tooltip.innerHTML = `${topRow}<span class="tooltip-label">Global mean temp. index</span>`
             const offset = 12
             const svgRect = svg.node()?.getBoundingClientRect()
             const ttRect = tooltip.getBoundingClientRect()
@@ -267,25 +252,6 @@ onMounted(async () => {
         .map((d) => ({ year: +d.Year, anomaly: +d['J-D'] }))
         .sort((a, b) => a.year - b.year)
 
-    monthlyData = []
-    for (const row of parsed) {
-        const year = row.Year ? +row.Year : null
-        if (year == null) continue
-        for (let m = 0; m < MONTH_COLS.length; m++) {
-            const val = row[MONTH_COLS[m]]
-            if (val != null && val !== '***') {
-                monthlyData.push({
-                    date: new Date(year, m, 1),
-                    year,
-                    month: m + 1,
-                    monthName: MONTH_COLS[m],
-                    anomaly: +val,
-                })
-            }
-        }
-    }
-    monthlyData.sort((a, b) => a.date - b.date)
-
     if (!chartRef.value) return
 
     const tooltip = document.createElement('div')
@@ -294,15 +260,7 @@ onMounted(async () => {
     document.body.appendChild(tooltip)
     tooltipEl.value = tooltip
 
-    renderChartFn = () => {
-        const data = viewMode.value === 'monthly' ? monthlyData : annualData
-        renderChart(chartRef.value, data, viewMode.value === 'monthly')
-    }
-    renderChart(chartRef.value, annualData, false)
-})
-
-watch(viewMode, () => {
-    if (renderChartFn && chartRef.value) renderChartFn()
+    renderChart(chartRef.value, annualData)
 })
 
 onBeforeUnmount(() => {
@@ -317,26 +275,6 @@ onBeforeUnmount(() => {
         class="temperature-chart"
         aria-label="Global land-ocean temperature anomaly from 1880 to present"
     >
-        <div class="chart-controls">
-            <div class="pill-toggle" role="group" aria-label="Data view">
-                <button
-                    type="button"
-                    class="pill-option"
-                    :class="{ active: viewMode === 'annual' }"
-                    @click="viewMode = 'annual'"
-                >
-                    Annual mean
-                </button>
-                <button
-                    type="button"
-                    class="pill-option"
-                    :class="{ active: viewMode === 'monthly' }"
-                    @click="viewMode = 'monthly'"
-                >
-                    Monthly mean
-                </button>
-            </div>
-        </div>
         <div ref="chartRef" class="chart-container"></div>
         <figcaption>
             <strong>Source:</strong> NASA GISS — Land-Ocean Temperature Index. Anomalies relative to
@@ -349,40 +287,6 @@ onBeforeUnmount(() => {
 .temperature-chart {
     margin: 0;
     width: 100%;
-}
-
-.chart-controls {
-    margin-bottom: 1rem;
-}
-
-.pill-toggle {
-    display: inline-flex;
-    padding: 3px;
-    background: var(--color-border);
-    border-radius: 9999px;
-    gap: 0;
-}
-
-.pill-option {
-    padding: 0.4rem 1rem;
-    font-size: 0.85rem;
-    font-family: inherit;
-    font-weight: 500;
-    color: var(--color-muted);
-    background: transparent;
-    border: none;
-    border-radius: 9999px;
-    cursor: pointer;
-    transition: color 0.15s ease, background 0.15s ease;
-}
-
-.pill-option:hover {
-    color: var(--color-text);
-}
-
-.pill-option.active {
-    color: var(--color-bg);
-    background: var(--color-text);
 }
 
 .chart-container {
@@ -481,17 +385,6 @@ figcaption {
     gap: 0.75rem;
     width: 100%;
     margin-bottom: 0.15rem;
-}
-
-.chart-tooltip .tooltip-period {
-    display: block;
-    font-size: 0.7rem;
-    opacity: 0.9;
-    margin-bottom: 0.1rem;
-}
-
-.chart-tooltip .tooltip-top-row .tooltip-period {
-    margin-bottom: 0;
 }
 
 .chart-tooltip .tooltip-year {
