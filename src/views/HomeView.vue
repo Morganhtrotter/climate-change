@@ -93,7 +93,7 @@ onUnmounted(() => {
                 <div class="carousel-slide" :aria-hidden="activeSlide !== 0">
                     <div class="slide-inner">
                         <section class="section">
-                            <h2 class="section-title">Global land–ocean temperature anomaly</h2>
+                            <h2 class="section-title">Global Land-Ocean Temperature Anomaly</h2>
                             <p class="section-description">
                                 Annual mean temperature anomaly in °C relative to the 1951–1980 average.
                                 Values above zero indicate a warmer world; the trend over the last decades
@@ -107,12 +107,12 @@ onUnmounted(() => {
                 <div class="carousel-slide" :aria-hidden="activeSlide !== 1">
                     <div class="slide-inner">
                         <section class="section">
-                            <h2 class="section-title">Global greenhouse gas emissions (EARTH)</h2>
+                            <h2 class="section-title">Global Greenhouse Gas Emissions (EARTH)</h2>
                             <p class="section-description">
                                 Annual emissions for the PRIMAP-hist aggregate <strong>EARTH</strong> (world
                                 total), shown as the Kyoto basket in CO₂ equivalent using AR5 GWP100. The
-                                dashed line marks the 1951–1980 average of that series so you can see how
-                                quickly totals have risen past the mid‑century baseline.
+                                dashed line marks the 1951-1980 average of that series so you can see how
+                                quickly totals have risen past the mid-century baseline.
                             </p>
                             <GreenhouseGasChart />
                         </section>
@@ -126,7 +126,7 @@ onUnmounted(() => {
                     <div class="slide-inner slide-inner--last">
                         <div class="slide-scroll">
                             <section class="section">
-                                <h2 class="section-title">Country greenhouse gas emissions world map</h2>
+                                <h2 class="section-title">Country Greenhouse Gas Emissions World Map</h2>
                                 <p class="section-description">
                                     Annual country-level greenhouse gas totals from PRIMAP-hist (Kyoto basket,
                                     AR5 GWP100). Use the year slider to see how national emissions patterns shift
@@ -201,7 +201,7 @@ onUnmounted(() => {
 }
 
 .hero-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
     font-weight: 700;
     font-size: clamp(2rem, 5vw, 3rem);
     letter-spacing: -0.02em;
@@ -301,6 +301,7 @@ onUnmounted(() => {
     flex: 1;
     min-height: 0;
     max-height: 100%;
+    max-width: 1200px;
 }
 
 .slide-scroll {
@@ -310,11 +311,13 @@ onUnmounted(() => {
 }
 
 .section-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
     font-weight: 600;
     font-size: clamp(1.25rem, 2.5vw, 1.5rem);
     color: var(--color-heading);
-    margin: 0 0 0.5rem;
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-heading);
 }
 
 .section-description {

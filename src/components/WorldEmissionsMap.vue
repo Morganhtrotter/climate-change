@@ -32,7 +32,8 @@ const GWP_AR5_100 = {
 const EXCLUDED_AGGREGATE_AREAS = new Set(['LDC', 'ANT'])
 
 let geoFeatures = []
-let valuesByYear = {}
+/** Reactive so computeds refresh after async load (plain `let` would stay stale until `selectedYear` changes). */
+const valuesByYear = ref({})
 /** Official global total by year (Gg CO₂-eq / yr), same series as `GreenhouseGasChart`. */
 const earthOfficialGgByYear = ref({})
 let iso3ToContinent = {}
@@ -74,7 +75,7 @@ const minYear = computed(() => (availableYears.value.length ? availableYears.val
 const maxYear = computed(() =>
     availableYears.value.length ? availableYears.value[availableYears.value.length - 1] : 2023,
 )
-const currentYearValues = computed(() => valuesByYear[String(selectedYear.value)] ?? {})
+const currentYearValues = computed(() => valuesByYear.value[String(selectedYear.value)] ?? {})
 const earthTotalGt = computed(() => {
     const official = earthOfficialGgByYear.value[selectedYear.value]
     if (official != null && Number.isFinite(official)) return ggToGt(official)
@@ -117,7 +118,7 @@ const topCountries = computed(() =>
 function getCountryRecord(feature) {
     const iso3 = feature?.id
     if (!iso3) return null
-    return valuesByYear[String(selectedYear.value)]?.[iso3] ?? null
+    return valuesByYear.value[String(selectedYear.value)]?.[iso3] ?? null
 }
 
 function updateFills() {
@@ -156,32 +157,36 @@ function updateTooltip(event, feature) {
     const record = getCountryRecord(feature)
     if (!record) {
         tooltip.innerHTML = `
-            <span class="tooltip-header">annual</span>
-            <span class="tooltip-year">${escapeHtml(String(selectedYear.value))}</span>
-            <span class="tooltip-area">Country: ${escapeHtml(countryName)}</span>
-            <span class="tooltip-total">No reported value for this year</span>
+            <div class="tooltip-top-row">
+                <div class="tooltip-ghg-main">
+                    <span class="tooltip-map-area">${escapeHtml(countryName)}</span>
+                    <span class="tooltip-total">No reported value for this year</span>
+                </div>
+                <span class="tooltip-year">${escapeHtml(String(selectedYear.value))}</span>
+            </div>
         `
         positionTooltip(event)
         return
     }
 
     const totalGt = ggToGt(record.total)
-    const rows = BREAKDOWN_ORDER.map(([key, sym, unit]) => {
+    const rows = BREAKDOWN_ORDER.map(([key, sym]) => {
         const raw = record.breakdown?.[key]
         if (raw == null) return ''
-        const gtRaw = ggToGt(raw)
         const gtCo2e = ggToGt(breakdownGgToGgCo2e(key, raw))
-        const co2eLabel = `(${fmtGt(gtCo2e)} Gt CO₂-eq/yr)`
-        return `<li><span class="tt-gas">${escapeHtml(sym)}</span> <span class="tt-amt">${escapeHtml(fmtGt(gtRaw))}</span> <span class="tt-unit">${escapeHtml(unit)}</span> <span class="tt-co2e">${escapeHtml(co2eLabel)}</span></li>`
+        return `<li><span class="tt-gas">${escapeHtml(sym)}</span> <span class="tt-co2e">${escapeHtml(fmtGt(gtCo2e))} Gt CO₂-eq / yr</span></li>`
     }).join('')
 
     tooltip.innerHTML = `
-        <span class="tooltip-header">annual</span>
-        <span class="tooltip-year">${escapeHtml(String(selectedYear.value))}</span>
-        <span class="tooltip-area">Country: ${escapeHtml(countryName)}</span>
-        <span class="tooltip-total">Total (Kyoto, AR5): ${escapeHtml(fmtGt(totalGt))} Gt CO₂-eq / yr</span>
-        <span class="tooltip-sub">By gas</span>
-        <ul class="tooltip-breakdown">${rows}</ul>
+        <div class="tooltip-top-row">
+            <div class="tooltip-ghg-main">
+                <span class="tooltip-map-area">${escapeHtml(countryName)}</span>
+                <span class="tooltip-total">${escapeHtml(fmtGt(totalGt))} Gt CO₂-eq / yr</span>
+                <span class="tooltip-sub">By gas</span>
+                <ul class="tooltip-breakdown">${rows}</ul>
+            </div>
+            <span class="tooltip-year">${escapeHtml(String(selectedYear.value))}</span>
+        </div>
     `
     positionTooltip(event)
 }
@@ -306,7 +311,7 @@ onMounted(async () => {
     ])
 
     geoFeatures = worldData?.features ?? []
-    valuesByYear = emissionsData?.valuesByYear ?? {}
+    valuesByYear.value = emissionsData?.valuesByYear ?? {}
     earthOfficialGgByYear.value = Object.fromEntries(
         (earthPayload?.series ?? []).map((row) => [row.year, row.total]),
     )
@@ -322,7 +327,7 @@ onMounted(async () => {
 
     const totals = []
     for (const year of availableYears.value) {
-        const byCountry = valuesByYear[String(year)] || {}
+        const byCountry = valuesByYear.value[String(year)] || {}
         for (const countryValue of Object.values(byCountry)) {
             const total = countryValue?.total
             if (total != null && total > 0) totals.push(total)
@@ -363,55 +368,61 @@ onBeforeUnmount(() => {
 
 <template>
     <figure class="world-map" aria-label="Country-level greenhouse gas emissions world map">
-        <div class="stats-panel">
-            <div class="panel-head">
-                <span class="slider-label">Year: {{ yearLabel }}</span>
-                <button type="button" class="play-button" :aria-label="isPlaying ? 'Pause year playback' : 'Play year playback'" @click="togglePlayback">
-                    {{ isPlaying ? 'Pause' : 'Play' }}
-                </button>
+        <div class="world-map-layout">
+            <div class="stats-panel">
+                <div class="panel-head">
+                    <span class="slider-label">{{ yearLabel }}</span>
+                    <button type="button" class="play-button" :aria-label="isPlaying ? 'Pause year playback' : 'Play year playback'" @click="togglePlayback">
+                        {{ isPlaying ? 'Pause' : 'Play' }}
+                    </button>
+                </div>
+                <div class="totals-grid">
+                    <div class="total-card">
+                        <span class="total-label">EARTH total</span>
+                        <strong class="total-value">{{ fmtGt(earthTotalGt) }} Gt CO₂-eq / yr</strong>
+                    </div>
+                    <div class="total-card">
+                        <span class="total-label">Continents</span>
+                        <ul class="mini-list">
+                            <li v-for="row in continentTotals" :key="row.name">
+                                <span>{{ row.name }}</span>
+                                <strong>{{ fmtGt(row.totalGt) }}</strong>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="total-card">
+                        <span class="total-label">Top 5 countries</span>
+                        <ol class="mini-list ranked">
+                            <li v-for="row in topCountries" :key="row.iso3">
+                                <span>{{ row.name }}</span>
+                                <strong>{{ fmtGt(row.totalGt) }}</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
             </div>
-            <div class="totals-grid">
-                <div class="total-card">
-                    <span class="total-label">EARTH total</span>
-                    <strong class="total-value">{{ fmtGt(earthTotalGt) }} Gt CO₂-eq / yr</strong>
+            <div class="map-column">
+                <div class="map-controls">
+                    <label for="year-slider" class="slider-label sr-only">Year: {{ yearLabel }}</label>
+                    <input
+                        id="year-slider"
+                        v-model.number="selectedYear"
+                        type="range"
+                        class="year-slider"
+                        :min="minYear"
+                        :max="maxYear"
+                        step="1"
+                    />
                 </div>
-                <div class="total-card">
-                    <span class="total-label">Continents</span>
-                    <ul class="mini-list">
-                        <li v-for="row in continentTotals" :key="row.name">
-                            <span>{{ row.name }}</span>
-                            <strong>{{ fmtGt(row.totalGt) }}</strong>
-                        </li>
-                    </ul>
-                </div>
-                <div class="total-card">
-                    <span class="total-label">Top 5 countries</span>
-                    <ol class="mini-list ranked">
-                        <li v-for="row in topCountries" :key="row.iso3">
-                            <span>{{ row.name }}</span>
-                            <strong>{{ fmtGt(row.totalGt) }}</strong>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-        <div class="map-controls">
-            <label for="year-slider" class="slider-label sr-only">Year: {{ yearLabel }}</label>
-            <input
-                id="year-slider"
-                v-model.number="selectedYear"
-                type="range"
-                class="year-slider"
-                :min="minYear"
-                :max="maxYear"
-                step="1"
-            />
-        </div>
 
-        <div ref="chartRef" class="map-container"></div>
-        <div class="zoom-controls" aria-label="Map zoom controls">
-            <button type="button" class="zoom-button" aria-label="Zoom in" @click="zoomIn">+</button>
-            <button type="button" class="zoom-button" aria-label="Zoom out" @click="zoomOut">-</button>
+                <div class="map-wrap">
+                    <div ref="chartRef" class="map-container"></div>
+                    <div class="zoom-controls" aria-label="Map zoom controls">
+                        <button type="button" class="zoom-button" aria-label="Zoom in" @click="zoomIn">+</button>
+                        <button type="button" class="zoom-button" aria-label="Zoom out" @click="zoomOut">-</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <figcaption>
             <strong>Source:</strong>
@@ -429,18 +440,42 @@ onBeforeUnmount(() => {
     position: relative;
 }
 
+.world-map-layout {
+    display: flex;
+    align-items: stretch;
+    gap: 1rem;
+}
+
+.map-column {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 320px;
+}
+
 .map-controls {
     display: grid;
     gap: 0.35rem;
     margin-bottom: 0.9rem;
+    flex-shrink: 0;
 }
 
 .stats-panel {
+    flex: 0 0 min(280px, 34%);
+    max-width: 320px;
     border: 1px solid var(--color-border);
     border-radius: 10px;
     padding: 0.75rem;
-    margin-bottom: 0.65rem;
     background: var(--color-background-soft);
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
 }
 
 .panel-head {
@@ -452,9 +487,10 @@ onBeforeUnmount(() => {
 }
 
 .slider-label {
-    font-size: 0.9rem;
+    font-size: 1.8rem;
     color: var(--color-text);
     font-weight: 600;
+    padding-left: 0.5rem;
 }
 
 .play-button {
@@ -473,15 +509,17 @@ onBeforeUnmount(() => {
 }
 
 .totals-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 0.5rem;
+    flex: 1;
+    min-height: 0;
 }
 
 .total-card {
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    padding: 0.5rem 0.55rem;
+    padding: 0;
     background: var(--color-background);
 }
 
@@ -491,16 +529,20 @@ onBeforeUnmount(() => {
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--color-muted);
-    margin-bottom: 0.2rem;
+    padding: 0.5rem 0.5rem 0.2rem 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 0.4rem;
 }
 
 .total-value {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
+    padding: 0 0.5rem 0.5rem;
+    display: block;
 }
 
 .mini-list {
     margin: 0;
-    padding: 0;
+    padding: 0 0.5rem 0.5rem;
     list-style: none;
 }
 
@@ -515,7 +557,6 @@ onBeforeUnmount(() => {
 
 .mini-list.ranked {
     list-style: decimal inside;
-    padding-left: 0;
 }
 
 .mini-list.ranked li {
@@ -556,7 +597,7 @@ onBeforeUnmount(() => {
 .zoom-controls {
     position: absolute;
     left: 0.75rem;
-    bottom: 3.25rem;
+    bottom: 0.75rem;
     display: grid;
     gap: 0.35rem;
     z-index: 2;
@@ -591,5 +632,30 @@ figcaption code {
     padding: 0.1em 0.25em;
     border-radius: 4px;
     background: var(--color-background-mute);
+}
+
+@media (max-width: 720px) {
+    .world-map-layout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .stats-panel {
+        flex: none;
+        max-width: none;
+        width: 100%;
+    }
+}
+</style>
+
+<style>
+/* Tooltip is portaled to `document.body`; GHG modifiers live on GreenhouseGasChart — country label is map-only. */
+.chart-tooltip.chart-tooltip--ghg .tooltip-map-area {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+    opacity: 0.92;
 }
 </style>

@@ -51,7 +51,7 @@ import { RouterLink } from 'vue-router'
 }
 
 .explore-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
     font-weight: 700;
     font-size: clamp(1.75rem, 4vw, 2.25rem);
     color: var(--color-heading);
