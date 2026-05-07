@@ -12,19 +12,26 @@ import { RouterLink } from 'vue-router'
 
             <article class="explore-body">
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Climate change is not an abstract future risk; it is already reshaping weather,
+                    coastlines, agriculture, and health. Warmer air and oceans fuel more intense
+                    heat waves, storms, and shifting rainfall patterns. Understanding what is
+                    changing—and how fast—helps communities plan, holds decisions accountable to
+                    evidence, and makes the tradeoffs of action versus inaction easier to see.
                 </p>
                 <p>
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                    nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                    officia deserunt mollit anim id est laborum.
+                    For more than a century, human activities have added greenhouse gases such as
+                    carbon dioxide and methane to the atmosphere. Those gases trap outgoing heat, so
+                    more emissions mean more energy retained near the surface. Over decades, that
+                    relationship shows up clearly in the data: as cumulative emissions rise, global
+                    average temperature rises with them. Year-to-year weather still varies, but the
+                    long-term warming trend tracks the growth in greenhouse gases far more closely
+                    than it does natural cycles alone—one reason scientists treat fossil-fuel burning
+                    and land-use change as the main drivers of recent warming.
                 </p>
                 <p>
-                    Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et
-                    commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris.
-                    Integer mauris lacus, rhoncus neque eget, dignissim pretium nulla.
+                    This site collects charts and maps so you can explore those trends yourself—country
+                    by country, gas by gas, and year by year. The goal is straightforward: replace
+                    headlines with numbers you can inspect, compare, and reason about.
                 </p>
             </article>
         </div>
@@ -34,7 +41,7 @@ import { RouterLink } from 'vue-router'
 <style scoped>
 .explore {
     min-height: 100vh;
-    max-width: 42rem;
+    max-width: 1440px;
     margin: 0 auto;
     padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem);
 }

@@ -197,7 +197,7 @@ onUnmounted(() => {
 
 .hero {
     text-align: center;
-    max-width: 42rem;
+    max-width: 600px;
 }
 
 .hero-title {
@@ -229,7 +229,6 @@ onUnmounted(() => {
     font-weight: 600;
     padding: 0.65rem 1.75rem;
     border: 1px solid var(--color-border);
-    border-radius: 999px;
     background: var(--color-background-soft);
     color: var(--color-heading);
     cursor: pointer;
