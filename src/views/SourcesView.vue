@@ -11,6 +11,112 @@
                 </p>
             </header>
 
+            <section class="sources-section" aria-labelledby="why-heading">
+                <h2 id="why-heading" class="sources-h2">Why we chose these datasets</h2>
+                <p class="sources-body sources-lead">
+                    This site pairs a global temperature record with harmonized national emissions so that
+                    readers can relate observed warming to long-run greenhouse-gas trajectories using sources
+                    that are transparent, maintained, and widely used in climate science and policy analysis.
+                </p>
+
+                <div class="rationale-block">
+                    <h3 class="sources-h3">NASA climate data — GISS Surface Temperature Analysis (GISTEMP)</h3>
+                    <p class="sources-body">
+                        We use NASA’s Goddard Institute for Space Studies (GISS)
+                        <abbr title="GISS Surface Temperature Analysis">GISTEMP</abbr> land–ocean temperature
+                        index—the same family of products documented by NASA’s climate research program and
+                        featured across NASA Earth science communications (e.g.
+                        <a href="https://climate.nasa.gov/" rel="noopener noreferrer">NASA Climate</a> /
+                        Earth Observatory context)—because it is <strong>trusted</strong>: it is produced by a
+                        federal climate modeling group with a multi-decade publication record, consistent with
+                        methods described in the peer-reviewed literature. The series is
+                        <strong>updated frequently</strong> (GISS releases refreshed global-mean tables as new
+                        monthly station and ocean data become available; this project can refresh its local
+                        copy via the bundled script). It <strong>measures global temperature change since
+                        1880</strong>, providing a continuous century-scale context for recent warming. It is
+                        also <strong>among the most widely cited global temperature datasets</strong>, making
+                        comparisons with textbooks, assessments, and media reporting straightforward for readers
+                        checking our charts against other reputable analyses.
+                    </p>
+                </div>
+
+                <div class="rationale-block">
+                    <h3 class="sources-h3">PRIMAP-hist national historical emissions</h3>
+                    <p class="sources-body">
+                        We rely on PRIMAP-hist because it offers a <strong>single, peer-reviewed framework</strong>
+                        for comparing national emissions over the long run: the same gas and sector definitions
+                        (IPCC 2006), the same treatment of the Kyoto basket and GWP choices, and explicit
+                        scenarios such as <abbr title="country reported data priority">HISTCR</abbr> that
+                        prioritize official UNFCCC reporting while still gap-filling where inventories are
+                        incomplete. That makes it well suited to maps and time series that must be
+                        <strong>comparable across countries and decades</strong>, and it is widely used in
+                        academic and policy analyses—so readers can connect our figures to the broader
+                        literature on national mitigation and global totals.
+                    </p>
+                    <p class="sources-body">
+                        The PRIMAP-hist national historical emissions time series is a global climate-emissions
+                        dataset providing long-term, country-level greenhouse gas (GHG) emissions time series.
+                        It combines multiple official and research datasets to produce consistent, gap-filled
+                        trajectories for all major Kyoto gases and almost all countries from the preindustrial
+                        period to the present.
+                    </p>
+
+                    <h4 class="sources-h4">Key facts</h4>
+                    <dl class="key-facts">
+                        <dt>Domain</dt>
+                        <dd>National GHG emissions time series (climate emissions dataset)</dd>
+                        <dt>Temporal coverage</dt>
+                        <dd>1750–2024 (latest v2.7 release)</dd>
+                        <dt>Spatial coverage</dt>
+                        <dd>All UNFCCC Parties + most non-UNFCCC territories</dd>
+                        <dt>Gases</dt>
+                        <dd>CO₂, CH₄, N₂O, F-gases, Kyoto basket (multiple GWP metrics)</dd>
+                        <dt>Sectors</dt>
+                        <dd>
+                            IPCC 2006 categories (Energy, IPPU, Agriculture, Waste, Other)
+                        </dd>
+                    </dl>
+
+                    <h4 class="sources-h4">Background and purpose</h4>
+                    <p class="sources-body">
+                        PRIMAP-hist was developed by researchers associated with the Potsdam Institute for
+                        Climate Impact Research to create a comparable, comprehensive, and long-run record of
+                        national emissions. It addresses inconsistencies and gaps in official national
+                        inventories by merging them with other datasets and harmonizing them to common
+                        sector/gas definitions. The original method description is documented in Gütschow et
+                        al. (2016, <em>Earth System Science Data</em>).
+                    </p>
+
+                    <h4 class="sources-h4">Data content and structure</h4>
+                    <p class="sources-body">
+                        The dataset provides annual emissions for individual Kyoto gases (CO₂, CH₄, N₂O,
+                        various F-gases); aggregated “Kyoto basket” totals under different GWP choices (e.g.,
+                        AR4, AR5, AR6); and IPCC 2006 sectors: Energy; Industrial Processes and Product Use
+                        (IPPU); Agriculture; Waste; and “Other,” plus national totals excluding land use,
+                        land-use change and forestry (LULUCF). Most versions include a “country reported data
+                        priority” (HISTCR) scenario that prioritizes data directly reported by countries to the
+                        UNFCCC, supplemented by additional national submissions and gap-filling procedures.
+                    </p>
+
+                    <h4 class="sources-h4">Methodology and updates</h4>
+                    <p class="sources-body">
+                        PRIMAP-hist stitches together national inventory data, global/sectoral datasets, and
+                        proxy series, then harmonizes and extrapolates where necessary. For recent years it
+                        uses official inventories where available; energy CO₂ extrapolation based on energy
+                        statistics (e.g., Energy Institute’s Statistical Review of World Energy); and linear
+                        trend extrapolation for other sectors/gases when no direct data exist. LULUCF emissions
+                        are not included in the main file of recent versions (e.g., v2.7); instead they are
+                        provided separately and flagged as higher-uncertainty due to heterogeneous sources and
+                        methods.
+                    </p>
+                    <p class="sources-body sources-note-inline">
+                        The figures and derived JSON files in this repository were built from PRIMAP-hist
+                        v2.6.1 (see references below); newer releases extend coverage and may revise historical
+                        values as methods and reporting evolve.
+                    </p>
+                </div>
+            </section>
+
             <section class="sources-section" aria-labelledby="use-heading">
                 <h2 id="use-heading" class="sources-h2">
                     Dataset use on this site
@@ -281,6 +387,87 @@
     font-size: 0.98rem;
     line-height: 1.65;
     color: var(--color-text);
+}
+
+.sources-lead {
+    margin-bottom: 1.5rem;
+}
+
+.rationale-block {
+    margin-bottom: 1.75rem;
+}
+
+.rationale-block:last-child {
+    margin-bottom: 0;
+}
+
+.sources-h3 {
+    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--color-heading);
+    margin: 0 0 0.65rem;
+    line-height: 1.35;
+}
+
+.sources-h4 {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--color-heading);
+    margin: 1.15rem 0 0.5rem;
+    letter-spacing: 0.01em;
+}
+
+.sources-h4:first-of-type {
+    margin-top: 0.85rem;
+}
+
+.key-facts {
+    margin: 0 0 0.85rem;
+    display: grid;
+    grid-template-columns: minmax(7rem, 10rem) 1fr;
+    gap: 0.35rem 1rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.key-facts dt {
+    margin: 0;
+    font-weight: 600;
+    color: var(--color-muted);
+}
+
+.key-facts dd {
+    margin: 0;
+    color: var(--color-text);
+}
+
+@media (max-width: 520px) {
+    .key-facts {
+        grid-template-columns: 1fr;
+    }
+
+    .key-facts dt {
+        margin-top: 0.35rem;
+    }
+
+    .key-facts dt:first-child {
+        margin-top: 0;
+    }
+}
+
+.sources-note-inline {
+    margin-top: 1rem;
+    padding: 0.65rem 0.85rem;
+    border-left: 3px solid var(--color-border-hover);
+    background: var(--color-background-soft);
+    font-size: 0.92rem;
+    color: var(--color-muted);
+}
+
+.rationale-block .sources-body + .sources-body {
+    margin-top: 0.75rem;
 }
 
 .use-table-wrap {
