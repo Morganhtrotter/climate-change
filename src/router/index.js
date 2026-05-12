@@ -36,10 +36,10 @@ const router = createRouter({
             meta: { title: 'Why It Matters' },
         },
         {
-            path: '/points-of-no-return',
-            name: 'points-of-no-return',
+            path: '/tipping-points',
+            name: 'tipping-points',
             component: SectionPlaceholderView,
-            meta: { title: 'Points of No Return' },
+            meta: { title: 'Tipping Points' },
         },
         {
             path: '/what-can-we-do',

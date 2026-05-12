@@ -10,7 +10,7 @@ const navItems = [
     { label: 'Graphs', name: 'graphs' },
     { label: 'Predictive Data', name: 'predictive-data' },
     { label: 'Why It Matters', name: 'why-it-matters' },
-    { label: 'Points of No Return', name: 'points-of-no-return' },
+    { label: 'Tipping Points', name: 'tipping-points' },
     { label: 'What Can We Do', name: 'what-can-we-do' },
     { label: 'Sources', name: 'sources' },
 ]

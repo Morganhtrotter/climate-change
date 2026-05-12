@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 
 const chartRef = ref(null)
 const tooltipEl = ref(null)
-const selectedYear = ref(2023)
+const selectedYear = ref(1880)
 const isPlaying = ref(false)
 
 const BREAKDOWN_ORDER = [
@@ -322,7 +322,10 @@ onMounted(async () => {
     availableYears.value = emissionsData?.years ?? []
 
     if (availableYears.value.length) {
-        selectedYear.value = availableYears.value[availableYears.value.length - 1]
+        const years = availableYears.value
+        const defaultYear = 1880
+        const match = years.find((y) => Number(y) === defaultYear)
+        selectedYear.value = match != null ? Number(match) : Number(years[0])
     }
 
     const totals = []
