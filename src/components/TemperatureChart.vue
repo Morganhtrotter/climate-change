@@ -17,7 +17,8 @@ function renderChart(container, data) {
     const x = d3.scaleLinear().domain(d3.extent(data, (d) => d.year)).range([0, width])
     const yExtent = d3.extent(data, (d) => d.anomaly)
     const yPadding = 0.15
-    const yMin = Math.min(yExtent[0], 0) - yPadding
+    const PRE_INDUSTRIAL_ANOMALY = -0.19
+    const yMin = Math.min(yExtent[0], 0, PRE_INDUSTRIAL_ANOMALY) - yPadding
     const yMax = Math.max(yExtent[1], 0) + yPadding
     const y = d3.scaleLinear().domain([yMin, yMax]).range([height, 0])
 
@@ -51,10 +52,14 @@ function renderChart(container, data) {
         .call(xAxis)
 
     const zeroY = y(0)
+    const preIndustrialY = y(PRE_INDUSTRIAL_ANOMALY)
     const baselineInView = zeroY >= 0 && zeroY <= height
+    const preIndustrialInView = preIndustrialY >= 0 && preIndustrialY <= height
     const BASELINE_HIT_PX = 10
     let baselineLine = null
     let baselineLabel = null
+    let preIndustrialLine = null
+    let preIndustrialLabel = null
     let refLine1951 = null
     let refLine1980 = null
     let refYearLabel1951 = null
@@ -67,6 +72,16 @@ function renderChart(container, data) {
             .attr('x2', width)
             .attr('y1', zeroY)
             .attr('y2', zeroY)
+            .attr('stroke-dasharray', '4 4')
+    }
+    if (preIndustrialInView) {
+        preIndustrialLine = g
+            .append('line')
+            .attr('class', 'baseline baseline-preindustrial')
+            .attr('x1', 0)
+            .attr('x2', width)
+            .attr('y1', preIndustrialY)
+            .attr('y2', preIndustrialY)
             .attr('stroke-dasharray', '4 4')
     }
 
@@ -156,6 +171,18 @@ function renderChart(container, data) {
             .text('1980')
     }
 
+    if (preIndustrialInView && preIndustrialLine) {
+        preIndustrialLabel = g
+            .append('text')
+            .attr('class', 'baseline-label baseline-label-preindustrial')
+            .attr('x', width - 4)
+            .attr('y', preIndustrialY - 6)
+            .attr('text-anchor', 'end')
+            .attr('dominant-baseline', 'auto')
+            .attr('visibility', 'hidden')
+            .text('Pre-industrial average')
+    }
+
     const bisect = d3.bisector((d) => d.year).left
     const hoverLine = g
         .append('line')
@@ -180,22 +207,47 @@ function renderChart(container, data) {
         .on('mouseenter', () => tooltip.classList.add('visible'))
         .on('mousemove', function (event) {
             const [mx, my] = d3.pointer(event, this)
-            const onBaseline =
-                baselineLine && baselineLabel && Math.abs(my - zeroY) <= BASELINE_HIT_PX
-            if (onBaseline) {
-                baselineLine.attr('stroke-dasharray', null)
-                baselineLabel.attr('visibility', 'visible')
+            const distBaseline =
+                baselineLine && baselineLabel ? Math.abs(my - zeroY) : Number.POSITIVE_INFINITY
+            const distPre =
+                preIndustrialLine && preIndustrialLabel
+                    ? Math.abs(my - preIndustrialY)
+                    : Number.POSITIVE_INFINITY
+            const hitBaseline = distBaseline <= BASELINE_HIT_PX
+            const hitPre = distPre <= BASELINE_HIT_PX
+            let activeBaseline = false
+            let activePre = false
+            if (hitBaseline && hitPre) {
+                if (distBaseline <= distPre) activeBaseline = true
+                else activePre = true
+            } else if (hitBaseline) {
+                activeBaseline = true
+            } else if (hitPre) {
+                activePre = true
+            }
+
+            if (activeBaseline) {
+                baselineLine?.attr('stroke-dasharray', null)
+                baselineLabel?.attr('visibility', 'visible')
                 refLine1951?.attr('visibility', 'visible')
                 refLine1980?.attr('visibility', 'visible')
                 refYearLabel1951?.attr('visibility', 'visible')
                 refYearLabel1980?.attr('visibility', 'visible')
-            } else if (baselineLine && baselineLabel) {
-                baselineLine.attr('stroke-dasharray', '4 4')
-                baselineLabel.attr('visibility', 'hidden')
+            } else {
+                baselineLine?.attr('stroke-dasharray', '4 4')
+                baselineLabel?.attr('visibility', 'hidden')
                 refLine1951?.attr('visibility', 'hidden')
                 refLine1980?.attr('visibility', 'hidden')
                 refYearLabel1951?.attr('visibility', 'hidden')
                 refYearLabel1980?.attr('visibility', 'hidden')
+            }
+
+            if (activePre) {
+                preIndustrialLine?.attr('stroke-dasharray', null)
+                preIndustrialLabel?.attr('visibility', 'visible')
+            } else {
+                preIndustrialLine?.attr('stroke-dasharray', '4 4')
+                preIndustrialLabel?.attr('visibility', 'hidden')
             }
             const xVal = x.invert(mx)
             const i = Math.max(0, Math.min(bisect(data, xVal), data.length - 1))
@@ -232,6 +284,10 @@ function renderChart(container, data) {
             if (baselineLine && baselineLabel) {
                 baselineLine.attr('stroke-dasharray', '4 4')
                 baselineLabel.attr('visibility', 'hidden')
+            }
+            if (preIndustrialLine && preIndustrialLabel) {
+                preIndustrialLine.attr('stroke-dasharray', '4 4')
+                preIndustrialLabel.attr('visibility', 'hidden')
             }
             refLine1951?.attr('visibility', 'hidden')
             refLine1980?.attr('visibility', 'hidden')
@@ -313,6 +369,10 @@ onBeforeUnmount(() => {
 .chart-container :deep(.baseline) {
     stroke: var(--color-text);
     stroke-opacity: 0.5;
+}
+
+.chart-container :deep(.baseline-preindustrial) {
+    stroke-opacity: 0.42;
 }
 
 .chart-container :deep(.baseline-label) {
