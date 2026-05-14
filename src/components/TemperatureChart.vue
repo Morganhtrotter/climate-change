@@ -1,12 +1,98 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import * as d3 from 'd3'
 
 const chartRef = ref(null)
 const tooltipEl = ref(null)
-let annualData = []
+const annualDataRef = ref([])
+const extrapolate = ref(false)
 
-function renderChart(container, data) {
+const FIT_WINDOW_YEARS = 40
+/** Anomaly (°C vs 1951–1980) at which forward extrapolation stops. */
+const EXTRAP_TARGET_ANOMALY = 3.81
+/** Safety cap on forward span (years) if slope is flat or target unreachable. */
+const EXTRAP_MAX_FORWARD_YEARS = 800
+
+function lastCalendarYearWindow(data, nYears) {
+    if (!data.length) return []
+    const lastY = data[data.length - 1].year
+    const startY = lastY - (nYears - 1)
+    return data.filter((d) => d.year >= startY && d.year <= lastY)
+}
+
+/** Ordinary least squares slope d(anomaly)/d(year). */
+function regressionSlopeYearAnomaly(points) {
+    const n = points.length
+    if (n < 2) return 0
+    const meanX = d3.mean(points, (d) => d.year)
+    const meanY = d3.mean(points, (d) => d.anomaly)
+    let num = 0
+    let den = 0
+    for (const p of points) {
+        const dx = p.year - meanX
+        num += dx * (p.anomaly - meanY)
+        den += dx * dx
+    }
+    return den === 0 ? 0 : num / den
+}
+
+function extrapolationSeries(data, enabled) {
+    if (!enabled || data.length < 2) return null
+    const windowPts = lastCalendarYearWindow(data, FIT_WINDOW_YEARS)
+    const fitPts = windowPts.length >= 2 ? windowPts : data.slice(-Math.min(FIT_WINDOW_YEARS, data.length))
+    if (fitPts.length < 2) return null
+    const slope = regressionSlopeYearAnomaly(fitPts)
+    const last = data[data.length - 1]
+    const target = EXTRAP_TARGET_ANOMALY
+
+    let endYear
+    let endAnomaly
+
+    if (Math.abs(slope) < 1e-10) {
+        endYear = last.year + EXTRAP_MAX_FORWARD_YEARS
+        endAnomaly = last.anomaly
+    } else if (slope > 0) {
+        const yearsToTarget = (target - last.anomaly) / slope
+        if (yearsToTarget <= 0) {
+            endYear = last.year
+            endAnomaly = last.anomaly
+        } else if (yearsToTarget <= EXTRAP_MAX_FORWARD_YEARS) {
+            endYear = last.year + yearsToTarget
+            endAnomaly = target
+        } else {
+            endYear = last.year + EXTRAP_MAX_FORWARD_YEARS
+            endAnomaly = last.anomaly + slope * EXTRAP_MAX_FORWARD_YEARS
+        }
+    } else {
+        const yearsToTarget = (target - last.anomaly) / slope
+        if (yearsToTarget > 0 && yearsToTarget <= EXTRAP_MAX_FORWARD_YEARS) {
+            endYear = last.year + yearsToTarget
+            endAnomaly = target
+        } else {
+            endYear = last.year + EXTRAP_MAX_FORWARD_YEARS
+            endAnomaly = last.anomaly + slope * EXTRAP_MAX_FORWARD_YEARS
+        }
+    }
+
+    if (endYear < last.year) {
+        endYear = last.year
+        endAnomaly = last.anomaly
+    }
+
+    return {
+        slope,
+        lastYear: last.year,
+        lastAnomaly: last.anomaly,
+        endYear,
+        endAnomaly,
+        segment: [
+            { year: last.year, anomaly: last.anomaly },
+            { year: endYear, anomaly: endAnomaly },
+        ],
+    }
+}
+
+function renderChart(container, data, extrapolateMode) {
     if (!container || !data.length) return
     d3.select(container).selectAll('*').remove()
 
@@ -14,12 +100,20 @@ function renderChart(container, data) {
     const width = Math.max(320, container.clientWidth) - margin.left - margin.right
     const height = 360 - margin.top - margin.bottom
 
-    const x = d3.scaleLinear().domain(d3.extent(data, (d) => d.year)).range([0, width])
+    const extrap = extrapolationSeries(data, extrapolateMode)
+    const lastDataYear = data[data.length - 1].year
+    const xMax = extrap ? extrap.endYear : lastDataYear
+    const xMin = d3.min(data, (d) => d.year)
+    const x = d3.scaleLinear().domain([xMin, xMax]).range([0, width])
+
     const yExtent = d3.extent(data, (d) => d.anomaly)
     const yPadding = 0.15
     const PRE_INDUSTRIAL_ANOMALY = -0.19
+    const yMaxExtrap = extrap
+        ? Math.max(extrap.endAnomaly, EXTRAP_TARGET_ANOMALY)
+        : yExtent[1]
     const yMin = Math.min(yExtent[0], 0, PRE_INDUSTRIAL_ANOMALY) - yPadding
-    const yMax = Math.max(yExtent[1], 0) + yPadding
+    const yMax = Math.max(yExtent[1], yMaxExtrap, 0) + yPadding
     const y = d3.scaleLinear().domain([yMin, yMax]).range([height, 0])
 
     const line = d3
@@ -121,6 +215,22 @@ function renderChart(container, data) {
         .attr('stroke-width', 2.5)
         .attr('stroke-linecap', 'round')
         .attr('stroke-linejoin', 'round')
+
+    if (extrap && extrap.endYear > extrap.lastYear + 1e-6) {
+        const extrapLine = d3
+            .line()
+            .x((d) => x(d.year))
+            .y((d) => y(d.anomaly))
+        g.append('path')
+            .attr('class', 'extrap-line')
+            .attr('d', extrapLine(extrap.segment))
+            .attr('fill', 'none')
+            .attr('stroke', 'var(--color-heading)')
+            .attr('stroke-width', 2)
+            .attr('stroke-dasharray', '6 5')
+            .attr('stroke-linecap', 'round')
+            .attr('opacity', 0.9)
+    }
 
     if (baselineInView && baselineLine) {
         baselineLabel = g
@@ -250,16 +360,27 @@ function renderChart(container, data) {
                 preIndustrialLabel?.attr('visibility', 'hidden')
             }
             const xVal = x.invert(mx)
-            const i = Math.max(0, Math.min(bisect(data, xVal), data.length - 1))
-            const point = data[i]
-            const xPos = x(point.year)
+            let point
+            let xPos
+            let tooltipLabel = 'Global mean temp. index'
+            if (extrap && xVal > lastDataYear) {
+                const xEx = Math.min(xVal, extrap.endYear)
+                const yHat = extrap.lastAnomaly + extrap.slope * (xEx - extrap.lastYear)
+                point = { year: Math.round(xEx), anomaly: yHat }
+                xPos = x(xEx)
+                tooltipLabel = 'Linear extrapolation (40-yr trend)'
+            } else {
+                const i = Math.max(0, Math.min(bisect(data, xVal), data.length - 1))
+                point = data[i]
+                xPos = x(point.year)
+            }
             hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
             const anomaly = point.anomaly
             const sign = anomaly >= 0 ? '+' : ''
             const yearLabel = String(point.year)
             const valueStr = `${sign}${anomaly.toFixed(2)}°C`
             const topRow = `<div class="tooltip-top-row"><span class="tooltip-value">${valueStr}</span><span class="tooltip-year">${yearLabel}</span></div>`
-            tooltip.innerHTML = `${topRow}<span class="tooltip-label">Global mean temp. index</span>`
+            tooltip.innerHTML = `${topRow}<span class="tooltip-label">${tooltipLabel}</span>`
             const offset = 12
             const svgRect = svg.node()?.getBoundingClientRect()
             const ttRect = tooltip.getBoundingClientRect()
@@ -303,12 +424,10 @@ onMounted(async () => {
     const csvContent = lines.slice(1).join('\n')
     const parsed = d3.csvParse(csvContent)
 
-    annualData = parsed
+    annualDataRef.value = parsed
         .filter((d) => d.Year && d['J-D'] && d['J-D'] !== '***')
         .map((d) => ({ year: +d.Year, anomaly: +d['J-D'] }))
         .sort((a, b) => a.year - b.year)
-
-    if (!chartRef.value) return
 
     const tooltip = document.createElement('div')
     tooltip.setAttribute('class', 'chart-tooltip')
@@ -316,7 +435,17 @@ onMounted(async () => {
     document.body.appendChild(tooltip)
     tooltipEl.value = tooltip
 
-    renderChart(chartRef.value, annualData)
+    await nextTick()
+    if (chartRef.value && annualDataRef.value.length) {
+        renderChart(chartRef.value, annualDataRef.value, extrapolate.value)
+    }
+})
+
+watch(extrapolate, async () => {
+    await nextTick()
+    if (chartRef.value && annualDataRef.value.length) {
+        renderChart(chartRef.value, annualDataRef.value, extrapolate.value)
+    }
 })
 
 onBeforeUnmount(() => {
@@ -331,6 +460,12 @@ onBeforeUnmount(() => {
         class="temperature-chart"
         aria-label="Global land-ocean temperature anomaly from 1880 to present"
     >
+        <div class="chart-toolbar">
+            <label class="extrap-toggle">
+                <input v-model="extrapolate" type="checkbox" class="extrap-checkbox" />
+                <span class="extrap-label">Extrapolate</span>
+            </label>
+        </div>
         <div ref="chartRef" class="chart-container"></div>
         <figcaption>
             <strong>Source:</strong> NASA GISS — Land-Ocean Temperature Index. Anomalies relative to
@@ -343,6 +478,35 @@ onBeforeUnmount(() => {
 .temperature-chart {
     margin: 0;
     width: 100%;
+}
+
+.chart-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.extrap-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-heading);
+    user-select: none;
+}
+
+.extrap-checkbox {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-heading);
+    cursor: pointer;
+}
+
+.extrap-label {
+    line-height: 1.2;
 }
 
 .chart-container {
@@ -402,6 +566,11 @@ onBeforeUnmount(() => {
 
 .chart-container :deep(.line) {
     vector-effect: non-scaling-stroke;
+}
+
+.chart-container :deep(.extrap-line) {
+    vector-effect: non-scaling-stroke;
+    pointer-events: none;
 }
 
 figcaption {
