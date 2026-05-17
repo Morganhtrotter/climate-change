@@ -97,15 +97,209 @@ function extrapolationSeries(data, enabled) {
 
 const PRE_INDUSTRIAL_ANOMALY = -0.19
 
-function yDomainForData(data, extrap) {
+/** Horizontal guides (°C anomaly vs 1951–1980). Warming levels ≈ pre-industrial + 1.5 / 2 / 3 / 4 °C. */
+const HORIZONTAL_REFERENCE_LINES = [
+    { anomaly: 0, label: '1951–1980 average', showRefYears: true, lineClass: 'baseline' },
+    {
+        anomaly: PRE_INDUSTRIAL_ANOMALY,
+        label: 'Pre-industrial average',
+        lineClass: 'baseline baseline-preindustrial',
+    },
+    { anomaly: 1.31, label: '1.5 °C above pre-industrial', lineClass: 'baseline baseline-warming' },
+    { anomaly: 1.81, label: '2 °C above pre-industrial', lineClass: 'baseline baseline-warming' },
+    { anomaly: 2.81, label: '3 °C above pre-industrial', lineClass: 'baseline baseline-warming' },
+    { anomaly: 3.81, label: '4 °C above pre-industrial', lineClass: 'baseline baseline-warming' },
+]
+
+const REFERENCE_ANOMALIES = HORIZONTAL_REFERENCE_LINES.map((spec) => spec.anomaly)
+
+function yDomainForData(data, extrap, extrapolateMode) {
     const yExtent = d3.extent(data, (d) => d.anomaly)
     const yPadding = 0.15
-    const yMaxExtrap = extrap
-        ? Math.max(extrap.endAnomaly, EXTRAP_TARGET_ANOMALY)
-        : yExtent[1]
+
+    if (extrapolateMode) {
+        const yMaxExtrap = extrap
+            ? Math.max(extrap.endAnomaly, EXTRAP_TARGET_ANOMALY)
+            : yExtent[1]
+        const yMin = Math.min(yExtent[0], ...REFERENCE_ANOMALIES, 0, PRE_INDUSTRIAL_ANOMALY) - yPadding
+        const yMax = Math.max(yExtent[1], yMaxExtrap, ...REFERENCE_ANOMALIES) + yPadding
+        return [yMin, yMax]
+    }
+
     const yMin = Math.min(yExtent[0], 0, PRE_INDUSTRIAL_ANOMALY) - yPadding
-    const yMax = Math.max(yExtent[1], yMaxExtrap, 0) + yPadding
+    const yMax = Math.max(yExtent[1], 0) + yPadding
     return [yMin, yMax]
+}
+
+function syncHorizontalRefVisibility(inst) {
+    const [yMin, yMax] = inst.y.domain()
+    for (const ref of inst.horizontalRefs) {
+        const inDomain = ref.anomaly >= yMin && ref.anomaly <= yMax
+        const yPx = inst.y(ref.anomaly)
+        const inView = inDomain && yPx >= 0 && yPx <= inst.height
+        ref.inView = inView
+        ref.line?.attr('visibility', inView ? 'visible' : 'hidden')
+        if (!inView) {
+            ref.label?.attr('visibility', 'hidden')
+            ref.line?.attr('stroke-dasharray', '4 4')
+            ref.refLine1951?.attr('visibility', 'hidden')
+            ref.refLine1980?.attr('visibility', 'hidden')
+            ref.refYearLabel1951?.attr('visibility', 'hidden')
+            ref.refYearLabel1980?.attr('visibility', 'hidden')
+        }
+    }
+}
+
+function createHorizontalReferences(g, y, x, width, height) {
+    const refs = []
+    for (const spec of HORIZONTAL_REFERENCE_LINES) {
+        const yPx = y(spec.anomaly)
+
+        const line = g
+            .append('line')
+            .attr('class', spec.lineClass)
+            .attr('data-anomaly', spec.anomaly)
+            .attr('x1', 0)
+            .attr('x2', width)
+            .attr('y1', yPx)
+            .attr('y2', yPx)
+            .attr('stroke-dasharray', '4 4')
+
+        const label = g
+            .append('text')
+            .attr('class', 'baseline-label')
+            .attr('x', width - 4)
+            .attr('y', yPx - 6)
+            .attr('text-anchor', 'end')
+            .attr('dominant-baseline', 'auto')
+            .attr('visibility', 'hidden')
+            .text(spec.label)
+
+        const ref = { spec, anomaly: spec.anomaly, line, label, inView: false }
+
+        if (spec.showRefYears) {
+            const x1951 = x(1951)
+            const x1980 = x(1980)
+            const refYearLabelY = height - 8
+            ref.refLine1951 = g
+                .append('line')
+                .attr('class', 'baseline-ref-year')
+                .attr('y1', 0)
+                .attr('y2', height)
+                .attr('x1', x1951)
+                .attr('x2', x1951)
+                .attr('visibility', 'hidden')
+            ref.refLine1980 = g
+                .append('line')
+                .attr('class', 'baseline-ref-year')
+                .attr('y1', 0)
+                .attr('y2', height)
+                .attr('x1', x1980)
+                .attr('x2', x1980)
+                .attr('visibility', 'hidden')
+            ref.refYearLabel1951 = g
+                .append('text')
+                .attr('class', 'baseline-ref-year-label')
+                .attr('x', x1951 + 4)
+                .attr('y', refYearLabelY)
+                .attr('text-anchor', 'start')
+                .attr('dominant-baseline', 'auto')
+                .attr('visibility', 'hidden')
+                .text('1951')
+            ref.refYearLabel1980 = g
+                .append('text')
+                .attr('class', 'baseline-ref-year-label')
+                .attr('x', x1980 + 4)
+                .attr('y', refYearLabelY)
+                .attr('text-anchor', 'start')
+                .attr('dominant-baseline', 'auto')
+                .attr('visibility', 'hidden')
+                .text('1980')
+        }
+
+        refs.push(ref)
+    }
+    return refs
+}
+
+function setActiveHorizontalRef(inst, activeRef) {
+    for (const ref of inst.horizontalRefs) {
+        if (!ref.inView) continue
+        const active = ref === activeRef
+        ref.line?.attr('stroke-dasharray', active ? null : '4 4')
+        ref.label?.attr('visibility', active ? 'visible' : 'hidden')
+        ref.refLine1951?.attr('visibility', active && ref.spec.showRefYears ? 'visible' : 'hidden')
+        ref.refLine1980?.attr('visibility', active && ref.spec.showRefYears ? 'visible' : 'hidden')
+        ref.refYearLabel1951?.attr(
+            'visibility',
+            active && ref.spec.showRefYears ? 'visible' : 'hidden',
+        )
+        ref.refYearLabel1980?.attr(
+            'visibility',
+            active && ref.spec.showRefYears ? 'visible' : 'hidden',
+        )
+    }
+}
+
+function hitHorizontalRef(inst, pointerY) {
+    let best = null
+    let bestDist = inst.BASELINE_HIT_PX + 1
+    for (const ref of inst.horizontalRefs) {
+        if (!ref.inView) continue
+        const yPx = inst.y(ref.anomaly)
+        const dist = Math.abs(pointerY - yPx)
+        if (dist <= inst.BASELINE_HIT_PX && dist < bestDist) {
+            bestDist = dist
+            best = ref
+        }
+    }
+    return best
+}
+
+function updateHorizontalRefPositions(inst, transition) {
+    for (const ref of inst.horizontalRefs) {
+        const yPx = inst.y(ref.anomaly)
+        if (ref.line) {
+            if (transition) {
+                ref.line.transition(transition).attr('y1', yPx).attr('y2', yPx)
+            } else {
+                ref.line.attr('y1', yPx).attr('y2', yPx)
+            }
+        }
+        if (ref.label) {
+            if (transition) ref.label.transition(transition).attr('y', yPx - 6)
+            else ref.label.attr('y', yPx - 6)
+        }
+        if (ref.spec.showRefYears) {
+            const x1951 = inst.x(1951)
+            const x1980 = inst.x(1980)
+            if (ref.refLine1951) {
+                if (transition) {
+                    ref.refLine1951.transition(transition).attr('x1', x1951).attr('x2', x1951)
+                } else {
+                    ref.refLine1951.attr('x1', x1951).attr('x2', x1951)
+                }
+            }
+            if (ref.refLine1980) {
+                if (transition) {
+                    ref.refLine1980.transition(transition).attr('x1', x1980).attr('x2', x1980)
+                } else {
+                    ref.refLine1980.attr('x1', x1980).attr('x2', x1980)
+                }
+            }
+            if (ref.refYearLabel1951) {
+                if (transition) ref.refYearLabel1951.transition(transition).attr('x', x1951 + 4)
+                else ref.refYearLabel1951.attr('x', x1951 + 4)
+            }
+            if (ref.refYearLabel1980) {
+                if (transition) ref.refYearLabel1980.transition(transition).attr('x', x1980 + 4)
+                else ref.refYearLabel1980.attr('x', x1980 + 4)
+            }
+        }
+    }
+    inst.zeroY = inst.y(0)
+    inst.preIndustrialY = inst.y(PRE_INDUSTRIAL_ANOMALY)
+    syncHorizontalRefVisibility(inst)
 }
 
 function buildChart(container, data, extrapolateMode) {
@@ -123,7 +317,7 @@ function buildChart(container, data, extrapolateMode) {
     const xMin = d3.min(data, (d) => d.year)
     const x = d3.scaleLinear().domain([xMin, xMax]).range([0, width])
 
-    const [yMin, yMax] = yDomainForData(data, extrap)
+    const [yMin, yMax] = yDomainForData(data, extrap, extrapolateMode)
     const y = d3.scaleLinear().domain([yMin, yMax]).range([height, 0])
 
     const line = d3
@@ -155,39 +349,8 @@ function buildChart(container, data, extrapolateMode) {
         .attr('transform', `translate(0,${height})`)
         .call(xAxis)
 
-    const zeroY = y(0)
-    const preIndustrialY = y(PRE_INDUSTRIAL_ANOMALY)
-    const baselineInView = zeroY >= 0 && zeroY <= height
-    const preIndustrialInView = preIndustrialY >= 0 && preIndustrialY <= height
     const BASELINE_HIT_PX = 10
-    let baselineLine = null
-    let baselineLabel = null
-    let preIndustrialLine = null
-    let preIndustrialLabel = null
-    let refLine1951 = null
-    let refLine1980 = null
-    let refYearLabel1951 = null
-    let refYearLabel1980 = null
-    if (baselineInView) {
-        baselineLine = g
-            .append('line')
-            .attr('class', 'baseline')
-            .attr('x1', 0)
-            .attr('x2', width)
-            .attr('y1', zeroY)
-            .attr('y2', zeroY)
-            .attr('stroke-dasharray', '4 4')
-    }
-    if (preIndustrialInView) {
-        preIndustrialLine = g
-            .append('line')
-            .attr('class', 'baseline baseline-preindustrial')
-            .attr('x1', 0)
-            .attr('x2', width)
-            .attr('y1', preIndustrialY)
-            .attr('y2', preIndustrialY)
-            .attr('stroke-dasharray', '4 4')
-    }
+    const horizontalRefs = createHorizontalReferences(g, y, x, width, height)
 
     const minAnomaly = d3.min(data, (d) => d.anomaly)
     const maxAnomaly = d3.max(data, (d) => d.anomaly)
@@ -242,67 +405,6 @@ function buildChart(container, data, extrapolateMode) {
             .attr('opacity', extrapolateMode ? 0.9 : 0)
     }
 
-    if (baselineInView && baselineLine) {
-        baselineLabel = g
-            .append('text')
-            .attr('class', 'baseline-label')
-            .attr('x', width - 4)
-            .attr('y', zeroY - 6)
-            .attr('text-anchor', 'end')
-            .attr('dominant-baseline', 'auto')
-            .attr('visibility', 'hidden')
-            .text('1951–1980 average')
-        const x1951 = x(1951)
-        const x1980 = x(1980)
-        refLine1951 = g
-            .append('line')
-            .attr('class', 'baseline-ref-year')
-            .attr('y1', 0)
-            .attr('y2', height)
-            .attr('x1', x1951)
-            .attr('x2', x1951)
-            .attr('visibility', 'hidden')
-        refLine1980 = g
-            .append('line')
-            .attr('class', 'baseline-ref-year')
-            .attr('y1', 0)
-            .attr('y2', height)
-            .attr('x1', x1980)
-            .attr('x2', x1980)
-            .attr('visibility', 'hidden')
-        const refYearLabelY = height - 8
-        refYearLabel1951 = g
-            .append('text')
-            .attr('class', 'baseline-ref-year-label')
-            .attr('x', x1951 + 4)
-            .attr('y', refYearLabelY)
-            .attr('text-anchor', 'start')
-            .attr('dominant-baseline', 'auto')
-            .attr('visibility', 'hidden')
-            .text('1951')
-        refYearLabel1980 = g
-            .append('text')
-            .attr('class', 'baseline-ref-year-label')
-            .attr('x', x1980 + 4)
-            .attr('y', refYearLabelY)
-            .attr('text-anchor', 'start')
-            .attr('dominant-baseline', 'auto')
-            .attr('visibility', 'hidden')
-            .text('1980')
-    }
-
-    if (preIndustrialInView && preIndustrialLine) {
-        preIndustrialLabel = g
-            .append('text')
-            .attr('class', 'baseline-label baseline-label-preindustrial')
-            .attr('x', width - 4)
-            .attr('y', preIndustrialY - 6)
-            .attr('text-anchor', 'end')
-            .attr('dominant-baseline', 'auto')
-            .attr('visibility', 'hidden')
-            .text('Pre-industrial average')
-    }
-
     const bisect = d3.bisector((d) => d.year).left
     const hoverLine = g
         .append('line')
@@ -329,50 +431,7 @@ function buildChart(container, data, extrapolateMode) {
             const inst = chartInstance
             if (!inst) return
             const [mx, my] = d3.pointer(event, this)
-            const distBaseline =
-                inst.baselineLine && inst.baselineLabel
-                    ? Math.abs(my - inst.zeroY)
-                    : Number.POSITIVE_INFINITY
-            const distPre =
-                inst.preIndustrialLine && inst.preIndustrialLabel
-                    ? Math.abs(my - inst.preIndustrialY)
-                    : Number.POSITIVE_INFINITY
-            const hitBaseline = distBaseline <= BASELINE_HIT_PX
-            const hitPre = distPre <= BASELINE_HIT_PX
-            let activeBaseline = false
-            let activePre = false
-            if (hitBaseline && hitPre) {
-                if (distBaseline <= distPre) activeBaseline = true
-                else activePre = true
-            } else if (hitBaseline) {
-                activeBaseline = true
-            } else if (hitPre) {
-                activePre = true
-            }
-
-            if (activeBaseline) {
-                inst.baselineLine?.attr('stroke-dasharray', null)
-                inst.baselineLabel?.attr('visibility', 'visible')
-                inst.refLine1951?.attr('visibility', 'visible')
-                inst.refLine1980?.attr('visibility', 'visible')
-                inst.refYearLabel1951?.attr('visibility', 'visible')
-                inst.refYearLabel1980?.attr('visibility', 'visible')
-            } else {
-                inst.baselineLine?.attr('stroke-dasharray', '4 4')
-                inst.baselineLabel?.attr('visibility', 'hidden')
-                inst.refLine1951?.attr('visibility', 'hidden')
-                inst.refLine1980?.attr('visibility', 'hidden')
-                inst.refYearLabel1951?.attr('visibility', 'hidden')
-                inst.refYearLabel1980?.attr('visibility', 'hidden')
-            }
-
-            if (activePre) {
-                inst.preIndustrialLine?.attr('stroke-dasharray', null)
-                inst.preIndustrialLabel?.attr('visibility', 'visible')
-            } else {
-                inst.preIndustrialLine?.attr('stroke-dasharray', '4 4')
-                inst.preIndustrialLabel?.attr('visibility', 'hidden')
-            }
+            setActiveHorizontalRef(inst, hitHorizontalRef(inst, my))
             const xVal = inst.x.invert(mx)
             let point
             let xPos
@@ -420,18 +479,7 @@ function buildChart(container, data, extrapolateMode) {
             if (!inst) return
             inst.hoverLine.attr('visibility', 'hidden')
             inst.tooltip.classList.remove('visible')
-            if (inst.baselineLine && inst.baselineLabel) {
-                inst.baselineLine.attr('stroke-dasharray', '4 4')
-                inst.baselineLabel.attr('visibility', 'hidden')
-            }
-            if (inst.preIndustrialLine && inst.preIndustrialLabel) {
-                inst.preIndustrialLine.attr('stroke-dasharray', '4 4')
-                inst.preIndustrialLabel.attr('visibility', 'hidden')
-            }
-            inst.refLine1951?.attr('visibility', 'hidden')
-            inst.refLine1980?.attr('visibility', 'hidden')
-            inst.refYearLabel1951?.attr('visibility', 'hidden')
-            inst.refYearLabel1980?.attr('visibility', 'hidden')
+            setActiveHorizontalRef(inst, null)
         })
 
     chartInstance = {
@@ -455,23 +503,16 @@ function buildChart(container, data, extrapolateMode) {
         extrap,
         lastDataYear,
         extrapLineGen,
-        baselineLine,
-        baselineLabel,
-        preIndustrialLine,
-        preIndustrialLabel,
-        refLine1951,
-        refLine1980,
-        refYearLabel1951,
-        refYearLabel1980,
-        zeroY,
-        preIndustrialY,
-        baselineInView,
-        preIndustrialInView,
+        horizontalRefs,
+        zeroY: y(0),
+        preIndustrialY: y(PRE_INDUSTRIAL_ANOMALY),
         BASELINE_HIT_PX,
         bisect,
         hoverLine,
         tooltip,
     }
+
+    syncHorizontalRefVisibility(chartInstance)
 }
 
 function setExtrapolateMode(enabled, animate = true) {
@@ -486,7 +527,7 @@ function setExtrapolateMode(enabled, animate = true) {
     const lastDataYear = data[data.length - 1].year
     const xMin = d3.min(data, (d) => d.year)
     const xMax = extrap ? extrap.endYear : lastDataYear
-    const [yMin, yMax] = yDomainForData(data, extrap)
+    const [yMin, yMax] = yDomainForData(data, extrap, enabled)
 
     inst.extrapolateMode = enabled
     inst.extrap = extrap
@@ -498,11 +539,6 @@ function setExtrapolateMode(enabled, animate = true) {
 
     inst.x.domain([xMin, xMax])
     inst.y.domain([yMin, yMax])
-
-    const zeroY = inst.y(0)
-    const preIndustrialY = inst.y(PRE_INDUSTRIAL_ANOMALY)
-    inst.zeroY = zeroY
-    inst.preIndustrialY = preIndustrialY
 
     const axisX = g.select('.axis-x')
     const axisY = g.select('.axis-y')
@@ -540,46 +576,7 @@ function setExtrapolateMode(enabled, animate = true) {
         mainArea.attr('d', areaPath(data))
     }
 
-    if (inst.baselineLine) {
-        if (transition) {
-            inst.baselineLine.transition(transition).attr('y1', zeroY).attr('y2', zeroY)
-        } else {
-            inst.baselineLine.attr('y1', zeroY).attr('y2', zeroY)
-        }
-    }
-    if (inst.baselineLabel) {
-        if (transition) inst.baselineLabel.transition(transition).attr('y', zeroY - 6)
-        else inst.baselineLabel.attr('y', zeroY - 6)
-    }
-    if (inst.preIndustrialLine) {
-        if (transition) {
-            inst.preIndustrialLine.transition(transition).attr('y1', preIndustrialY).attr('y2', preIndustrialY)
-        } else {
-            inst.preIndustrialLine.attr('y1', preIndustrialY).attr('y2', preIndustrialY)
-        }
-    }
-    if (inst.preIndustrialLabel) {
-        if (transition) inst.preIndustrialLabel.transition(transition).attr('y', preIndustrialY - 6)
-        else inst.preIndustrialLabel.attr('y', preIndustrialY - 6)
-    }
-
-    const x1951 = inst.x(1951)
-    const x1980 = inst.x(1980)
-    const moveX = (sel, xVal) => {
-        if (!sel) return
-        if (transition) sel.transition(transition).attr('x1', xVal).attr('x2', xVal)
-        else sel.attr('x1', xVal).attr('x2', xVal)
-    }
-    moveX(inst.refLine1951, x1951)
-    moveX(inst.refLine1980, x1980)
-    if (inst.refYearLabel1951) {
-        if (transition) inst.refYearLabel1951.transition(transition).attr('x', x1951 + 4)
-        else inst.refYearLabel1951.attr('x', x1951 + 4)
-    }
-    if (inst.refYearLabel1980) {
-        if (transition) inst.refYearLabel1980.transition(transition).attr('x', x1980 + 4)
-        else inst.refYearLabel1980.attr('x', x1980 + 4)
-    }
+    updateHorizontalRefPositions(inst, transition)
 
     const extrapLineGen = d3
         .line()
@@ -767,6 +764,10 @@ onBeforeUnmount(() => {
 
 .chart-container :deep(.baseline-preindustrial) {
     stroke-opacity: 0.42;
+}
+
+.chart-container :deep(.baseline-warming) {
+    stroke-opacity: 0.38;
 }
 
 .chart-container :deep(.baseline-label) {
