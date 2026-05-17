@@ -12,6 +12,9 @@ const FIT_WINDOW_YEARS = 40
 const EXTRAP_TARGET_ANOMALY = 3.81
 /** Safety cap on forward span (years) if slope is flat or target unreachable. */
 const EXTRAP_MAX_FORWARD_YEARS = 800
+const EXTRAP_TRANSITION_MS = 650
+
+let chartInstance = null
 
 function lastCalendarYearWindow(data, nYears) {
     if (!data.length) return []
@@ -92,9 +95,23 @@ function extrapolationSeries(data, enabled) {
     }
 }
 
-function renderChart(container, data, extrapolateMode) {
+const PRE_INDUSTRIAL_ANOMALY = -0.19
+
+function yDomainForData(data, extrap) {
+    const yExtent = d3.extent(data, (d) => d.anomaly)
+    const yPadding = 0.15
+    const yMaxExtrap = extrap
+        ? Math.max(extrap.endAnomaly, EXTRAP_TARGET_ANOMALY)
+        : yExtent[1]
+    const yMin = Math.min(yExtent[0], 0, PRE_INDUSTRIAL_ANOMALY) - yPadding
+    const yMax = Math.max(yExtent[1], yMaxExtrap, 0) + yPadding
+    return [yMin, yMax]
+}
+
+function buildChart(container, data, extrapolateMode) {
     if (!container || !data.length) return
     d3.select(container).selectAll('*').remove()
+    chartInstance = null
 
     const margin = { top: 32, right: 24, bottom: 48, left: 52 }
     const width = Math.max(320, container.clientWidth) - margin.left - margin.right
@@ -106,14 +123,7 @@ function renderChart(container, data, extrapolateMode) {
     const xMin = d3.min(data, (d) => d.year)
     const x = d3.scaleLinear().domain([xMin, xMax]).range([0, width])
 
-    const yExtent = d3.extent(data, (d) => d.anomaly)
-    const yPadding = 0.15
-    const PRE_INDUSTRIAL_ANOMALY = -0.19
-    const yMaxExtrap = extrap
-        ? Math.max(extrap.endAnomaly, EXTRAP_TARGET_ANOMALY)
-        : yExtent[1]
-    const yMin = Math.min(yExtent[0], 0, PRE_INDUSTRIAL_ANOMALY) - yPadding
-    const yMax = Math.max(yExtent[1], yMaxExtrap, 0) + yPadding
+    const [yMin, yMax] = yDomainForData(data, extrap)
     const y = d3.scaleLinear().domain([yMin, yMax]).range([height, 0])
 
     const line = d3
@@ -216,20 +226,20 @@ function renderChart(container, data, extrapolateMode) {
         .attr('stroke-linecap', 'round')
         .attr('stroke-linejoin', 'round')
 
+    const extrapLineGen = d3
+        .line()
+        .x((d) => x(d.year))
+        .y((d) => y(d.anomaly))
     if (extrap && extrap.endYear > extrap.lastYear + 1e-6) {
-        const extrapLine = d3
-            .line()
-            .x((d) => x(d.year))
-            .y((d) => y(d.anomaly))
         g.append('path')
             .attr('class', 'extrap-line')
-            .attr('d', extrapLine(extrap.segment))
+            .attr('d', extrapLineGen(extrap.segment))
             .attr('fill', 'none')
             .attr('stroke', 'var(--color-heading)')
             .attr('stroke-width', 2)
             .attr('stroke-dasharray', '6 5')
             .attr('stroke-linecap', 'round')
-            .attr('opacity', 0.9)
+            .attr('opacity', extrapolateMode ? 0.9 : 0)
     }
 
     if (baselineInView && baselineLine) {
@@ -316,12 +326,16 @@ function renderChart(container, data, extrapolateMode) {
         .attr('pointer-events', 'all')
         .on('mouseenter', () => tooltip.classList.add('visible'))
         .on('mousemove', function (event) {
+            const inst = chartInstance
+            if (!inst) return
             const [mx, my] = d3.pointer(event, this)
             const distBaseline =
-                baselineLine && baselineLabel ? Math.abs(my - zeroY) : Number.POSITIVE_INFINITY
+                inst.baselineLine && inst.baselineLabel
+                    ? Math.abs(my - inst.zeroY)
+                    : Number.POSITIVE_INFINITY
             const distPre =
-                preIndustrialLine && preIndustrialLabel
-                    ? Math.abs(my - preIndustrialY)
+                inst.preIndustrialLine && inst.preIndustrialLabel
+                    ? Math.abs(my - inst.preIndustrialY)
                     : Number.POSITIVE_INFINITY
             const hitBaseline = distBaseline <= BASELINE_HIT_PX
             const hitPre = distPre <= BASELINE_HIT_PX
@@ -337,56 +351,58 @@ function renderChart(container, data, extrapolateMode) {
             }
 
             if (activeBaseline) {
-                baselineLine?.attr('stroke-dasharray', null)
-                baselineLabel?.attr('visibility', 'visible')
-                refLine1951?.attr('visibility', 'visible')
-                refLine1980?.attr('visibility', 'visible')
-                refYearLabel1951?.attr('visibility', 'visible')
-                refYearLabel1980?.attr('visibility', 'visible')
+                inst.baselineLine?.attr('stroke-dasharray', null)
+                inst.baselineLabel?.attr('visibility', 'visible')
+                inst.refLine1951?.attr('visibility', 'visible')
+                inst.refLine1980?.attr('visibility', 'visible')
+                inst.refYearLabel1951?.attr('visibility', 'visible')
+                inst.refYearLabel1980?.attr('visibility', 'visible')
             } else {
-                baselineLine?.attr('stroke-dasharray', '4 4')
-                baselineLabel?.attr('visibility', 'hidden')
-                refLine1951?.attr('visibility', 'hidden')
-                refLine1980?.attr('visibility', 'hidden')
-                refYearLabel1951?.attr('visibility', 'hidden')
-                refYearLabel1980?.attr('visibility', 'hidden')
+                inst.baselineLine?.attr('stroke-dasharray', '4 4')
+                inst.baselineLabel?.attr('visibility', 'hidden')
+                inst.refLine1951?.attr('visibility', 'hidden')
+                inst.refLine1980?.attr('visibility', 'hidden')
+                inst.refYearLabel1951?.attr('visibility', 'hidden')
+                inst.refYearLabel1980?.attr('visibility', 'hidden')
             }
 
             if (activePre) {
-                preIndustrialLine?.attr('stroke-dasharray', null)
-                preIndustrialLabel?.attr('visibility', 'visible')
+                inst.preIndustrialLine?.attr('stroke-dasharray', null)
+                inst.preIndustrialLabel?.attr('visibility', 'visible')
             } else {
-                preIndustrialLine?.attr('stroke-dasharray', '4 4')
-                preIndustrialLabel?.attr('visibility', 'hidden')
+                inst.preIndustrialLine?.attr('stroke-dasharray', '4 4')
+                inst.preIndustrialLabel?.attr('visibility', 'hidden')
             }
-            const xVal = x.invert(mx)
+            const xVal = inst.x.invert(mx)
             let point
             let xPos
             let tooltipLabel = 'Global mean temp. index'
-            if (extrap && xVal > lastDataYear) {
-                const xEx = Math.min(xVal, extrap.endYear)
-                const yHat = extrap.lastAnomaly + extrap.slope * (xEx - extrap.lastYear)
+            const extrapActive = inst.extrapolateMode && inst.extrap
+            if (extrapActive && xVal > inst.lastDataYear) {
+                const xEx = Math.min(xVal, inst.extrap.endYear)
+                const yHat =
+                    inst.extrap.lastAnomaly + inst.extrap.slope * (xEx - inst.extrap.lastYear)
                 point = { year: Math.round(xEx), anomaly: yHat }
-                xPos = x(xEx)
+                xPos = inst.x(xEx)
                 tooltipLabel = 'Linear extrapolation (40-yr trend)'
             } else {
-                const i = Math.max(0, Math.min(bisect(data, xVal), data.length - 1))
-                point = data[i]
-                xPos = x(point.year)
+                const i = Math.max(0, Math.min(inst.bisect(inst.data, xVal), inst.data.length - 1))
+                point = inst.data[i]
+                xPos = inst.x(point.year)
             }
-            hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
+            inst.hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
             const anomaly = point.anomaly
             const sign = anomaly >= 0 ? '+' : ''
             const yearLabel = String(point.year)
             const valueStr = `${sign}${anomaly.toFixed(2)}°C`
             const topRow = `<div class="tooltip-top-row"><span class="tooltip-value">${valueStr}</span><span class="tooltip-year">${yearLabel}</span></div>`
-            tooltip.innerHTML = `${topRow}<span class="tooltip-label">${tooltipLabel}</span>`
+            inst.tooltip.innerHTML = `${topRow}<span class="tooltip-label">${tooltipLabel}</span>`
             const offset = 12
-            const svgRect = svg.node()?.getBoundingClientRect()
-            const ttRect = tooltip.getBoundingClientRect()
+            const svgRect = inst.svg.node()?.getBoundingClientRect()
+            const ttRect = inst.tooltip.getBoundingClientRect()
             if (!svgRect) return
-            const plotLeft = svgRect.left + margin.left
-            const plotRight = plotLeft + width
+            const plotLeft = svgRect.left + inst.margin.left
+            const plotRight = plotLeft + inst.width
             const lineX = plotLeft + xPos
 
             let left = lineX + offset
@@ -395,26 +411,236 @@ function renderChart(container, data, extrapolateMode) {
             }
             left = Math.max(plotLeft, left)
 
-            const top = Math.max(8, svgRect.top + margin.top + 8)
-            tooltip.style.left = `${left}px`
-            tooltip.style.top = `${top}px`
+            const top = Math.max(8, svgRect.top + inst.margin.top + 8)
+            inst.tooltip.style.left = `${left}px`
+            inst.tooltip.style.top = `${top}px`
         })
         .on('mouseleave', () => {
-            hoverLine.attr('visibility', 'hidden')
-            tooltip.classList.remove('visible')
-            if (baselineLine && baselineLabel) {
-                baselineLine.attr('stroke-dasharray', '4 4')
-                baselineLabel.attr('visibility', 'hidden')
+            const inst = chartInstance
+            if (!inst) return
+            inst.hoverLine.attr('visibility', 'hidden')
+            inst.tooltip.classList.remove('visible')
+            if (inst.baselineLine && inst.baselineLabel) {
+                inst.baselineLine.attr('stroke-dasharray', '4 4')
+                inst.baselineLabel.attr('visibility', 'hidden')
             }
-            if (preIndustrialLine && preIndustrialLabel) {
-                preIndustrialLine.attr('stroke-dasharray', '4 4')
-                preIndustrialLabel.attr('visibility', 'hidden')
+            if (inst.preIndustrialLine && inst.preIndustrialLabel) {
+                inst.preIndustrialLine.attr('stroke-dasharray', '4 4')
+                inst.preIndustrialLabel.attr('visibility', 'hidden')
             }
-            refLine1951?.attr('visibility', 'hidden')
-            refLine1980?.attr('visibility', 'hidden')
-            refYearLabel1951?.attr('visibility', 'hidden')
-            refYearLabel1980?.attr('visibility', 'hidden')
+            inst.refLine1951?.attr('visibility', 'hidden')
+            inst.refLine1980?.attr('visibility', 'hidden')
+            inst.refYearLabel1951?.attr('visibility', 'hidden')
+            inst.refYearLabel1980?.attr('visibility', 'hidden')
         })
+
+    chartInstance = {
+        container,
+        data,
+        margin,
+        width,
+        height,
+        svg,
+        g,
+        x,
+        y,
+        xAxis,
+        yAxis,
+        line,
+        area,
+        gradient,
+        minAnomaly,
+        maxAnomaly,
+        extrapolateMode,
+        extrap,
+        lastDataYear,
+        extrapLineGen,
+        baselineLine,
+        baselineLabel,
+        preIndustrialLine,
+        preIndustrialLabel,
+        refLine1951,
+        refLine1980,
+        refYearLabel1951,
+        refYearLabel1980,
+        zeroY,
+        preIndustrialY,
+        baselineInView,
+        preIndustrialInView,
+        BASELINE_HIT_PX,
+        bisect,
+        hoverLine,
+        tooltip,
+    }
+}
+
+function setExtrapolateMode(enabled, animate = true) {
+    const inst = chartInstance
+    if (!inst?.g || !inst.data?.length) return
+
+    inst.hoverLine?.attr('visibility', 'hidden')
+    inst.tooltip?.classList.remove('visible')
+
+    const { data, g, height, line, area, gradient, minAnomaly, maxAnomaly } = inst
+    const extrap = extrapolationSeries(data, enabled)
+    const lastDataYear = data[data.length - 1].year
+    const xMin = d3.min(data, (d) => d.year)
+    const xMax = extrap ? extrap.endYear : lastDataYear
+    const [yMin, yMax] = yDomainForData(data, extrap)
+
+    inst.extrapolateMode = enabled
+    inst.extrap = extrap
+    inst.lastDataYear = lastDataYear
+
+    const transition = animate
+        ? d3.transition().duration(EXTRAP_TRANSITION_MS).ease(d3.easeCubicInOut)
+        : null
+
+    inst.x.domain([xMin, xMax])
+    inst.y.domain([yMin, yMax])
+
+    const zeroY = inst.y(0)
+    const preIndustrialY = inst.y(PRE_INDUSTRIAL_ANOMALY)
+    inst.zeroY = zeroY
+    inst.preIndustrialY = preIndustrialY
+
+    const axisX = g.select('.axis-x')
+    const axisY = g.select('.axis-y')
+    if (transition) {
+        axisX.transition(transition).call(inst.xAxis)
+        axisY.transition(transition).call(inst.yAxis)
+    } else {
+        axisX.call(inst.xAxis)
+        axisY.call(inst.yAxis)
+    }
+
+    const gradSel = gradient
+    if (transition) {
+        gradSel
+            .transition(transition)
+            .attr('y1', inst.y(maxAnomaly))
+            .attr('y2', inst.y(minAnomaly))
+    } else {
+        gradSel.attr('y1', inst.y(maxAnomaly)).attr('y2', inst.y(minAnomaly))
+    }
+
+    const linePath = line.x((d) => inst.x(d.year)).y((d) => inst.y(d.anomaly))
+    const areaPath = area
+        .x((d) => inst.x(d.year))
+        .y0(height)
+        .y1((d) => inst.y(d.anomaly))
+
+    const mainLine = g.select('.line')
+    const mainArea = g.select('.area')
+    if (transition) {
+        mainLine.transition(transition).attr('d', linePath(data))
+        mainArea.transition(transition).attr('d', areaPath(data))
+    } else {
+        mainLine.attr('d', linePath(data))
+        mainArea.attr('d', areaPath(data))
+    }
+
+    if (inst.baselineLine) {
+        if (transition) {
+            inst.baselineLine.transition(transition).attr('y1', zeroY).attr('y2', zeroY)
+        } else {
+            inst.baselineLine.attr('y1', zeroY).attr('y2', zeroY)
+        }
+    }
+    if (inst.baselineLabel) {
+        if (transition) inst.baselineLabel.transition(transition).attr('y', zeroY - 6)
+        else inst.baselineLabel.attr('y', zeroY - 6)
+    }
+    if (inst.preIndustrialLine) {
+        if (transition) {
+            inst.preIndustrialLine.transition(transition).attr('y1', preIndustrialY).attr('y2', preIndustrialY)
+        } else {
+            inst.preIndustrialLine.attr('y1', preIndustrialY).attr('y2', preIndustrialY)
+        }
+    }
+    if (inst.preIndustrialLabel) {
+        if (transition) inst.preIndustrialLabel.transition(transition).attr('y', preIndustrialY - 6)
+        else inst.preIndustrialLabel.attr('y', preIndustrialY - 6)
+    }
+
+    const x1951 = inst.x(1951)
+    const x1980 = inst.x(1980)
+    const moveX = (sel, xVal) => {
+        if (!sel) return
+        if (transition) sel.transition(transition).attr('x1', xVal).attr('x2', xVal)
+        else sel.attr('x1', xVal).attr('x2', xVal)
+    }
+    moveX(inst.refLine1951, x1951)
+    moveX(inst.refLine1980, x1980)
+    if (inst.refYearLabel1951) {
+        if (transition) inst.refYearLabel1951.transition(transition).attr('x', x1951 + 4)
+        else inst.refYearLabel1951.attr('x', x1951 + 4)
+    }
+    if (inst.refYearLabel1980) {
+        if (transition) inst.refYearLabel1980.transition(transition).attr('x', x1980 + 4)
+        else inst.refYearLabel1980.attr('x', x1980 + 4)
+    }
+
+    const extrapLineGen = d3
+        .line()
+        .x((d) => inst.x(d.year))
+        .y((d) => inst.y(d.anomaly))
+    inst.extrapLineGen = extrapLineGen
+
+    const hasSegment = extrap && extrap.endYear > extrap.lastYear + 1e-6
+    const extrapData = hasSegment && enabled ? [extrap] : []
+
+    const extrapSel = g.selectAll('.extrap-line').data(extrapData, () => 'extrap')
+
+    const extrapEnter = extrapSel
+        .enter()
+        .append('path')
+        .attr('class', 'extrap-line')
+        .attr('fill', 'none')
+        .attr('stroke', 'var(--color-heading)')
+        .attr('stroke-width', 2)
+        .attr('stroke-dasharray', '6 5')
+        .attr('stroke-linecap', 'round')
+        .attr('opacity', 0)
+        .attr('d', (d) => extrapLineGen(d.segment))
+
+    if (enabled && hasSegment) {
+        const pathNode = extrapEnter.node()
+        if (pathNode && transition) {
+            const len = pathNode.getTotalLength()
+            extrapEnter
+                .attr('stroke-dasharray', `${len} ${len}`)
+                .attr('stroke-dashoffset', len)
+        }
+    }
+
+    extrapSel
+        .exit()
+        .transition(transition)
+        .attr('opacity', 0)
+        .remove()
+
+    const extrapMerged = extrapEnter.merge(extrapSel)
+
+    if (transition) {
+        extrapMerged
+            .transition(transition)
+            .attr('d', (d) => extrapLineGen(d.segment))
+            .attr('opacity', enabled && hasSegment ? 0.9 : 0)
+            .on('end', function () {
+                if (enabled && hasSegment) {
+                    d3.select(this).attr('stroke-dasharray', '6 5').attr('stroke-dashoffset', 0)
+                }
+            })
+    } else if (enabled && hasSegment) {
+        extrapMerged
+            .attr('d', (d) => extrapLineGen(d.segment))
+            .attr('opacity', 0.9)
+            .attr('stroke-dasharray', '6 5')
+            .attr('stroke-dashoffset', 0)
+    } else {
+        extrapMerged.attr('opacity', 0)
+    }
 }
 
 onMounted(async () => {
@@ -437,18 +663,22 @@ onMounted(async () => {
 
     await nextTick()
     if (chartRef.value && annualDataRef.value.length) {
-        renderChart(chartRef.value, annualDataRef.value, extrapolate.value)
+        buildChart(chartRef.value, annualDataRef.value, extrapolate.value)
     }
 })
 
-watch(extrapolate, async () => {
+watch(extrapolate, async (enabled) => {
     await nextTick()
-    if (chartRef.value && annualDataRef.value.length) {
-        renderChart(chartRef.value, annualDataRef.value, extrapolate.value)
+    const animate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (chartInstance) {
+        setExtrapolateMode(enabled, animate)
+    } else if (chartRef.value && annualDataRef.value.length) {
+        buildChart(chartRef.value, annualDataRef.value, enabled)
     }
 })
 
 onBeforeUnmount(() => {
+    chartInstance = null
     if (tooltipEl.value && tooltipEl.value.parentNode) {
         tooltipEl.value.remove()
     }
