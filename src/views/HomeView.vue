@@ -91,7 +91,7 @@ onUnmounted(() => {
                 :style="{ transform: `translateX(-${activeSlide * 100}vw)` }"
             >
                 <div class="carousel-slide" :aria-hidden="activeSlide !== 0">
-                    <div class="slide-inner">
+                    <div class="slide-inner slide-inner--first">
                         <section class="section">
                             <h2 class="section-title">Global Land-Ocean Temperature Anomaly</h2>
                             <p class="section-description">
@@ -294,7 +294,7 @@ onUnmounted(() => {
     margin: 0 auto;
 }
 
-.slide-inner--last {
+.slide-inner--last, .slide-inner--first {
     display: flex;
     flex-direction: column;
     flex: 1;

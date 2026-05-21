@@ -1,11 +1,67 @@
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import * as d3 from 'd3'
 
 const chartRef = ref(null)
 const tooltipEl = ref(null)
 const annualDataRef = ref([])
 const extrapolate = ref(false)
+/** Anomaly (°C) of the clicked horizontal guide, or null for default instructions. */
+const selectedRefAnomaly = ref(null)
+
+const DEFAULT_GUIDE = {
+    title: 'How to use this chart',
+    paragraphs: [
+        'This chart shows NASA GISS global land–ocean temperature anomalies in degrees Celsius (°C). Each value is how far the annual global mean temperature is above or below the 1951–1980 average—the baseline NASA uses for the Land-Ocean Temperature Index (LOTI). A reading of 0 °C means the year matched that 30-year mean; positive values are warmer, negative values are cooler.',
+        'Move the cursor over the temperature line to see the anomaly for a given year. Enable Extrapolate to extend the recent 40-year warming trend forward (dashed segment).',
+        'Clicking on a horizontal line to learn more about that temperature anomaly.',
+    ],
+}
+
+const REFERENCE_LINE_DETAILS = {
+    '0': {
+        title: '1951–1980 average — 0 °C anomaly',
+        paragraphs: [
+            'Placeholder: The 1951–1980 average is NASA’s reference period for GISTEMP anomalies. Years at 0 °C align with the mean global temperature observed across those three decades.',
+        ],
+    },
+    '-0.19': {
+        title: 'Pre-industrial average — −0.19 °C anomaly',
+        paragraphs: [
+            'Placeholder: Relative to the 1951–1980 baseline, pre-industrial conditions sit about 0.19 °C cooler. This line helps compare modern warming to long-run climate before industrial emissions dominated.',
+        ],
+    },
+    '1.31': {
+        title: '1.5 °C above pre-industrial — +1.31 °C anomaly',
+        paragraphs: [
+            'Placeholder: On this scale, +1.31 °C corresponds to roughly 1.5 °C of warming above pre-industrial levels—a threshold often discussed in international climate targets.',
+        ],
+    },
+    '1.81': {
+        title: '2 °C above pre-industrial — +1.81 °C anomaly',
+        paragraphs: [
+            'Placeholder: +1.81 °C anomaly marks about 2 °C above pre-industrial temperatures, a long-standing benchmark for assessing severe climate risks.',
+        ],
+    },
+    '2.81': {
+        title: '3 °C above pre-industrial — +2.81 °C anomaly',
+        paragraphs: [
+            'Placeholder: +2.81 °C anomaly represents roughly 3 °C above pre-industrial conditions, a level associated with substantially greater regional and global impacts in scientific assessments.',
+        ],
+    },
+    '3.81': {
+        title: '4 °C above pre-industrial — +3.81 °C anomaly',
+        paragraphs: [
+            'Placeholder: +3.81 °C anomaly corresponds to about 4 °C above pre-industrial levels—the upper end used in some high-emissions scenarios and extrapolation on this chart when Extrapolate is enabled.',
+        ],
+    },
+}
+
+const guidePanel = computed(() => {
+    if (selectedRefAnomaly.value == null) return DEFAULT_GUIDE
+    const key = String(selectedRefAnomaly.value)
+    return REFERENCE_LINE_DETAILS[key] ?? DEFAULT_GUIDE
+})
 
 const FIT_WINDOW_YEARS = 40
 /** Anomaly (°C vs 1951–1980) at which forward extrapolation stops. */
@@ -222,6 +278,16 @@ function createHorizontalReferences(g, y, x, width, height) {
     return refs
 }
 
+function applyHorizontalRefHighlight(inst, hoverRef) {
+    const pinned =
+        selectedRefAnomaly.value != null
+            ? inst.horizontalRefs.find(
+                  (r) => r.anomaly === selectedRefAnomaly.value && r.inView,
+              )
+            : null
+    setActiveHorizontalRef(inst, hoverRef ?? pinned ?? null)
+}
+
 function setActiveHorizontalRef(inst, activeRef) {
     for (const ref of inst.horizontalRefs) {
         if (!ref.inView) continue
@@ -300,6 +366,7 @@ function updateHorizontalRefPositions(inst, transition) {
     inst.zeroY = inst.y(0)
     inst.preIndustrialY = inst.y(PRE_INDUSTRIAL_ANOMALY)
     syncHorizontalRefVisibility(inst)
+    applyHorizontalRefHighlight(inst, null)
 }
 
 function buildChart(container, data, extrapolateMode) {
@@ -431,7 +498,9 @@ function buildChart(container, data, extrapolateMode) {
             const inst = chartInstance
             if (!inst) return
             const [mx, my] = d3.pointer(event, this)
-            setActiveHorizontalRef(inst, hitHorizontalRef(inst, my))
+            const hoverRef = hitHorizontalRef(inst, my)
+            applyHorizontalRefHighlight(inst, hoverRef)
+            this.style.cursor = hoverRef ? 'pointer' : 'crosshair'
             const xVal = inst.x.invert(mx)
             let point
             let xPos
@@ -474,12 +543,20 @@ function buildChart(container, data, extrapolateMode) {
             inst.tooltip.style.left = `${left}px`
             inst.tooltip.style.top = `${top}px`
         })
+        .on('click', function (event) {
+            const inst = chartInstance
+            if (!inst) return
+            const [, my] = d3.pointer(event, this)
+            const hit = hitHorizontalRef(inst, my)
+            selectedRefAnomaly.value = hit ? hit.anomaly : null
+            applyHorizontalRefHighlight(inst, hit)
+        })
         .on('mouseleave', () => {
             const inst = chartInstance
             if (!inst) return
             inst.hoverLine.attr('visibility', 'hidden')
             inst.tooltip.classList.remove('visible')
-            setActiveHorizontalRef(inst, null)
+            applyHorizontalRefHighlight(inst, null)
         })
 
     chartInstance = {
@@ -513,6 +590,7 @@ function buildChart(container, data, extrapolateMode) {
     }
 
     syncHorizontalRefVisibility(chartInstance)
+    applyHorizontalRefHighlight(chartInstance, null)
 }
 
 function setExtrapolateMode(enabled, animate = true) {
@@ -577,6 +655,14 @@ function setExtrapolateMode(enabled, animate = true) {
     }
 
     updateHorizontalRefPositions(inst, transition)
+
+    if (selectedRefAnomaly.value != null) {
+        const stillVisible = inst.horizontalRefs.some(
+            (r) => r.anomaly === selectedRefAnomaly.value && r.inView,
+        )
+        if (!stillVisible) selectedRefAnomaly.value = null
+    }
+    applyHorizontalRefHighlight(inst, null)
 
     const extrapLineGen = d3
         .line()
@@ -693,7 +779,21 @@ onBeforeUnmount(() => {
                 <span class="extrap-label">Extrapolate</span>
             </label>
         </div>
-        <div ref="chartRef" class="chart-container"></div>
+        <div class="temperature-chart-layout">
+            <aside class="guide-panel" aria-live="polite">
+                <h3 class="guide-panel-title">{{ guidePanel.title }}</h3>
+                <p
+                    v-for="(paragraph, index) in guidePanel.paragraphs"
+                    :key="index"
+                    class="guide-panel-text"
+                >
+                    {{ paragraph }}
+                </p>
+            </aside>
+            <div class="chart-column">
+                <div ref="chartRef" class="chart-container"></div>
+            </div>
+        </div>
         <figcaption>
             <strong>Source:</strong> NASA GISS — Land-Ocean Temperature Index. Anomalies relative to
             1951–1980 mean.
@@ -736,10 +836,62 @@ onBeforeUnmount(() => {
     line-height: 1.2;
 }
 
+.temperature-chart-layout {
+    display: flex;
+    align-items: stretch;
+    gap: 1rem;
+}
+
+.guide-panel {
+    flex: 0 0 min(280px, 34%);
+    max-width: 320px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 0.85rem 0.9rem;
+    background: var(--color-background-soft);
+    align-self: stretch;
+}
+
+.guide-panel-title {
+    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-heading);
+    margin: 0 0 0.65rem;
+    line-height: 1.3;
+}
+
+.guide-panel-text {
+    margin: 0 0 0.75rem;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--color-text);
+}
+
+.guide-panel-text:last-child {
+    margin-bottom: 0;
+}
+
+.chart-column {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .chart-container {
     position: relative;
     width: 100%;
     min-height: 360px;
+    flex: 1;
+}
+
+.chart-container :deep(.chart-overlay) {
+    cursor: crosshair;
+}
+
+.chart-container :deep(.baseline) {
+    cursor: pointer;
 }
 
 .chart-container :deep(.hover-line) {
@@ -809,6 +961,19 @@ figcaption {
     font-size: 0.8rem;
     color: var(--color-muted);
     line-height: 1.4;
+}
+
+@media (max-width: 720px) {
+    .temperature-chart-layout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .guide-panel {
+        flex: none;
+        max-width: none;
+        width: 100%;
+    }
 }
 </style>
 
