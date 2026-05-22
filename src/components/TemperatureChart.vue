@@ -12,9 +12,10 @@ const selectedRefAnomaly = ref(null)
 const DEFAULT_GUIDE = {
     title: 'How to use this chart',
     paragraphs: [
-        'This chart shows NASA GISS global land–ocean temperature anomalies in degrees Celsius (°C). Each value is how far the annual global mean temperature is above or below the 1951–1980 average—the baseline NASA uses for the Land-Ocean Temperature Index (LOTI). A reading of 0 °C means the year matched that 30-year mean; positive values are warmer, negative values are cooler.',
-        'Move the cursor over the temperature line to see the anomaly for a given year. Enable Extrapolate to extend the recent 40-year warming trend forward (dashed segment).',
-        'Clicking on a horizontal line to learn more about that temperature anomaly.',
+        'This chart shows NASA GISS global land–ocean temperature anomalies in degrees Celsius (°C). Each value is how far the annual global mean temperature is above or below the 1951–1980 average—the baseline NASA uses for the Land-Ocean Temperature Index (LOTI).',
+        'Move the cursor over the temperature line to see the anomaly for a given year.',
+        'Enable Extrapolate to extend the recent 40-year warming trend forward (dashed segment).',
+        'Click on a horizontal line to learn more about that temperature anomaly.',
     ],
 }
 
@@ -34,25 +35,150 @@ const REFERENCE_LINE_DETAILS = {
     '1.31': {
         title: '1.5 °C above pre-industrial — +1.31 °C anomaly',
         paragraphs: [
-            'Placeholder: On this scale, +1.31 °C corresponds to roughly 1.5 °C of warming above pre-industrial levels—a threshold often discussed in international climate targets.',
+        'What becomes likely here:',
+        'Coral reef collapse accelerates',
+        '70–90% of warm-water coral reefs may disappear',
+        'repeated bleaching events prevent recovery',
+        'reef ecosystems stop functioning normally',
+        'Arctic summer sea ice becomes unstable',
+        'nearly ice-free summers become increasingly possible',
+        'Arctic warming accelerates due to albedo loss',
+        'Major heatwaves become common',
+        'What used to be “once per century” heat extremes become regular.',
+        'Boreal forests begin large-scale stress',
+        'Canada + Siberia see:',
+        'mega-fires',
+        'bark beetle outbreaks',
+        'drought mortality',
+        'Species migration accelerates',
+        'Many ecosystems can still survive here — but they begin reorganizing geographically.',
         ],
     },
     '1.81': {
         title: '2 °C above pre-industrial — +1.81 °C anomaly',
         paragraphs: [
-            'Placeholder: +1.81 °C anomaly marks about 2 °C above pre-industrial temperatures, a long-standing benchmark for assessing severe climate risks.',
+        'Major irreversible systems become threatened',
+        'Greenland Ice Sheet may pass a tipping point',
+
+        'The concern here is not immediate collapse — it’s committed collapse.',
+
+        'Once enough ice is lost:',
+
+        'elevation drops',
+        'melting accelerates',
+        'long-term disintegration continues for centuries',
+
+        'Potential long-term sea level rise:',
+
+        '~7 meters eventually',
+        'Amazon rainforest dieback risk rises sharply',
+
+        'The rainforest may begin partially converting into:',
+
+        'dry forest',
+        'savanna',
+
+        'because rainfall recycling weakens.',
+
+        'This creates a dangerous carbon feedback:',
+
+        'dying forest releases CO₂',
+        'warming accelerates further',
+        'Coral reefs mostly disappear',
+
+        'At ~2°C, scientists project the near-total loss of warm-water coral ecosystems.',
+
+        'Water stress and crop instability expand',
+
+        'Large regions experience:',
+
+        'chronic drought',
+        'stronger flood cycles',
+        'heat stress on agriculture',
+        'Extreme rainfall intensifies',
+
+        'Flooding risk rises substantially in many regions.',
         ],
     },
     '2.81': {
         title: '3 °C above pre-industrial — +2.81 °C anomaly',
         paragraphs: [
-            'Placeholder: +2.81 °C anomaly represents roughly 3 °C above pre-industrial conditions, a level associated with substantially greater regional and global impacts in scientific assessments.',
+        'Ecosystem-level restructuring',
+        'Large portions of the Amazon may collapse',
+
+        'Not just drought years —',
+        'the biome itself changes state.',
+
+        'Permafrost thaw becomes a major feedback source',
+
+        'Large methane and CO₂ releases begin contributing significantly to warming.',
+
+        'Boreal forests may transition ecosystems',
+
+        'Some areas may fail to regrow as forest after fires.',
+
+        'Instead:',
+
+        'shrubland',
+        'grassland',
+        'sparse woodland',
+
+        'replace them.',
+
+        'Heat becomes physiologically dangerous in some regions',
+
+        'Certain humid heat events may approach survivability limits for humans outdoors.',
+
+        'Food systems destabilize more regularly',
+
+        'Crop failures become more correlated globally:',
+
+        'simultaneous droughts',
+        'heatwaves across multiple breadbaskets',
         ],
     },
     '3.81': {
         title: '4 °C above pre-industrial — +3.81 °C anomaly',
         paragraphs: [
-            'Placeholder: +3.81 °C anomaly corresponds to about 4 °C above pre-industrial levels—the upper end used in some high-emissions scenarios and extrapolation on this chart when Extrapolate is enabled.',
+        'This is generally considered a profoundly destabilized Earth system.',
+
+        'Not “human extinction,” but:',
+
+        'massive adaptation pressure',
+        'severe migration',
+        'chronic food/water insecurity in many regions',
+        'Possible outcomes here',
+        'West Antarctic Ice Sheet instability becomes much more likely',
+
+        'This could commit the world to multi-meter sea level rise over centuries.',
+
+        'Entire climate zones shift',
+
+        'Regions that historically supported:',
+
+        'agriculture',
+        'forests',
+        'dense populations',
+
+        'may no longer reliably do so.',
+
+        'Extreme weather becomes the dominant climate experience',
+
+        'What we currently call:',
+
+        'heatwaves',
+        'megafires',
+        '“100-year floods”',
+
+        'becomes routine in many places.',
+
+        'Ecosystem simplification',
+
+        'Biodiversity drops sharply because:',
+
+        'migration speed cannot keep up',
+        'ecosystems fragment',
+        'food webs destabilize',
         ],
     },
 }
@@ -773,15 +899,24 @@ onBeforeUnmount(() => {
         class="temperature-chart"
         aria-label="Global land-ocean temperature anomaly from 1880 to present"
     >
-        <div class="chart-toolbar">
-            <label class="extrap-toggle">
-                <input v-model="extrapolate" type="checkbox" class="extrap-checkbox" />
-                <span class="extrap-label">Extrapolate</span>
-            </label>
-        </div>
         <div class="temperature-chart-layout">
             <aside class="guide-panel" aria-live="polite">
-                <h3 class="guide-panel-title">{{ guidePanel.title }}</h3>
+                <div class="panel-head">
+                    <span class="panel-head-label">{{ guidePanel.title }}</span>
+                    <button
+                        type="button"
+                        class="play-button"
+                        :aria-pressed="extrapolate"
+                        :aria-label="
+                            extrapolate
+                                ? 'Turn off temperature extrapolation'
+                                : 'Turn on temperature extrapolation'
+                        "
+                        @click="extrapolate = !extrapolate"
+                    >
+                        {{ extrapolate ? 'Extrapolate on' : 'Extrapolate' }}
+                    </button>
+                </div>
                 <p
                     v-for="(paragraph, index) in guidePanel.paragraphs"
                     :key="index"
@@ -807,35 +942,6 @@ onBeforeUnmount(() => {
     width: 100%;
 }
 
-.chart-toolbar {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.extrap-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--color-heading);
-    user-select: none;
-}
-
-.extrap-checkbox {
-    width: 1rem;
-    height: 1rem;
-    accent-color: var(--color-heading);
-    cursor: pointer;
-}
-
-.extrap-label {
-    line-height: 1.2;
-}
-
 .temperature-chart-layout {
     display: flex;
     align-items: stretch;
@@ -847,18 +953,48 @@ onBeforeUnmount(() => {
     max-width: 320px;
     border: 1px solid var(--color-border);
     border-radius: 10px;
-    padding: 0.85rem 0.9rem;
+    padding: 0.75rem;
     background: var(--color-background-soft);
+    display: flex;
+    flex-direction: column;
     align-self: stretch;
+    min-height: 500px;
+    max-height: 500px;
+    overflow-y: auto;
 }
 
-.guide-panel-title {
+.panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+}
+
+.panel-head-label {
     font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
     font-size: 1rem;
+    line-height: 1.3;
     font-weight: 600;
     color: var(--color-heading);
-    margin: 0 0 0.65rem;
-    line-height: 1.3;
+    flex: 1;
+    min-width: 0;
+}
+
+.play-button {
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-text);
+    background: var(--color-background);
+    cursor: pointer;
+}
+
+.play-button:hover {
+    border-color: var(--color-text);
 }
 
 .guide-panel-text {
@@ -877,13 +1013,13 @@ onBeforeUnmount(() => {
     min-width: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 .chart-container {
     position: relative;
     width: 100%;
     min-height: 360px;
-    flex: 1;
 }
 
 .chart-container :deep(.chart-overlay) {
