@@ -1,15 +1,15 @@
 @import './base.css';
+@import './tailwind.css';
 
 #app {
     width: 100%;
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    font-weight: normal;
 }
 
 .carousel-fade-enter-active {
-    transition: opacity 2s ease;
+    transition: opacity 2s ease-out;
 }
 
 .carousel-fade-enter-from {
@@ -20,16 +20,131 @@
     opacity: 1;
 }
 
-a,
-.green {
-    text-decoration: none;
-    color: hsla(160, 100%, 37%, 1);
-    transition: 0.4s;
-    padding: 3px;
+/* Portaled chart tooltips (fixed to body) */
+.chart-tooltip {
+    position: fixed;
+    z-index: 9999;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.75rem;
+    color: #111111;
+    background: #f9f9f7;
+    border: 1px solid #111111;
+    border-radius: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.15s ease-out,
+        visibility 0.15s ease-out;
+    box-shadow: 4px 4px 0 0 #111111;
 }
 
-@media (hover: hover) {
-    a:hover {
-        background-color: hsla(160, 100%, 37%, 0.2);
-    }
+.chart-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.chart-tooltip .tooltip-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+    margin-bottom: 0.15rem;
+}
+
+.chart-tooltip .tooltip-year {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+}
+
+.chart-tooltip .tooltip-top-row .tooltip-year {
+    margin-bottom: 0;
+    margin-left: auto;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.chart-tooltip .tooltip-top-row .tooltip-value {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.chart-tooltip .tooltip-value {
+    display: block;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.chart-tooltip .tooltip-label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #737373;
+    margin-top: 0.15rem;
+}
+
+.chart-tooltip.chart-tooltip--ghg {
+    white-space: normal;
+    max-width: min(320px, calc(100vw - 24px));
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-top-row {
+    margin-bottom: 0;
+    align-items: flex-start;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-ghg-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-top-row .tooltip-year {
+    margin-left: auto;
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-total {
+    display: block;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+    line-height: 1.35;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-sub {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #737373;
+    margin-bottom: 0.2rem;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-breakdown {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.72rem;
+    line-height: 1.45;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tt-co2e {
+    opacity: 0.95;
+    white-space: nowrap;
+}
+
+.chart-tooltip.chart-tooltip--ghg .tooltip-map-area {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.3rem;
+    opacity: 0.92;
 }

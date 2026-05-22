@@ -1,9 +1,11 @@
 <template>
     <Transition name="carousel-fade" appear>
-        <article class="sources">
-            <header class="sources-header">
-                <h1 class="sources-title">Data sources and references</h1>
-                <p class="sources-intro">
+        <article class="page-container max-w-[1440px] newsprint-texture">
+            <header class="mb-8 border-b-4 border-newsprint-fg pb-6">
+                <h1 class="mb-3 font-serif text-3xl font-black leading-tight lg:text-4xl">
+                    Data sources and references
+                </h1>
+                <p class="m-0 max-w-3xl leading-relaxed">
                     This appendix lists primary observational datasets, derived files stored in this
                     repository, and methodological references underpinning the figures. Citations follow
                     a conventional numbered format so readers can trace each visualization to its
@@ -11,17 +13,19 @@
                 </p>
             </header>
 
-            <section class="sources-section" aria-labelledby="why-heading">
-                <h2 id="why-heading" class="sources-h2">Why we chose these datasets</h2>
-                <p class="sources-body sources-lead">
+            <section class="mb-9 last:mb-0" aria-labelledby="why-heading">
+                <h2 id="why-heading" class="section-heading mb-3">Why we chose these datasets</h2>
+                <p class="mb-6 leading-relaxed">
                     This site pairs a global temperature record with harmonized national emissions so that
                     readers can relate observed warming to long-run greenhouse-gas trajectories using sources
                     that are transparent, maintained, and widely used in climate science and policy analysis.
                 </p>
 
-                <div class="rationale-block">
-                    <h3 class="sources-h3">NASA climate data — GISS Surface Temperature Analysis (GISTEMP)</h3>
-                    <p class="sources-body">
+                <div class="mb-7 last:mb-0">
+                    <h3 class="mb-2.5 font-serif text-lg font-bold leading-snug">
+                        NASA climate data — GISS Surface Temperature Analysis (GISTEMP)
+                    </h3>
+                    <p class="leading-relaxed">
                         We use NASA’s Goddard Institute for Space Studies (GISS)
                         <abbr title="GISS Surface Temperature Analysis">GISTEMP</abbr> land–ocean temperature
                         index—the same family of products documented by NASA’s climate research program and
@@ -40,9 +44,11 @@
                     </p>
                 </div>
 
-                <div class="rationale-block">
-                    <h3 class="sources-h3">PRIMAP-hist national historical emissions</h3>
-                    <p class="sources-body">
+                <div class="mb-7 last:mb-0">
+                    <h3 class="mb-2.5 font-serif text-lg font-bold leading-snug">
+                        PRIMAP-hist national historical emissions
+                    </h3>
+                    <p class="leading-relaxed">
                         We rely on PRIMAP-hist because it offers a <strong>single, peer-reviewed framework</strong>
                         for comparing national emissions over the long run: the same gas and sector definitions
                         (IPCC 2006), the same treatment of the Kyoto basket and GWP choices, and explicit
@@ -53,7 +59,7 @@
                         academic and policy analyses—so readers can connect our figures to the broader
                         literature on national mitigation and global totals.
                     </p>
-                    <p class="sources-body">
+                    <p class="mt-3 leading-relaxed">
                         The PRIMAP-hist national historical emissions time series is a global climate-emissions
                         dataset providing long-term, country-level greenhouse gas (GHG) emissions time series.
                         It combines multiple official and research datasets to produce consistent, gap-filled
@@ -61,24 +67,28 @@
                         period to the present.
                     </p>
 
-                    <h4 class="sources-h4">Key facts</h4>
-                    <dl class="key-facts">
-                        <dt>Domain</dt>
-                        <dd>National GHG emissions time series (climate emissions dataset)</dd>
-                        <dt>Temporal coverage</dt>
-                        <dd>1750–2024 (latest v2.7 release)</dd>
-                        <dt>Spatial coverage</dt>
-                        <dd>All UNFCCC Parties + most non-UNFCCC territories</dd>
-                        <dt>Gases</dt>
-                        <dd>CO₂, CH₄, N₂O, F-gases, Kyoto basket (multiple GWP metrics)</dd>
-                        <dt>Sectors</dt>
-                        <dd>
+                    <h4 class="mt-4 mb-2 font-sans text-sm font-semibold first:mt-3">Key facts</h4>
+                    <dl
+                        class="mb-3 grid grid-cols-1 gap-x-4 gap-y-1.5 text-[0.95rem] leading-snug sm:grid-cols-[minmax(7rem,10rem)_1fr]"
+                    >
+                        <dt class="m-0 font-semibold text-neutral-500 sm:mt-0 mt-2 first:mt-0">
+                            Domain
+                        </dt>
+                        <dd class="m-0">National GHG emissions time series (climate emissions dataset)</dd>
+                        <dt class="m-0 font-semibold text-neutral-500 sm:mt-0 mt-2">Temporal coverage</dt>
+                        <dd class="m-0">1750–2024 (latest v2.7 release)</dd>
+                        <dt class="m-0 font-semibold text-neutral-500 sm:mt-0 mt-2">Spatial coverage</dt>
+                        <dd class="m-0">All UNFCCC Parties + most non-UNFCCC territories</dd>
+                        <dt class="m-0 font-semibold text-neutral-500 sm:mt-0 mt-2">Gases</dt>
+                        <dd class="m-0">CO₂, CH₄, N₂O, F-gases, Kyoto basket (multiple GWP metrics)</dd>
+                        <dt class="m-0 font-semibold text-neutral-500 sm:mt-0 mt-2">Sectors</dt>
+                        <dd class="m-0">
                             IPCC 2006 categories (Energy, IPPU, Agriculture, Waste, Other)
                         </dd>
                     </dl>
 
-                    <h4 class="sources-h4">Background and purpose</h4>
-                    <p class="sources-body">
+                    <h4 class="mt-4 mb-2 font-sans text-sm font-semibold">Background and purpose</h4>
+                    <p class="mt-3 leading-relaxed">
                         PRIMAP-hist was developed by researchers associated with the Potsdam Institute for
                         Climate Impact Research to create a comparable, comprehensive, and long-run record of
                         national emissions. It addresses inconsistencies and gaps in official national
@@ -87,8 +97,8 @@
                         al. (2016, <em>Earth System Science Data</em>).
                     </p>
 
-                    <h4 class="sources-h4">Data content and structure</h4>
-                    <p class="sources-body">
+                    <h4 class="mt-4 mb-2 font-sans text-sm font-semibold">Data content and structure</h4>
+                    <p class="mt-3 leading-relaxed">
                         The dataset provides annual emissions for individual Kyoto gases (CO₂, CH₄, N₂O,
                         various F-gases); aggregated “Kyoto basket” totals under different GWP choices (e.g.,
                         AR4, AR5, AR6); and IPCC 2006 sectors: Energy; Industrial Processes and Product Use
@@ -98,8 +108,8 @@
                         UNFCCC, supplemented by additional national submissions and gap-filling procedures.
                     </p>
 
-                    <h4 class="sources-h4">Methodology and updates</h4>
-                    <p class="sources-body">
+                    <h4 class="mt-4 mb-2 font-sans text-sm font-semibold">Methodology and updates</h4>
+                    <p class="mt-3 leading-relaxed">
                         PRIMAP-hist stitches together national inventory data, global/sectoral datasets, and
                         proxy series, then harmonizes and extrapolates where necessary. For recent years it
                         uses official inventories where available; energy CO₂ extrapolation based on energy
@@ -109,7 +119,9 @@
                         provided separately and flagged as higher-uncertainty due to heterogeneous sources and
                         methods.
                     </p>
-                    <p class="sources-body sources-note-inline">
+                    <p
+                        class="mt-4 border-l-4 border-newsprint-accent bg-newsprint-muted/60 px-3 py-2.5 text-sm leading-relaxed text-neutral-600"
+                    >
                         The figures and derived JSON files in this repository were built from PRIMAP-hist
                         v2.6.1 (see references below); newer releases extend coverage and may revise historical
                         values as methods and reporting evolve.
@@ -117,113 +129,128 @@
                 </div>
             </section>
 
-            <section class="sources-section" aria-labelledby="use-heading">
-                <h2 id="use-heading" class="sources-h2">
+            <section class="mb-9 last:mb-0" aria-labelledby="use-heading">
+                <h2 id="use-heading" class="section-heading mb-3">
                     Dataset use on this site
                 </h2>
-                <p class="sources-note">
+                <p class="mb-4 text-sm leading-relaxed text-neutral-600">
                     The table links each interactive element to local files where applicable (paths
                     relative to project root).
                 </p>
 
-                <div class="use-table-wrap">
-                    <table class="use-table">
+                <div class="overflow-x-auto border border-newsprint-fg">
+                    <table class="w-full min-w-[38rem] border-collapse text-sm leading-normal">
                         <thead>
                             <tr>
-                                <th scope="col">Site location</th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Data / citation</th>
+                                <th
+                                    scope="col"
+                                    class="label-meta border-b border-newsprint-fg bg-newsprint-muted px-3 py-2.5 text-left"
+                                >
+                                    Site location
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="label-meta border-b border-newsprint-fg bg-newsprint-muted px-3 py-2.5 text-left"
+                                >
+                                    Role
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="label-meta border-b border-newsprint-fg bg-newsprint-muted px-3 py-2.5 text-left"
+                                >
+                                    Data / citation
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
-                                    <strong class="nowrap">Home</strong> — Carousel slide&nbsp;1,<br /><span class="muted"
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    <strong class="whitespace-nowrap">Home</strong> — Carousel slide&nbsp;1,<br /><span class="text-sm text-neutral-500"
                                         >Global land–ocean temperature anomaly</span
-                                    ><br /><code class="file">TemperatureChart.vue</code>
+                                    ><br /><code class="font-mono text-xs">TemperatureChart.vue</code>
                                 </td>
-                                <td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     Annual (<code>J-D</code>) and monthly global-mean anomalies (°C) vs
                                     the 1951–1980 baseline; chart and tooltips computed in-browser.
                                 </td>
-                                <td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     ASCII table <code>public/data/GLB.Ts+dSST.csv</code> maintained from
-                                    NASA GISS LOTI<sup class="cite">[1]</sup>.
+                                    NASA GISS LOTI<sup class="ml-0.5 font-semibold">[1]</sup>.
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <strong class="nowrap">Home</strong> — Carousel slide&nbsp;2,<br /><span class="muted"
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    <strong class="whitespace-nowrap">Home</strong> — Carousel slide&nbsp;2,<br /><span class="text-sm text-neutral-500"
                                         >World aggregate greenhouse gases (Kyoto basket)</span
-                                    ><br /><code class="file">GreenhouseGasChart.vue</code>
+                                    ><br /><code class="font-mono text-xs">GreenhouseGasChart.vue</code>
                                 </td>
-                                <td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     Time series for aggregate <strong>EARTH</strong>, PRIMAP scenario
                                     <code>HISTCR</code>, national total excluding land use /
                                     land-use change (IPCC&nbsp;2006 reporting category <code>M.0.EL</code>).
                                     Stacked constituents and Kyoto total in CO₂-equivalent using AR5
-                                    100-yr GWPs where applicable<sup class="cite">[4]</sup>; dashed line:
+                                    100-yr GWPs where applicable<sup class="ml-0.5 font-semibold">[4]</sup>; dashed line:
                                     mean of Kyoto total over 1951–1980.
                                 </td>
-                                <td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     Pre-derived JSON <code>public/data/earth-ghg-annual.json</code> from
-                                    PRIMAP-hist v2.6.1<sup class="cite">[2,&nbsp;3]</sup>.
+                                    PRIMAP-hist v2.6.1<sup class="ml-0.5 font-semibold">[2,&nbsp;3]</sup>.
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <strong class="nowrap">Home</strong> — Carousel slide&nbsp;3,<br /><span class="muted"
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    <strong class="whitespace-nowrap">Home</strong> — Carousel slide&nbsp;3,<br /><span class="text-sm text-neutral-500"
                                         >Country map of greenhouse gases</span
-                                    ><br /><code class="file">WorldEmissionsMap.vue</code>
+                                    ><br /><code class="font-mono text-xs">WorldEmissionsMap.vue</code>
                                 </td>
-                                <td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     Choropleth and tooltips join annual country totals (Gg CO₂-eq / yr,
                                     Kyoto basket AR5&nbsp;GWP100) on ISO&nbsp;3166-1 alpha-3 keys; gas-wise
                                     values in tooltip are converted to CO₂-eq using the same GWPs as the
-                                    global chart<sup class="cite">[4]</sup>.
+                                    global chart<sup class="ml-0.5 font-semibold">[4]</sup>.
                                     Continental rollups use an ISO-derived region classification embedded in
-                                    the JSON build<sup class="cite">[5]</sup>; two PRIMAP-area codes that
+                                    the JSON build<sup class="ml-0.5 font-semibold">[5]</sup>; two PRIMAP-area codes that
                                     are multi-country aggregates are excluded from “top regions” maths to
                                     avoid double counting.
                                     World outline geometry is purely cartographic — it does not change
                                     reported emissions totals.
                                 </td>
-                                <td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     <code>public/data/country-ghg-annual.json</code>, produced by
                                     <code>scripts/build-country-ghg-data.py</code> from the official
-                                    PRIMAP-hist CSV<sup class="cite">[2]</sup>; regional metadata merged
-                                    from the ISO‑3166 list<sup class="cite">[5]</sup>; cartographic layers
-                                    <code>public/data/world.geojson</code> (<strong>boundary basemap</strong><sup class="cite">[6]</sup>). The aggregate world total displayed on
+                                    PRIMAP-hist CSV<sup class="ml-0.5 font-semibold">[2]</sup>; regional metadata merged
+                                    from the ISO‑3166 list<sup class="ml-0.5 font-semibold">[5]</sup>; cartographic layers
+                                    <code>public/data/world.geojson</code> (<strong>boundary basemap</strong><sup class="ml-0.5 font-semibold">[6]</sup>). The aggregate world total displayed on
                                     the map side panel is anchored to the same EARTH Kyoto total as slide
-                                    2 via <code>earth-ghg-annual.json</code><sup class="cite">[2]</sup>.
+                                    2 via <code>earth-ghg-annual.json</code><sup class="ml-0.5 font-semibold">[2]</sup>.
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <strong class="nowrap">Explore</strong><br /><code class="file"
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    <strong class="whitespace-nowrap">Explore</strong><br /><code class="font-mono text-xs"
                                         >ExploreView.vue</code
                                     >
                                 </td>
-                                <td>Introductory narrative only; no quantitative series loaded.</td>
-                                <td>—</td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">Introductory narrative only; no quantitative series loaded.</td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">—</td>
                             </tr>
                             <tr>
-                                <td>
-                                    <strong class="nowrap">Repository tooling</strong><br /><code class="file"
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    <strong class="whitespace-nowrap">Repository tooling</strong><br /><code class="font-mono text-xs"
                                         >scripts/build-country-ghg-data.py</code
                                     >,
-                                    <code class="file">scripts/update-gistemp-data.sh</code>
+                                    <code class="font-mono text-xs">scripts/update-gistemp-data.sh</code>
                                 </td>
-                                <td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     Reproducible refresh of local copies: temperature table from GISS;
                                     country-level PRIMAP extract from Zenodo; regional codes from the
                                     ISO CSV mirror.
                                 </td>
-                                <td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     Build script sources listed in file headers: PRIMAP CSV via Zenodo
-                                    record for v2.6.1<sup class="cite">[2]</sup>; regional lookup from
-                                    GitHub mirror<sup class="cite">[5]</sup>. Temperature script targets
-                                    live GISS products<sup class="cite">[1]</sup>.
+                                    record for v2.6.1<sup class="ml-0.5 font-semibold">[2]</sup>; regional lookup from
+                                    GitHub mirror<sup class="ml-0.5 font-semibold">[5]</sup>. Temperature script targets
+                                    live GISS products<sup class="ml-0.5 font-semibold">[1]</sup>.
                                 </td>
                             </tr>
                         </tbody>
@@ -231,11 +258,11 @@
                 </div>
             </section>
 
-            <section class="sources-section" aria-labelledby="refs-heading">
-                <h2 id="refs-heading" class="sources-h2">References</h2>
-                <ol class="ref-list">
+            <section class="mb-9 last:mb-0" aria-labelledby="refs-heading">
+                <h2 id="refs-heading" class="section-heading mb-3">References</h2>
+                <ol class="m-0 list-decimal space-y-4 pl-6 leading-relaxed">
                     <li>
-                        <span class="ref-label">Global temperature (LOTI / GISTEMP).</span>
+                        <span class="mr-1.5 inline font-semibold">Global temperature (LOTI / GISTEMP).</span>
                         NASA Goddard Institute for Space Studies. <em>GISS Surface Temperature Analysis
                         (GISTEMP)</em> — global-mean land–ocean index
                         (<code>GLB.Ts+dSST</code>). Accessed as tabular ASCII from
@@ -251,7 +278,7 @@
                         >.
                     </li>
                     <li>
-                        <span class="ref-label">National and world historical emissions (PRIMAP-hist).</span>
+                        <span class="mr-1.5 inline font-semibold">National and world historical emissions (PRIMAP-hist).</span>
                         Gütschow, J., Busch, D., &amp; Pflüger, M. (2025). The PRIMAP-hist national
                         historical emissions time series v2.6.1 (1750–2023). <em>Zenodo</em>.
                         <a href="https://doi.org/10.5281/zenodo.15016289" rel="noopener noreferrer"
@@ -260,7 +287,7 @@
                         script and for the metadata embedded in the derived JSON files.
                     </li>
                     <li>
-                        <span class="ref-label">PRIMAP-hist methods and earlier releases.</span>
+                        <span class="mr-1.5 inline font-semibold">PRIMAP-hist methods and earlier releases.</span>
                         Gütschow, J., Jeffery, L., Gieseke, R., Gebel, R., Stevens, D., Krapp, M., &amp;
                         Rocha, M. (2016). The PRIMAP-hist national historical emissions time series.
                         <em>Earth System Science Data</em>, 8, 571–603.
@@ -269,7 +296,7 @@
                         >.
                     </li>
                     <li>
-                        <span class="ref-label">IPCC AR5 global warming potentials (100-yr, no climate–carbon feedback).</span>
+                        <span class="mr-1.5 inline font-semibold">IPCC AR5 global warming potentials (100-yr, no climate–carbon feedback).</span>
                         Myhre, G., Shindell, D., Bréon, F.-M., Collins, W., Fuglestvedt, J., Huang, J.,
                         … Zhang, H. (2013). Anthropogenic and natural radiative forcing. In T. F. Stocker
                         et&nbsp;al. (Eds.), <em>Climate Change 2013: The Physical Science Basis. Contribution
@@ -281,7 +308,7 @@
                         the chosen reporting option).
                     </li>
                     <li>
-                        <span class="ref-label">ISO country codes and UN regional groupings (preprocessing).</span>
+                        <span class="mr-1.5 inline font-semibold">ISO country codes and UN regional groupings (preprocessing).</span>
                         Public CSV listing ISO&nbsp;3166 alpha-2/alpha-3 identifiers with UN macro-region
                         and sub-region labels, used only to attach continent labels for optional
                         rollups in <code>country-ghg-annual.json</code>. Retrieved from
@@ -293,7 +320,7 @@
                         (file <code>all/all.csv</code> as referenced in the build script).
                     </li>
                     <li>
-                        <span class="ref-label">World country boundaries (visualization basemap).</span>
+                        <span class="mr-1.5 inline font-semibold">World country boundaries (visualization basemap).</span>
                         <code>public/data/world.geojson</code> provides simplified country polygons keyed
                         by ISO&nbsp;3166-1 alpha-3 in each feature’s <code>id</code> field for D3
                         rendering. The file is a cartographic convenience layer; it does not influence
@@ -305,20 +332,20 @@
                         specific GeoJSON export.
                     </li>
                     <li>
-                        <span class="ref-label">IPCC inventory boundary (national totals excluding LULUCF).</span>
+                        <span class="mr-1.5 inline font-semibold">IPCC inventory boundary (national totals excluding LULUCF).</span>
                         Reporting category <code>M.0.EL</code> (“national total excluding LULUCF”) follows the
                         2006 IPCC Guidelines structure referenced in PRIMAP documentation; inventories that
                         exclude land use fluxes are summarized in IPCC methodological guidance volumes
                         accompanying national greenhouse gas reporting. (See PRIMAP column documentation
-                        in the Zenodo package<sup class="cite">[2]</sup> for field definitions used by this
+                        in the Zenodo package<sup class="ml-0.5 font-semibold">[2]</sup> for field definitions used by this
                         site.)
                     </li>
                 </ol>
             </section>
 
-            <section class="sources-section" aria-labelledby="software-heading">
-                <h2 id="software-heading" class="sources-h2">Software libraries</h2>
-                <p class="sources-body">
+            <section class="mb-0" aria-labelledby="software-heading">
+                <h2 id="software-heading" class="section-heading mb-3">Software libraries</h2>
+                <p class="leading-relaxed">
                     Interactive figures are implemented in Vue&nbsp;3 and rendered with D3 scales, axes, and
                     geographic paths. Library versions are declared in <code>package.json</code>; they are
                     general-purpose visualization tools and are not themselves sources of climate
@@ -328,226 +355,3 @@
         </article>
     </Transition>
 </template>
-
-<style scoped>
-.sources {
-    min-height: 100vh;
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem);
-}
-
-.sources-header {
-    margin-bottom: 2rem;
-}
-
-.sources-title {
-    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
-    font-weight: 700;
-    font-size: clamp(1.75rem, 4vw, 2.25rem);
-    color: var(--color-heading);
-    margin: 0 0 0.75rem;
-    line-height: 1.2;
-}
-
-.sources-intro {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.65;
-    color: var(--color-text);
-}
-
-.sources-section {
-    margin-bottom: 2.25rem;
-}
-
-.sources-section:last-child {
-    margin-bottom: 0;
-}
-
-.sources-h2 {
-    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
-    font-weight: 600;
-    font-size: clamp(1.1rem, 2.2vw, 1.3rem);
-    color: var(--color-heading);
-    margin: 0 0 0.75rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--color-heading);
-}
-
-.sources-note {
-    margin: 0 0 1rem;
-    font-size: 0.95rem;
-    color: var(--color-muted);
-    line-height: 1.55;
-}
-
-.sources-body {
-    margin: 0;
-    font-size: 0.98rem;
-    line-height: 1.65;
-    color: var(--color-text);
-}
-
-.sources-lead {
-    margin-bottom: 1.5rem;
-}
-
-.rationale-block {
-    margin-bottom: 1.75rem;
-}
-
-.rationale-block:last-child {
-    margin-bottom: 0;
-}
-
-.sources-h3 {
-    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--color-heading);
-    margin: 0 0 0.65rem;
-    line-height: 1.35;
-}
-
-.sources-h4 {
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 0.92rem;
-    color: var(--color-heading);
-    margin: 1.15rem 0 0.5rem;
-    letter-spacing: 0.01em;
-}
-
-.sources-h4:first-of-type {
-    margin-top: 0.85rem;
-}
-
-.key-facts {
-    margin: 0 0 0.85rem;
-    display: grid;
-    grid-template-columns: minmax(7rem, 10rem) 1fr;
-    gap: 0.35rem 1rem;
-    font-size: 0.95rem;
-    line-height: 1.55;
-}
-
-.key-facts dt {
-    margin: 0;
-    font-weight: 600;
-    color: var(--color-muted);
-}
-
-.key-facts dd {
-    margin: 0;
-    color: var(--color-text);
-}
-
-@media (max-width: 520px) {
-    .key-facts {
-        grid-template-columns: 1fr;
-    }
-
-    .key-facts dt {
-        margin-top: 0.35rem;
-    }
-
-    .key-facts dt:first-child {
-        margin-top: 0;
-    }
-}
-
-.sources-note-inline {
-    margin-top: 1rem;
-    padding: 0.65rem 0.85rem;
-    border-left: 3px solid var(--color-border-hover);
-    background: var(--color-background-soft);
-    font-size: 0.92rem;
-    color: var(--color-muted);
-}
-
-.rationale-block .sources-body + .sources-body {
-    margin-top: 0.75rem;
-}
-
-.use-table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--color-border);
-    border-radius: 0.375rem;
-}
-
-.use-table {
-    width: 100%;
-    min-width: 38rem;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
-
-.use-table th,
-.use-table td {
-    padding: 0.65rem 0.75rem;
-    text-align: left;
-    vertical-align: top;
-    border-bottom: 1px solid var(--color-border);
-}
-
-.use-table thead th {
-    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--color-heading);
-    background: var(--color-background-soft);
-}
-
-.use-table tbody tr:last-child th,
-.use-table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.muted {
-    color: var(--color-muted);
-    font-size: 0.88rem;
-}
-
-.file {
-    font-size: 0.8rem;
-    font-family:
-        ui-monospace,
-        'Cascadia Code',
-        monospace;
-}
-
-.nowrap {
-    white-space: nowrap;
-}
-
-.cite {
-    font-weight: 600;
-    margin-left: 0.125rem;
-    color: var(--color-heading);
-}
-
-.ref-list {
-    margin: 0;
-    padding-left: 1.35rem;
-}
-
-.ref-list > li {
-    margin-bottom: 1.1rem;
-    padding-left: 0.35rem;
-    line-height: 1.6;
-    color: var(--color-text);
-}
-
-.ref-list > li:last-child {
-    margin-bottom: 0;
-}
-
-.ref-label {
-    display: inline;
-    font-weight: 600;
-    margin-right: 0.35rem;
-    color: var(--color-heading);
-}
-</style>

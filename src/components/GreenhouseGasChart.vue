@@ -401,17 +401,18 @@ onBeforeUnmount(() => {
 
 <template>
     <figure
-        class="ghg-chart"
+        class="m-0 w-full newsprint-texture"
         aria-label="Global greenhouse gas emissions for aggregate EARTH, 1880 to present"
     >
-        <div ref="chartRef" class="chart-container"></div>
-        <figcaption>
+        <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+        <figcaption class="mt-3 font-mono text-xs leading-relaxed text-neutral-500">
             <strong>Source:</strong>
             PRIMAP-hist v2.6.1 — Gütschow, Busch &amp; Pflüger (2025), Zenodo
             <a href="https://doi.org/10.5281/zenodo.15016289" rel="noopener noreferrer"
                 >doi:10.5281/zenodo.15016289</a
             >. Scenario HISTCR; national total excluding LULUCF (M.0.EL). Total line is Kyoto basket
-            <code>KYOTOGHG (AR5GWP100)</code> (CO₂ equivalent). Dashed horizontal line: 1951–1980
+            <code class="font-mono bg-newsprint-muted px-1 text-[0.78em]">KYOTOGHG (AR5GWP100)</code>
+            (CO₂ equivalent). Dashed horizontal line: 1951–1980
             average of that total. Axis shows gigagrams expressed as Gt (1 Gt = 10⁶ Gg). Annual
             values are available             through <strong>2023</strong> in this release; the x-axis runs to
             2025 for context. Tooltip parentheses convert CH₄, N₂O, SF₆, and NF₃
@@ -422,17 +423,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.ghg-chart {
-    margin: 0;
-    width: 100%;
-}
-
-.chart-container {
-    position: relative;
-    width: 100%;
-    min-height: 360px;
-}
-
 .chart-container :deep(.hover-line) {
     pointer-events: none;
 }
@@ -442,7 +432,7 @@ onBeforeUnmount(() => {
 }
 
 .chart-container :deep(.axis) {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.75rem;
     fill: var(--color-muted);
 }
@@ -453,7 +443,7 @@ onBeforeUnmount(() => {
 }
 
 .chart-container :deep(.axis-y-label) {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.72rem;
     fill: var(--color-muted);
 }
@@ -467,7 +457,7 @@ onBeforeUnmount(() => {
 .chart-container :deep(.baseline-label) {
     fill: var(--color-text);
     font-size: 0.68rem;
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 500;
     pointer-events: none;
 }
@@ -483,7 +473,7 @@ onBeforeUnmount(() => {
 .chart-container :deep(.baseline-ref-year-label) {
     fill: var(--color-muted);
     font-size: 0.68rem;
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 600;
     pointer-events: none;
     opacity: 0.95;
@@ -493,82 +483,4 @@ onBeforeUnmount(() => {
     vector-effect: non-scaling-stroke;
 }
 
-figcaption {
-    margin-top: 0.75rem;
-    font-size: 0.8rem;
-    color: var(--color-muted);
-    line-height: 1.5;
-}
-
-figcaption code {
-    font-size: 0.78em;
-    padding: 0.1em 0.25em;
-    border-radius: 4px;
-    background: var(--color-background-mute);
-}
-
-figcaption a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
-</style>
-
-<style>
-.chart-tooltip.chart-tooltip--ghg {
-    white-space: normal;
-    max-width: min(320px, calc(100vw - 24px));
-}
-
-.chart-tooltip.chart-tooltip--ghg .tooltip-top-row {
-    margin-bottom: 0;
-    align-items: flex-start;
-}
-
-.chart-tooltip.chart-tooltip--ghg .tooltip-ghg-main {
-    flex: 1;
-    min-width: 0;
-}
-
-.chart-tooltip.chart-tooltip--ghg .tooltip-top-row .tooltip-year {
-    margin-left: auto;
-    flex-shrink: 0;
-    text-align: right;
-}
-
-.chart-tooltip.chart-tooltip--ghg .tooltip-year {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0;
-    line-height: 1.2;
-}
-
-.chart-tooltip.chart-tooltip--ghg .tooltip-total {
-    display: block;
-    font-weight: 700;
-    font-size: 0.9rem;
-    margin-bottom: 0.35rem;
-    line-height: 1.35;
-}
-
-.chart-tooltip.chart-tooltip--ghg .tooltip-sub {
-    display: block;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    opacity: 0.8;
-    margin-bottom: 0.2rem;
-}
-
-.chart-tooltip.chart-tooltip--ghg .tooltip-breakdown {
-    margin: 0;
-    padding-left: 1.1rem;
-    font-size: 0.75rem;
-    line-height: 1.45;
-}
-
-.chart-tooltip.chart-tooltip--ghg .tt-co2e {
-    opacity: 0.95;
-    white-space: nowrap;
-}
 </style>

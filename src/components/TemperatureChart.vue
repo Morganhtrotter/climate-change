@@ -896,16 +896,21 @@ onBeforeUnmount(() => {
 
 <template>
     <figure
-        class="temperature-chart"
+        class="m-0 w-full"
         aria-label="Global land-ocean temperature anomaly from 1880 to present"
     >
-        <div class="temperature-chart-layout">
-            <aside class="guide-panel" aria-live="polite">
-                <div class="panel-head">
-                    <span class="panel-head-label">{{ guidePanel.title }}</span>
+        <div class="flex items-stretch gap-4 max-[720px]:flex-col">
+            <aside
+                class="panel-newsprint newsprint-texture flex max-h-[500px] min-h-[500px] flex-[0_0_min(280px,34%)] flex-col self-stretch overflow-y-auto max-[720px]:max-h-none max-[720px]:min-h-0 max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
+                aria-live="polite"
+            >
+                <div class="mb-2.5 flex items-start justify-between gap-3">
+                    <span class="min-w-0 flex-1 font-serif text-base font-semibold leading-snug">{{
+                        guidePanel.title
+                    }}</span>
                     <button
                         type="button"
-                        class="play-button"
+                        class="btn-ghost shrink-0"
                         :aria-pressed="extrapolate"
                         :aria-label="
                             extrapolate
@@ -920,108 +925,23 @@ onBeforeUnmount(() => {
                 <p
                     v-for="(paragraph, index) in guidePanel.paragraphs"
                     :key="index"
-                    class="guide-panel-text"
+                    class="mb-3 text-sm leading-relaxed last:mb-0"
                 >
                     {{ paragraph }}
                 </p>
             </aside>
-            <div class="chart-column">
-                <div ref="chartRef" class="chart-container"></div>
+            <div class="flex min-w-0 flex-1 flex-col justify-center">
+                <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
             </div>
         </div>
-        <figcaption>
-            <strong>Source:</strong> NASA GISS — Land-Ocean Temperature Index. Anomalies relative to
-            1951–1980 mean.
+        <figcaption class="mt-3 font-mono text-xs leading-snug text-neutral-500">
+            <strong class="text-newsprint-fg">Source:</strong> NASA GISS — Land-Ocean Temperature Index.
+            Anomalies relative to 1951–1980 mean.
         </figcaption>
     </figure>
 </template>
 
 <style scoped>
-.temperature-chart {
-    margin: 0;
-    width: 100%;
-}
-
-.temperature-chart-layout {
-    display: flex;
-    align-items: stretch;
-    gap: 1rem;
-}
-
-.guide-panel {
-    flex: 0 0 min(280px, 34%);
-    max-width: 320px;
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    padding: 0.75rem;
-    background: var(--color-background-soft);
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-    min-height: 500px;
-    max-height: 500px;
-    overflow-y: auto;
-}
-
-.panel-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.6rem;
-}
-
-.panel-head-label {
-    font-family: 'Cantarell', 'Roboto Condensed', sans-serif;
-    font-size: 1rem;
-    line-height: 1.3;
-    font-weight: 600;
-    color: var(--color-heading);
-    flex: 1;
-    min-width: 0;
-}
-
-.play-button {
-    flex-shrink: 0;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    padding: 0.3rem 0.65rem;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--color-text);
-    background: var(--color-background);
-    cursor: pointer;
-}
-
-.play-button:hover {
-    border-color: var(--color-text);
-}
-
-.guide-panel-text {
-    margin: 0 0 0.75rem;
-    font-size: 0.88rem;
-    line-height: 1.55;
-    color: var(--color-text);
-}
-
-.guide-panel-text:last-child {
-    margin-bottom: 0;
-}
-
-.chart-column {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.chart-container {
-    position: relative;
-    width: 100%;
-    min-height: 360px;
-}
-
 .chart-container :deep(.chart-overlay) {
     cursor: crosshair;
 }
@@ -1035,7 +955,7 @@ onBeforeUnmount(() => {
 }
 
 .chart-container :deep(.axis) {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.75rem;
     fill: var(--color-muted);
 }
@@ -1061,7 +981,7 @@ onBeforeUnmount(() => {
 .chart-container :deep(.baseline-label) {
     fill: var(--color-text);
     font-size: 0.68rem;
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 500;
     pointer-events: none;
 }
@@ -1077,7 +997,7 @@ onBeforeUnmount(() => {
 .chart-container :deep(.baseline-ref-year-label) {
     fill: var(--color-text);
     font-size: 0.68rem;
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     font-weight: 600;
     pointer-events: none;
     opacity: 0.85;
@@ -1090,94 +1010,5 @@ onBeforeUnmount(() => {
 .chart-container :deep(.extrap-line) {
     vector-effect: non-scaling-stroke;
     pointer-events: none;
-}
-
-figcaption {
-    margin-top: 0.75rem;
-    font-size: 0.8rem;
-    color: var(--color-muted);
-    line-height: 1.4;
-}
-
-@media (max-width: 720px) {
-    .temperature-chart-layout {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .guide-panel {
-        flex: none;
-        max-width: none;
-        width: 100%;
-    }
-}
-</style>
-
-<style>
-/* Unscoped: tooltip is appended to body so it needs global styles and position:fixed */
-.chart-tooltip {
-    position: fixed;
-    z-index: 9999;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-    font-family: 'DM Sans', system-ui, sans-serif;
-    color: var(--color-text);
-    background: var(--color-border);
-    border-radius: 6px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.15s ease, visibility 0.15s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    left: 0;
-    top: 0;
-}
-
-.chart-tooltip.visible {
-    opacity: 1;
-    visibility: visible;
-}
-
-.chart-tooltip .tooltip-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.75rem;
-    width: 100%;
-    margin-bottom: 0.15rem;
-}
-
-.chart-tooltip .tooltip-year {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.15rem;
-}
-
-.chart-tooltip .tooltip-top-row .tooltip-year {
-    margin-bottom: 0;
-    margin-left: auto;
-    text-align: right;
-    flex-shrink: 0;
-}
-
-.chart-tooltip .tooltip-top-row .tooltip-value {
-    flex: 1;
-    min-width: 0;
-    margin-bottom: 0;
-    text-align: left;
-}
-
-.chart-tooltip .tooltip-value {
-    display: block;
-    font-weight: 700;
-    font-size: 1rem;
-}
-
-.chart-tooltip .tooltip-label {
-    display: block;
-    font-size: 0.7rem;
-    opacity: 0.85;
-    margin-top: 0.15rem;
 }
 </style>

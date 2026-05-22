@@ -8,24 +8,13 @@ const showSideNav = computed(() => route.name !== 'home')
 </script>
 
 <template>
-    <div class="app-root" :class="{ 'app-root--nav': showSideNav }">
+    <div
+        class="min-h-screen bg-newsprint-bg"
+        :class="showSideNav ? 'md:pl-[3.375rem]' : ''"
+    >
         <AppSideNav v-if="showSideNav" />
-        <main class="app-main">
+        <main class="min-h-screen">
             <RouterView />
         </main>
     </div>
 </template>
-
-<style scoped>
-.app-root {
-    min-height: 100vh;
-}
-
-.app-root--nav .app-main {
-    padding-left: 3.375rem;
-}
-
-.app-main {
-    min-height: 100vh;
-}
-</style>

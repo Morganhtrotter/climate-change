@@ -370,295 +370,111 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <figure class="world-map" aria-label="Country-level greenhouse gas emissions world map">
-        <div class="world-map-layout">
-            <div class="stats-panel">
-                <div class="panel-head">
-                    <span class="slider-label">{{ yearLabel }}</span>
-                    <button type="button" class="play-button" :aria-label="isPlaying ? 'Pause year playback' : 'Play year playback'" @click="togglePlayback">
+    <figure class="relative m-0 w-full newsprint-texture" aria-label="Country-level greenhouse gas emissions world map">
+        <div class="flex items-stretch gap-4 max-[720px]:flex-col">
+            <aside
+                class="panel-newsprint flex max-w-80 flex-[0_0_min(280px,34%)] flex-col self-stretch max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
+            >
+                <div class="mb-2.5 flex items-center justify-between gap-3">
+                    <span class="pl-1 font-serif text-3xl font-bold leading-none">{{ yearLabel }}</span>
+                    <button
+                        type="button"
+                        class="btn-ghost shrink-0"
+                        :aria-label="isPlaying ? 'Pause year playback' : 'Play year playback'"
+                        @click="togglePlayback"
+                    >
                         {{ isPlaying ? 'Pause' : 'Play' }}
                     </button>
                 </div>
-                <div class="totals-grid">
-                    <div class="total-card">
-                        <span class="total-label">EARTH total</span>
-                        <strong class="total-value">{{ fmtGt(earthTotalGt) }} Gt CO₂-eq / yr</strong>
+                <div class="flex min-h-0 flex-1 flex-col gap-2">
+                    <div class="hard-shadow-hover border border-newsprint-fg bg-newsprint-bg">
+                        <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
+                            >EARTH total</span
+                        >
+                        <strong class="block px-2 py-2 font-mono text-lg">{{
+                            fmtGt(earthTotalGt)
+                        }}
+                            Gt CO₂-eq / yr</strong>
                     </div>
-                    <div class="total-card">
-                        <span class="total-label">Continents</span>
-                        <ul class="mini-list">
-                            <li v-for="row in continentTotals" :key="row.name">
+                    <div class="hard-shadow-hover border border-newsprint-fg bg-newsprint-bg">
+                        <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
+                            >Continents</span
+                        >
+                        <ul class="m-0 list-none px-2 py-2">
+                            <li
+                                v-for="row in continentTotals"
+                                :key="row.name"
+                                class="flex items-baseline justify-between gap-2 text-sm leading-snug"
+                            >
                                 <span>{{ row.name }}</span>
-                                <strong>{{ fmtGt(row.totalGt) }}</strong>
+                                <strong class="font-mono">{{ fmtGt(row.totalGt) }}</strong>
                             </li>
                         </ul>
                     </div>
-                    <div class="total-card">
-                        <span class="total-label">Top 5 countries</span>
-                        <ol class="mini-list ranked">
-                            <li v-for="row in topCountries" :key="row.iso3">
-                                <span>{{ row.name }}</span>
-                                <strong>{{ fmtGt(row.totalGt) }}</strong>
+                    <div class="hard-shadow-hover border border-newsprint-fg bg-newsprint-bg">
+                        <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
+                            >Top 5 countries</span
+                        >
+                        <ol class="m-0 list-decimal px-2 py-2 pl-5">
+                            <li
+                                v-for="row in topCountries"
+                                :key="row.iso3"
+                                class="mb-1 text-sm leading-snug last:mb-0"
+                            >
+                                <span class="mr-2">{{ row.name }}</span>
+                                <strong class="float-right font-mono">{{ fmtGt(row.totalGt) }}</strong>
                             </li>
                         </ol>
                     </div>
                 </div>
-            </div>
-            <div class="map-column">
-                <div class="map-controls">
-                    <label for="year-slider" class="slider-label sr-only">Year: {{ yearLabel }}</label>
+            </aside>
+            <div class="flex min-w-0 flex-1 flex-col">
+                <div class="mb-3.5 grid shrink-0 gap-1.5">
+                    <label for="year-slider" class="sr-only">Year: {{ yearLabel }}</label>
                     <input
                         id="year-slider"
                         v-model.number="selectedYear"
                         type="range"
-                        class="year-slider"
+                        class="w-full cursor-pointer accent-newsprint-fg"
                         :min="minYear"
                         :max="maxYear"
                         step="1"
                     />
                 </div>
 
-                <div class="map-wrap">
-                    <div ref="chartRef" class="map-container"></div>
-                    <div class="zoom-controls" aria-label="Map zoom controls">
-                        <button type="button" class="zoom-button" aria-label="Zoom in" @click="zoomIn">+</button>
-                        <button type="button" class="zoom-button" aria-label="Zoom out" @click="zoomOut">-</button>
+                <div class="relative min-h-[320px] flex-1">
+                    <div ref="chartRef" class="map-container relative w-full min-h-[320px]"></div>
+                    <div
+                        class="absolute bottom-3 left-3 z-2 grid gap-1.5"
+                        aria-label="Map zoom controls"
+                    >
+                        <button
+                            type="button"
+                            class="btn-ghost h-8 w-8 px-0 font-serif text-lg leading-none"
+                            aria-label="Zoom in"
+                            @click="zoomIn"
+                        >
+                            +
+                        </button>
+                        <button
+                            type="button"
+                            class="btn-ghost h-8 w-8 px-0 font-serif text-lg leading-none"
+                            aria-label="Zoom out"
+                            @click="zoomOut"
+                        >
+                            -
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <figcaption>
-            <strong>Source:</strong>
-            PRIMAP-hist v2.6.1 (HISTCR, category <code>M.0.EL</code>, Kyoto basket
-            <code>KYOTOGHG (AR5GWP100)</code>), mapped to ISO3 countries. Use the year slider to view
-            annual changes in country totals (Gt CO₂-eq / yr).
+        <figcaption class="mt-3 font-mono text-xs leading-relaxed text-neutral-500">
+            <strong class="text-newsprint-fg">Source:</strong>
+            PRIMAP-hist v2.6.1 (HISTCR, category
+            <code class="font-mono bg-newsprint-muted px-1">M.0.EL</code>, Kyoto basket
+            <code class="font-mono bg-newsprint-muted px-1">KYOTOGHG (AR5GWP100)</code>), mapped to ISO3
+            countries. Use the year slider to view annual changes in country totals (Gt CO₂-eq / yr).
         </figcaption>
     </figure>
 </template>
 
-<style scoped>
-.world-map {
-    margin: 0;
-    width: 100%;
-    position: relative;
-}
-
-.world-map-layout {
-    display: flex;
-    align-items: stretch;
-    gap: 1rem;
-}
-
-.map-column {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.map-wrap {
-    position: relative;
-    flex: 1;
-    min-height: 320px;
-}
-
-.map-controls {
-    display: grid;
-    gap: 0.35rem;
-    margin-bottom: 0.9rem;
-    flex-shrink: 0;
-}
-
-.stats-panel {
-    flex: 0 0 min(280px, 34%);
-    max-width: 320px;
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    padding: 0.75rem;
-    background: var(--color-background-soft);
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-}
-
-.panel-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.6rem;
-}
-
-.slider-label {
-    font-size: 1.8rem;
-    color: var(--color-text);
-    font-weight: 600;
-    padding-left: 0.5rem;
-}
-
-.play-button {
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    padding: 0.3rem 0.65rem;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--color-text);
-    background: var(--color-background);
-    cursor: pointer;
-}
-
-.play-button:hover {
-    border-color: var(--color-text);
-}
-
-.totals-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex: 1;
-    min-height: 0;
-}
-
-.total-card {
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 0;
-    background: var(--color-background);
-}
-
-.total-label {
-    display: block;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--color-muted);
-    padding: 0.5rem 0.5rem 0.2rem 0.5rem;
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: 0.4rem;
-}
-
-.total-value {
-    font-size: 1.1rem;
-    padding: 0 0.5rem 0.5rem;
-    display: block;
-}
-
-.mini-list {
-    margin: 0;
-    padding: 0 0.5rem 0.5rem;
-    list-style: none;
-}
-
-.mini-list li {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.45rem;
-    font-size: 0.8rem;
-    line-height: 1.45;
-}
-
-.mini-list.ranked {
-    list-style: decimal inside;
-}
-
-.mini-list.ranked li {
-    display: list-item;
-}
-
-.mini-list.ranked li > span {
-    margin-left: 0.2rem;
-}
-
-.mini-list.ranked li > strong {
-    float: right;
-}
-
-.year-slider {
-    width: 100%;
-    accent-color: var(--color-text);
-    cursor: pointer;
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-
-.map-container {
-    position: relative;
-    width: 100%;
-    min-height: 320px;
-}
-
-.zoom-controls {
-    position: absolute;
-    left: 0.75rem;
-    bottom: 0.75rem;
-    display: grid;
-    gap: 0.35rem;
-    z-index: 2;
-}
-
-.zoom-button {
-    width: 2rem;
-    height: 2rem;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    background: var(--color-background);
-    color: var(--color-text);
-    font-size: 1.05rem;
-    font-weight: 700;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.zoom-button:hover {
-    border-color: var(--color-text);
-}
-
-figcaption {
-    margin-top: 0.75rem;
-    font-size: 0.8rem;
-    color: var(--color-muted);
-    line-height: 1.5;
-}
-
-figcaption code {
-    font-size: 0.78em;
-    padding: 0.1em 0.25em;
-    border-radius: 4px;
-    background: var(--color-background-mute);
-}
-
-@media (max-width: 720px) {
-    .world-map-layout {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .stats-panel {
-        flex: none;
-        max-width: none;
-        width: 100%;
-    }
-}
-</style>
-
-<style>
-/* Tooltip is portaled to `document.body`; GHG modifiers live on GreenhouseGasChart — country label is map-only. */
-.chart-tooltip.chart-tooltip--ghg .tooltip-map-area {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 0.3rem;
-    opacity: 0.92;
-}
-</style>
