@@ -11,174 +11,204 @@ const selectedRefAnomaly = ref(null)
 
 const DEFAULT_GUIDE = {
     title: 'How to use this chart',
-    paragraphs: [
-        'This chart shows NASA GISS global land–ocean temperature anomalies in degrees Celsius (°C). Each value is how far the annual global mean temperature is above or below the 1951–1980 average—the baseline NASA uses for the Land-Ocean Temperature Index (LOTI).',
-        'Move the cursor over the temperature line to see the anomaly for a given year.',
-        'Enable Extrapolate to extend the recent 40-year warming trend forward (dashed segment).',
-        'Click on a horizontal line to learn more about that temperature anomaly.',
+    blocks: [
+        {
+            type: 'paragraph',
+            text: 'This chart shows NASA GISS global land–ocean temperature anomalies in degrees Celsius (°C). Each value is how far the annual global mean temperature is above or below the 1951–1980 average—the baseline NASA uses for the Land-Ocean Temperature Index (LOTI).',
+        },
+        {
+            type: 'paragraph',
+            text: 'Move the cursor over the temperature line to see the anomaly for a given year.',
+        },
+        {
+            type: 'paragraph',
+            text: 'Enable Extrapolate to extend the recent 40-year warming trend forward (dashed segment).',
+        },
+        {
+            type: 'paragraph',
+            text: 'Click on a horizontal line to learn more about that temperature anomaly.',
+        },
     ],
 }
 
 const REFERENCE_LINE_DETAILS = {
     '0': {
-        title: '1951–1980 average — 0 °C anomaly',
-        paragraphs: [
-            'Placeholder: The 1951–1980 average is NASA’s reference period for GISTEMP anomalies. Years at 0 °C align with the mean global temperature observed across those three decades.',
+        title: '1951–1980 average — 0°C anomaly',
+        blocks: [
+            {
+                type: 'paragraph',
+                text: 'The 1951–1980 average is NASA’s reference period for GISTEMP anomalies. Years at 0 °C align with the mean global temperature observed across those three decades.',
+            },
         ],
     },
     '-0.19': {
-        title: 'Pre-industrial average — −0.19 °C anomaly',
-        paragraphs: [
-            'Placeholder: Relative to the 1951–1980 baseline, pre-industrial conditions sit about 0.19 °C cooler. This line helps compare modern warming to long-run climate before industrial emissions dominated.',
+        title: 'Pre-industrial average — −0.19°C anomaly',
+        blocks: [
+            {
+                type: 'paragraph',
+                text: 'Relative to the 1951–1980 baseline, pre-industrial conditions sit about 0.19 °C cooler. This line helps compare modern warming to long-run climate before industrial emissions dominated. Often used as a reference point for comparing tipping points to pre-industrial conditions.',
+            },
         ],
     },
     '1.31': {
-        title: '1.5 °C above pre-industrial — +1.31 °C anomaly',
-        paragraphs: [
-        'What becomes likely here:',
-        'Coral reef collapse accelerates',
-        '70–90% of warm-water coral reefs may disappear',
-        'repeated bleaching events prevent recovery',
-        'reef ecosystems stop functioning normally',
-        'Arctic summer sea ice becomes unstable',
-        'nearly ice-free summers become increasingly possible',
-        'Arctic warming accelerates due to albedo loss',
-        'Major heatwaves become common',
-        'What used to be “once per century” heat extremes become regular.',
-        'Boreal forests begin large-scale stress',
-        'Canada + Siberia see:',
-        'mega-fires',
-        'bark beetle outbreaks',
-        'drought mortality',
-        'Species migration accelerates',
-        'Many ecosystems can still survive here — but they begin reorganizing geographically.',
+        title: '1.5°C above pre-industrial / +1.31°C anomaly',
+        blocks: [
+            { type: 'paragraph', text: 'What becomes likely here:' },
+            { type: 'heading', text: 'Coral reef collapse accelerates' },
+            {
+                type: 'list',
+                items: [
+                    '70–90% of warm-water coral reefs may disappear',
+                    'Repeated bleaching events prevent recovery',
+                    'Reef ecosystems stop functioning normally',
+                ],
+            },
+            { type: 'heading', text: 'Arctic summer sea ice becomes unstable' },
+            {
+                type: 'list',
+                items: [
+                    'Nearly ice-free summers become increasingly possible',
+                    'Arctic warming accelerates due to albedo loss',
+                ],
+            },
+            { type: 'heading', text: 'Major heatwaves become common' },
+            {
+                type: 'paragraph',
+                text: 'What used to be “once per century” heat extremes become regular.',
+            },
+            { type: 'heading', text: 'Boreal forests begin large-scale stress' },
+            { type: 'paragraph', text: 'Canada + Siberia see:' },
+            {
+                type: 'list',
+                items: ['Mega-fires', 'Bark beetle outbreaks', 'Drought mortality'],
+            },
+            { type: 'heading', text: 'Species migration accelerates' },
+            {
+                type: 'paragraph',
+                text: 'Many ecosystems can still survive here — but they begin reorganizing geographically.',
+            },
         ],
     },
     '1.81': {
-        title: '2 °C above pre-industrial — +1.81 °C anomaly',
-        paragraphs: [
-        'Major irreversible systems become threatened',
-        'Greenland Ice Sheet may pass a tipping point',
-
-        'The concern here is not immediate collapse — it’s committed collapse.',
-
-        'Once enough ice is lost:',
-
-        'elevation drops',
-        'melting accelerates',
-        'long-term disintegration continues for centuries',
-
-        'Potential long-term sea level rise:',
-
-        '~7 meters eventually',
-        'Amazon rainforest dieback risk rises sharply',
-
-        'The rainforest may begin partially converting into:',
-
-        'dry forest',
-        'savanna',
-
-        'because rainfall recycling weakens.',
-
-        'This creates a dangerous carbon feedback:',
-
-        'dying forest releases CO₂',
-        'warming accelerates further',
-        'Coral reefs mostly disappear',
-
-        'At ~2°C, scientists project the near-total loss of warm-water coral ecosystems.',
-
-        'Water stress and crop instability expand',
-
-        'Large regions experience:',
-
-        'chronic drought',
-        'stronger flood cycles',
-        'heat stress on agriculture',
-        'Extreme rainfall intensifies',
-
-        'Flooding risk rises substantially in many regions.',
+        title: '2°C above pre-industrial / +1.81°C anomaly',
+        blocks: [
+            { type: 'paragraph', text: 'Major irreversible systems become threatened.' },
+            { type: 'heading', text: 'Greenland Ice Sheet may pass a tipping point' },
+            {
+                type: 'paragraph',
+                text: 'The concern here is not immediate collapse — it’s committed collapse.',
+            },
+            { type: 'paragraph', text: 'Once enough ice is lost:' },
+            {
+                type: 'list',
+                items: [
+                    'Elevation drops',
+                    'Melting accelerates',
+                    'Long-term disintegration continues for centuries',
+                ],
+            },
+            { type: 'paragraph', text: 'Potential long-term sea level rise:' },
+            { type: 'list', items: ['~7 meters eventually'] },
+            { type: 'heading', text: 'Amazon rainforest dieback risk rises sharply' },
+            { type: 'paragraph', text: 'The rainforest may begin partially converting into:' },
+            { type: 'list', items: ['Dry forest', 'Savanna'] },
+            { type: 'paragraph', text: '…because rainfall recycling weakens.' },
+            { type: 'paragraph', text: 'This creates a dangerous carbon feedback:' },
+            {
+                type: 'list',
+                items: ['Dying forest releases CO₂', 'Warming accelerates further'],
+            },
+            { type: 'heading', text: 'Coral reefs mostly disappear' },
+            {
+                type: 'paragraph',
+                text: 'At ~2°C, scientists project the near-total loss of warm-water coral ecosystems.',
+            },
+            { type: 'heading', text: 'Water stress and crop instability expand' },
+            { type: 'paragraph', text: 'Large regions experience:' },
+            {
+                type: 'list',
+                items: [
+                    'Chronic drought',
+                    'Stronger flood cycles',
+                    'Heat stress on agriculture',
+                ],
+            },
+            { type: 'heading', text: 'Extreme rainfall intensifies' },
+            { type: 'paragraph', text: 'Flooding risk rises substantially in many regions.' },
         ],
     },
     '2.81': {
-        title: '3 °C above pre-industrial — +2.81 °C anomaly',
-        paragraphs: [
-        'Ecosystem-level restructuring',
-        'Large portions of the Amazon may collapse',
-
-        'Not just drought years —',
-        'the biome itself changes state.',
-
-        'Permafrost thaw becomes a major feedback source',
-
-        'Large methane and CO₂ releases begin contributing significantly to warming.',
-
-        'Boreal forests may transition ecosystems',
-
-        'Some areas may fail to regrow as forest after fires.',
-
-        'Instead:',
-
-        'shrubland',
-        'grassland',
-        'sparse woodland',
-
-        'replace them.',
-
-        'Heat becomes physiologically dangerous in some regions',
-
-        'Certain humid heat events may approach survivability limits for humans outdoors.',
-
-        'Food systems destabilize more regularly',
-
-        'Crop failures become more correlated globally:',
-
-        'simultaneous droughts',
-        'heatwaves across multiple breadbaskets',
+        title: '3°C above pre-industrial / +2.81°C anomaly',
+        blocks: [
+            { type: 'paragraph', text: 'Ecosystem-level restructuring.' },
+            { type: 'heading', text: 'Large portions of the Amazon may collapse' },
+            {
+                type: 'paragraph',
+                text: 'Not just drought years — the biome itself changes state.',
+            },
+            { type: 'heading', text: 'Permafrost thaw becomes a major feedback source' },
+            {
+                type: 'paragraph',
+                text: 'Large methane and CO₂ releases begin contributing significantly to warming.',
+            },
+            { type: 'heading', text: 'Boreal forests may transition ecosystems' },
+            { type: 'paragraph', text: 'Some areas may fail to regrow as forest after fires.' },
+            { type: 'paragraph', text: 'Instead:' },
+            { type: 'list', items: ['Shrubland', 'Grassland', 'Sparse woodland'] },
+            { type: 'paragraph', text: '…replace them.' },
+            { type: 'heading', text: 'Heat becomes physiologically dangerous in some regions' },
+            {
+                type: 'paragraph',
+                text: 'Certain humid heat events may approach survivability limits for humans outdoors.',
+            },
+            { type: 'heading', text: 'Food systems destabilize more regularly' },
+            { type: 'paragraph', text: 'Crop failures become more correlated globally:' },
+            {
+                type: 'list',
+                items: ['Simultaneous droughts', 'Heatwaves across multiple breadbaskets'],
+            },
         ],
     },
     '3.81': {
-        title: '4 °C above pre-industrial — +3.81 °C anomaly',
-        paragraphs: [
-        'This is generally considered a profoundly destabilized Earth system.',
-
-        'Not “human extinction,” but:',
-
-        'massive adaptation pressure',
-        'severe migration',
-        'chronic food/water insecurity in many regions',
-        'Possible outcomes here',
-        'West Antarctic Ice Sheet instability becomes much more likely',
-
-        'This could commit the world to multi-meter sea level rise over centuries.',
-
-        'Entire climate zones shift',
-
-        'Regions that historically supported:',
-
-        'agriculture',
-        'forests',
-        'dense populations',
-
-        'may no longer reliably do so.',
-
-        'Extreme weather becomes the dominant climate experience',
-
-        'What we currently call:',
-
-        'heatwaves',
-        'megafires',
-        '“100-year floods”',
-
-        'becomes routine in many places.',
-
-        'Ecosystem simplification',
-
-        'Biodiversity drops sharply because:',
-
-        'migration speed cannot keep up',
-        'ecosystems fragment',
-        'food webs destabilize',
+        title: '4°C above pre-industrial / +3.81°C anomaly',
+        blocks: [
+            {
+                type: 'paragraph',
+                text: 'This is generally considered a profoundly destabilized Earth system.',
+            },
+            { type: 'paragraph', text: 'Not “human extinction,” but:' },
+            {
+                type: 'list',
+                items: [
+                    'Massive adaptation pressure',
+                    'Severe migration',
+                    'Chronic food/water insecurity in many regions',
+                ],
+            },
+            { type: 'paragraph', text: 'Possible outcomes:' },
+            { type: 'heading', text: 'West Antarctic Ice Sheet instability becomes much more likely' },
+            {
+                type: 'paragraph',
+                text: 'This could commit the world to multi-meter sea level rise over centuries.',
+            },
+            { type: 'heading', text: 'Entire climate zones shift' },
+            { type: 'paragraph', text: 'Regions that historically supported:' },
+            { type: 'list', items: ['Agriculture', 'Forests', 'Dense populations'] },
+            { type: 'paragraph', text: '…may no longer reliably do so.' },
+            { type: 'heading', text: 'Extreme weather becomes the dominant climate experience' },
+            { type: 'paragraph', text: 'What we currently call:' },
+            { type: 'list', items: ['Heatwaves', 'Megafires', '“100-year floods”'] },
+            { type: 'paragraph', text: '…becomes routine in many places.' },
+            { type: 'heading', text: 'Ecosystem simplification' },
+            { type: 'paragraph', text: 'Biodiversity drops sharply because:' },
+            {
+                type: 'list',
+                items: [
+                    'Migration speed cannot keep up',
+                    'Ecosystems fragment',
+                    'Food webs destabilize',
+                ],
+            },
         ],
     },
 }
@@ -1071,7 +1101,7 @@ onBeforeUnmount(() => {
 
 <template>
     <figure
-        class="m-0 w-full"
+        class="m-0 w-full temperature-chart"
         aria-label="Global land-ocean temperature anomaly from 1880 to present"
     >
         <div class="flex items-stretch gap-4 max-[720px]:flex-col">
@@ -1082,13 +1112,32 @@ onBeforeUnmount(() => {
                 <span class="mb-2.5 min-w-0 font-serif text-base font-semibold leading-snug">{{
                     guidePanel.title
                 }}</span>
-                <p
-                    v-for="(paragraph, index) in guidePanel.paragraphs"
-                    :key="index"
-                    class="mb-3 text-sm leading-relaxed last:mb-0"
-                >
-                    {{ paragraph }}
-                </p>
+                <template v-for="(block, index) in guidePanel.blocks" :key="index">
+                    <p
+                        v-if="block.type === 'paragraph'"
+                        class="mb-3 text-sm leading-relaxed last:mb-0"
+                    >
+                        {{ block.text }}
+                    </p>
+                    <h3
+                        v-else-if="block.type === 'heading'"
+                        class="mt-4 mb-2 font-serif text-sm font-bold leading-snug first:mt-0"
+                    >
+                        {{ block.text }}
+                    </h3>
+                    <ul
+                        v-else-if="block.type === 'list'"
+                        class="mb-3 list-disc text-sm leading-relaxed last:mb-0"
+                    >
+                        <li
+                            v-for="(item, i) in block.items"
+                            :key="i"
+                            class="mb-1 last:mb-0"
+                        >
+                            {{ item }}
+                        </li>
+                    </ul>
+                </template>
             </aside>
             <div class="flex min-w-0 flex-1 flex-col">
                 <div class="mb-2.5 ml-4 flex items-center justify-start">

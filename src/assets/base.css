@@ -21,3 +21,20 @@
 h1, h2 {
     font-weight: 300;
 }
+
+.temperature-chart .panel-newsprint p,
+.temperature-chart .panel-newsprint h3 {
+    @apply pl-4 pr-4 md:pl-6 md:pr-6;
+}
+
+.temperature-chart .panel-newsprint ul {
+    @apply pl-9 pr-4 md:pl-11 md:pr-6;
+}
+
+.temperature-chart .panel-newsprint span {
+    @apply p-4 mb-4 bg-newsprint-muted font-mono uppercase sticky top-0 md:p-6 border-b mb-6;
+}
+
+.temperature-chart .panel-newsprint {
+    @apply p-0 pb-8;
+}
