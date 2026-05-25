@@ -195,6 +195,8 @@ const EXTRAP_TARGET_ANOMALY = 3.81
 /** Safety cap on forward span (years) if slope is flat or target unreachable. */
 const EXTRAP_MAX_FORWARD_YEARS = 800
 const EXTRAP_TRANSITION_MS = 650
+/** Cap width (px) of the I-beam that visualizes anomaly vs the 1951–1980 baseline. */
+const HOVER_IBEAM_CAP_WIDTH = 12
 
 let chartInstance = null
 
@@ -294,6 +296,25 @@ const HORIZONTAL_REFERENCE_LINES = [
 ]
 
 const REFERENCE_ANOMALIES = HORIZONTAL_REFERENCE_LINES.map((spec) => spec.anomaly)
+
+/** Anomalies for the four tipping-point threshold lines (1.5/2/3/4 °C above pre-industrial). */
+const TIPPING_POINT_ANOMALIES = [1.31, 1.81, 2.81, 3.81]
+
+/**
+ * Right-side reference indicators shown when a tipping-point line is selected.
+ * Each row is a beam comparing the latest year's anomaly against a baseline.
+ */
+const LATEST_REF_INDICATORS = [
+    { key: 'baseline', refAnomaly: 0, label: 'vs 1951–80' },
+    { key: 'preindustrial', refAnomaly: PRE_INDUSTRIAL_ANOMALY, label: 'vs pre-industrial' },
+]
+
+const LATEST_INDICATOR_CAP_WIDTH = 12
+const LATEST_INDICATOR_LABEL_GAP = 6
+/** Distance from the left edge of the plot area to the center of the leftmost beam. */
+const LATEST_INDICATOR_LEFT_INSET = 14
+/** Horizontal spacing (px) between the two beam centers. */
+const LATEST_INDICATOR_BEAM_SPACING = 96
 
 function yDomainForData(data, extrap, extrapolateMode) {
     const yExtent = d3.extent(data, (d) => d.anomaly)
@@ -433,6 +454,89 @@ function setActiveHorizontalRef(inst, activeRef) {
     }
 }
 
+function createLatestRefIndicator(g) {
+    const group = g
+        .append('g')
+        .attr('class', 'latest-ref-indicator')
+        .attr('visibility', 'hidden')
+        .style('pointer-events', 'none')
+    const slots = LATEST_REF_INDICATORS.map((spec) => {
+        const stem = group.append('line').attr('class', 'hover-ibeam-stem')
+        const capTop = group.append('line').attr('class', 'hover-ibeam-cap')
+        const capBottom = group.append('line').attr('class', 'hover-ibeam-cap')
+        const valueText = group
+            .append('text')
+            .attr('class', 'latest-ref-indicator-value')
+            .attr('text-anchor', 'start')
+            .attr('dominant-baseline', 'baseline')
+        const refText = group
+            .append('text')
+            .attr('class', 'latest-ref-indicator-ref')
+            .attr('text-anchor', 'start')
+            .attr('dominant-baseline', 'hanging')
+        return { spec, stem, capTop, capBottom, valueText, refText }
+    })
+    return { group, slots }
+}
+
+function updateLatestRefIndicator(inst) {
+    if (!inst?.latestRefIndicator) return
+    const { latestRefIndicator, y, colorForAnomaly } = inst
+    const selected = selectedRefAnomaly.value
+    const isTippingPoint =
+        selected != null && TIPPING_POINT_ANOMALIES.some((a) => Math.abs(a - selected) < 1e-6)
+    if (!isTippingPoint) {
+        latestRefIndicator.group.attr('visibility', 'hidden')
+        return
+    }
+
+    const thresholdY = y(selected)
+    const color = colorForAnomaly(selected)
+    const capHalf = LATEST_INDICATOR_CAP_WIDTH / 2
+    const leftBeamX = LATEST_INDICATOR_LEFT_INSET
+    const rightBeamX = leftBeamX + LATEST_INDICATOR_BEAM_SPACING
+
+    latestRefIndicator.slots.forEach((slot, i) => {
+        const beamX = i === 0 ? leftBeamX : rightBeamX
+        const refY = y(slot.spec.refAnomaly)
+        const topY = Math.min(thresholdY, refY)
+        const bottomY = Math.max(thresholdY, refY)
+        const midY = (topY + bottomY) / 2
+        const delta = selected - slot.spec.refAnomaly
+        const sign = delta >= 0 ? '+' : ''
+        const labelAnchorX = beamX + capHalf + LATEST_INDICATOR_LABEL_GAP
+
+        slot.stem
+            .attr('x1', beamX)
+            .attr('x2', beamX)
+            .attr('y1', topY)
+            .attr('y2', bottomY)
+            .attr('stroke', color)
+        slot.capTop
+            .attr('x1', beamX - capHalf)
+            .attr('x2', beamX + capHalf)
+            .attr('y1', topY)
+            .attr('y2', topY)
+            .attr('stroke', color)
+        slot.capBottom
+            .attr('x1', beamX - capHalf)
+            .attr('x2', beamX + capHalf)
+            .attr('y1', bottomY)
+            .attr('y2', bottomY)
+            .attr('stroke', color)
+        slot.valueText
+            .attr('x', labelAnchorX)
+            .attr('y', midY - 2)
+            .text(`${sign}${delta.toFixed(2)} °C`)
+        slot.refText
+            .attr('x', labelAnchorX)
+            .attr('y', midY + 2)
+            .text(slot.spec.label)
+    })
+
+    latestRefIndicator.group.attr('visibility', 'visible')
+}
+
 function hitHorizontalRef(inst, pointerY) {
     let best = null
     let bestDist = inst.BASELINE_HIT_PX + 1
@@ -560,6 +664,17 @@ function buildChart(container, data, extrapolateMode) {
     gradient.append('stop').attr('offset', '0%').attr('stop-color', 'var(--color-above)')
     gradient.append('stop').attr('offset', '100%').attr('stop-color', 'var(--color-below)')
 
+    const styles = getComputedStyle(container)
+    const colorAbove = styles.getPropertyValue('--color-above').trim() || '#cc0000'
+    const colorBelow = styles.getPropertyValue('--color-below').trim() || '#525252'
+    const colorHeading = styles.getPropertyValue('--color-heading').trim() || '#111111'
+    const gradientInterp = d3.interpolateRgb(colorAbove, colorBelow)
+    const colorForAnomaly = (anomaly) => {
+        if (maxAnomaly === minAnomaly) return colorAbove
+        const t = (maxAnomaly - anomaly) / (maxAnomaly - minAnomaly)
+        return gradientInterp(Math.max(0, Math.min(1, t)))
+    }
+
     const area = d3
         .area()
         .x((d) => x(d.year))
@@ -598,7 +713,25 @@ function buildChart(container, data, extrapolateMode) {
             .attr('opacity', extrapolateMode ? 0.9 : 0)
     }
 
+    const latestRefIndicator = createLatestRefIndicator(g)
+
     const bisect = d3.bisector((d) => d.year).left
+    const hoverIBeam = g
+        .append('g')
+        .attr('class', 'hover-ibeam')
+        .attr('visibility', 'hidden')
+    const hoverIBeamStem = hoverIBeam
+        .append('line')
+        .attr('class', 'hover-ibeam-stem')
+        .attr('stroke-linecap', 'butt')
+    const hoverIBeamCapTop = hoverIBeam
+        .append('line')
+        .attr('class', 'hover-ibeam-cap')
+        .attr('stroke-linecap', 'butt')
+    const hoverIBeamCapBottom = hoverIBeam
+        .append('line')
+        .attr('class', 'hover-ibeam-cap')
+        .attr('stroke-linecap', 'butt')
     const hoverLine = g
         .append('line')
         .attr('class', 'hover-line')
@@ -646,6 +779,34 @@ function buildChart(container, data, extrapolateMode) {
             }
             inst.hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
             const anomaly = point.anomaly
+            const yAnomalyPx = inst.y(anomaly)
+            const yZeroPx = inst.zeroY
+            const beamTop = Math.min(yAnomalyPx, yZeroPx)
+            const beamBottom = Math.max(yAnomalyPx, yZeroPx)
+            const isExtrapPoint = extrapActive && xVal > inst.lastDataYear
+            const beamStroke = isExtrapPoint
+                ? inst.colorHeading
+                : inst.colorForAnomaly(anomaly)
+            const capHalf = HOVER_IBEAM_CAP_WIDTH / 2
+            inst.hoverIBeamStem
+                .attr('x1', xPos)
+                .attr('x2', xPos)
+                .attr('y1', beamTop)
+                .attr('y2', beamBottom)
+                .attr('stroke', beamStroke)
+            inst.hoverIBeamCapTop
+                .attr('x1', xPos - capHalf)
+                .attr('x2', xPos + capHalf)
+                .attr('y1', beamTop)
+                .attr('y2', beamTop)
+                .attr('stroke', beamStroke)
+            inst.hoverIBeamCapBottom
+                .attr('x1', xPos - capHalf)
+                .attr('x2', xPos + capHalf)
+                .attr('y1', beamBottom)
+                .attr('y2', beamBottom)
+                .attr('stroke', beamStroke)
+            inst.hoverIBeam.attr('visibility', 'visible')
             const sign = anomaly >= 0 ? '+' : ''
             const yearLabel = String(point.year)
             const valueStr = `${sign}${anomaly.toFixed(2)}°C`
@@ -674,13 +835,20 @@ function buildChart(container, data, extrapolateMode) {
             if (!inst) return
             const [, my] = d3.pointer(event, this)
             const hit = hitHorizontalRef(inst, my)
-            selectedRefAnomaly.value = hit ? hit.anomaly : null
-            applyHorizontalRefHighlight(inst, hit)
+            const alreadySelected =
+                hit != null &&
+                selectedRefAnomaly.value != null &&
+                Math.abs(hit.anomaly - selectedRefAnomaly.value) < 1e-6
+            const nextSelection = !hit || alreadySelected ? null : hit.anomaly
+            selectedRefAnomaly.value = nextSelection
+            applyHorizontalRefHighlight(inst, nextSelection != null ? hit : null)
+            updateLatestRefIndicator(inst)
         })
         .on('mouseleave', () => {
             const inst = chartInstance
             if (!inst) return
             inst.hoverLine.attr('visibility', 'hidden')
+            inst.hoverIBeam?.attr('visibility', 'hidden')
             inst.tooltip.classList.remove('visible')
             applyHorizontalRefHighlight(inst, null)
         })
@@ -712,11 +880,19 @@ function buildChart(container, data, extrapolateMode) {
         BASELINE_HIT_PX,
         bisect,
         hoverLine,
+        hoverIBeam,
+        hoverIBeamStem,
+        hoverIBeamCapTop,
+        hoverIBeamCapBottom,
+        latestRefIndicator,
+        colorForAnomaly,
+        colorHeading,
         tooltip,
     }
 
     syncHorizontalRefVisibility(chartInstance)
     applyHorizontalRefHighlight(chartInstance, null)
+    updateLatestRefIndicator(chartInstance)
 }
 
 function setExtrapolateMode(enabled, animate = true) {
@@ -724,6 +900,7 @@ function setExtrapolateMode(enabled, animate = true) {
     if (!inst?.g || !inst.data?.length) return
 
     inst.hoverLine?.attr('visibility', 'hidden')
+    inst.hoverIBeam?.attr('visibility', 'hidden')
     inst.tooltip?.classList.remove('visible')
 
     const { data, g, height, line, area, gradient, minAnomaly, maxAnomaly } = inst
@@ -789,6 +966,7 @@ function setExtrapolateMode(enabled, animate = true) {
         if (!stillVisible) selectedRefAnomaly.value = null
     }
     applyHorizontalRefHighlight(inst, null)
+    updateLatestRefIndicator(inst)
 
     const extrapLineGen = d3
         .line()
@@ -823,11 +1001,7 @@ function setExtrapolateMode(enabled, animate = true) {
         }
     }
 
-    extrapSel
-        .exit()
-        .transition(transition)
-        .attr('opacity', 0)
-        .remove()
+    extrapSel.exit().remove()
 
     const extrapMerged = extrapEnter.merge(extrapSel)
 
@@ -877,6 +1051,7 @@ onMounted(async () => {
 })
 
 watch(extrapolate, async (enabled) => {
+    selectedRefAnomaly.value = null
     await nextTick()
     const animate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (chartInstance) {
@@ -904,10 +1079,19 @@ onBeforeUnmount(() => {
                 class="panel-newsprint newsprint-texture flex max-h-[500px] min-h-[500px] flex-[0_0_min(280px,34%)] flex-col self-stretch overflow-y-auto max-[720px]:max-h-none max-[720px]:min-h-0 max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
                 aria-live="polite"
             >
-                <div class="mb-2.5 flex items-start justify-between gap-3">
-                    <span class="min-w-0 flex-1 font-serif text-base font-semibold leading-snug">{{
-                        guidePanel.title
-                    }}</span>
+                <span class="mb-2.5 min-w-0 font-serif text-base font-semibold leading-snug">{{
+                    guidePanel.title
+                }}</span>
+                <p
+                    v-for="(paragraph, index) in guidePanel.paragraphs"
+                    :key="index"
+                    class="mb-3 text-sm leading-relaxed last:mb-0"
+                >
+                    {{ paragraph }}
+                </p>
+            </aside>
+            <div class="flex min-w-0 flex-1 flex-col">
+                <div class="mb-2.5 ml-4 flex items-center justify-start">
                     <button
                         type="button"
                         class="btn-ghost shrink-0"
@@ -922,15 +1106,6 @@ onBeforeUnmount(() => {
                         {{ extrapolate ? 'Extrapolate on' : 'Extrapolate' }}
                     </button>
                 </div>
-                <p
-                    v-for="(paragraph, index) in guidePanel.paragraphs"
-                    :key="index"
-                    class="mb-3 text-sm leading-relaxed last:mb-0"
-                >
-                    {{ paragraph }}
-                </p>
-            </aside>
-            <div class="flex min-w-0 flex-1 flex-col justify-center">
                 <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
             </div>
         </div>
@@ -952,6 +1127,35 @@ onBeforeUnmount(() => {
 
 .chart-container :deep(.hover-line) {
     pointer-events: none;
+}
+
+.chart-container :deep(.hover-ibeam) {
+    pointer-events: none;
+}
+
+.chart-container :deep(.hover-ibeam-stem) {
+    stroke-width: 2;
+}
+
+.chart-container :deep(.hover-ibeam-cap) {
+    stroke-width: 2.5;
+}
+
+.chart-container :deep(.latest-ref-indicator) {
+    pointer-events: none;
+}
+
+.chart-container :deep(.latest-ref-indicator-value) {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    fill: var(--color-text);
+}
+
+.chart-container :deep(.latest-ref-indicator-ref) {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.62rem;
+    fill: var(--color-muted);
 }
 
 .chart-container :deep(.axis) {
