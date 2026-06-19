@@ -1,6 +1,14 @@
 @import './base.css';
 @import './tailwind.css';
 
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    cursor: pointer;
+}
+
 #app {
     width: 100%;
     min-height: 100vh;

@@ -229,8 +229,9 @@ function renderMap() {
         .attr('stroke-width', 0.55)
         .attr('vector-effect', 'non-scaling-stroke')
         .on('mouseenter', (event, feature) => {
+            countriesLayer.selectAll('path.country').attr('stroke-width', 0.55)
             d3.select(event.currentTarget)
-                .attr('stroke', '#ffffff')
+                .attr('stroke', 'var(--color-border)')
                 .attr('stroke-width', 1.8)
                 .raise()
             tooltipEl.value?.classList.add('visible')
@@ -241,6 +242,11 @@ function renderMap() {
             d3.select(event.currentTarget).attr('stroke', 'var(--color-border)').attr('stroke-width', 0.55)
             tooltipEl.value?.classList.remove('visible')
         })
+
+    svg.on('mouseleave', () => {
+        countriesLayer.selectAll('path.country').attr('stroke-width', 0.55)
+        tooltipEl.value?.classList.remove('visible')
+    })
 
     updateFills()
 
@@ -376,7 +382,7 @@ onBeforeUnmount(() => {
                 class="panel-newsprint flex max-w-80 flex-[0_0_min(280px,34%)] flex-col self-stretch max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
             >
                 <div class="mb-2.5 flex items-center justify-between gap-3">
-                    <span class="pl-1 font-serif text-3xl font-bold leading-none">{{ yearLabel }}</span>
+                    <span class="pl-1 font-mono text-3xl font-bold leading-none">{{ yearLabel }}</span>
                     <button
                         type="button"
                         class="btn-ghost shrink-0"
@@ -387,7 +393,7 @@ onBeforeUnmount(() => {
                     </button>
                 </div>
                 <div class="flex min-h-0 flex-1 flex-col gap-2">
-                    <div class="hard-shadow-hover border border-newsprint-fg bg-newsprint-bg">
+                    <div class="border border-newsprint-fg bg-newsprint-bg">
                         <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
                             >EARTH total</span
                         >
@@ -396,7 +402,7 @@ onBeforeUnmount(() => {
                         }}
                             Gt CO₂-eq / yr</strong>
                     </div>
-                    <div class="hard-shadow-hover border border-newsprint-fg bg-newsprint-bg">
+                    <div class="border border-newsprint-fg bg-newsprint-bg">
                         <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
                             >Continents</span
                         >
@@ -411,7 +417,7 @@ onBeforeUnmount(() => {
                             </li>
                         </ul>
                     </div>
-                    <div class="hard-shadow-hover border border-newsprint-fg bg-newsprint-bg">
+                    <div class="border border-newsprint-fg bg-newsprint-bg">
                         <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
                             >Top 5 countries</span
                         >

@@ -94,10 +94,6 @@ const REFERENCE_LINE_DETAILS = {
         blocks: [
             { type: 'paragraph', text: 'Major irreversible systems become threatened.' },
             { type: 'heading', text: 'Greenland Ice Sheet may pass a tipping point' },
-            {
-                type: 'paragraph',
-                text: 'The concern here is not immediate collapse — it’s committed collapse.',
-            },
             { type: 'paragraph', text: 'Once enough ice is lost:' },
             {
                 type: 'list',
@@ -789,7 +785,7 @@ function buildChart(container, data, extrapolateMode) {
             const [mx, my] = d3.pointer(event, this)
             const hoverRef = hitHorizontalRef(inst, my)
             applyHorizontalRefHighlight(inst, hoverRef)
-            this.style.cursor = hoverRef ? 'pointer' : 'crosshair'
+            this.style.cursor = hoverRef ? 'pointer' : 'default'
             const xVal = inst.x.invert(mx)
             let point
             let xPos
@@ -1166,8 +1162,12 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.panel-newsprint {
+    overscroll-behavior: none;
+}
+
 .chart-container :deep(.chart-overlay) {
-    cursor: crosshair;
+    cursor: default;
 }
 
 .chart-container :deep(.baseline) {
