@@ -157,7 +157,7 @@ onUnmounted(() => {
 
             <button
                 type="button"
-                class="carousel-nav btn-outline hard-shadow-hover fixed top-1/2 left-2 z-20 -translate-y-1/2 px-0 pb-4 font-serif text-3xl disabled:cursor-not-allowed disabled:opacity-35 md:left-4"
+                class="carousel-nav btn-primary hard-shadow-hover fixed top-1/2 left-2 z-20 -translate-y-1/2 px-0 pb-4 font-serif text-3xl disabled:cursor-not-allowed disabled:opacity-35 md:left-4"
                 :disabled="!canGoPrev"
                 aria-label="Previous slide"
                 @click="goPrev"
@@ -166,7 +166,7 @@ onUnmounted(() => {
             </button>
             <button
                 type="button"
-                class="carousel-nav btn-outline hard-shadow-hover fixed top-1/2 right-2 z-20 -translate-y-1/2 px-0 pb-4 font-serif text-3xl disabled:cursor-not-allowed disabled:opacity-35 md:right-4"
+                class="carousel-nav btn-primary hard-shadow-hover fixed top-1/2 right-2 z-20 -translate-y-1/2 px-0 pb-4 font-serif text-3xl disabled:cursor-not-allowed disabled:opacity-35 md:right-4"
                 :disabled="!canGoNext"
                 aria-label="Next slide"
                 @click="goNext"
@@ -218,5 +218,14 @@ onUnmounted(() => {
     width: 2.75rem;
     height: 3.5rem;
     line-height: 1;
+}
+
+.carousel-nav:disabled:hover {
+    border-color: transparent;
+    background-color: #111111;
+    color: #f9f9f7;
+    box-shadow: none;
+    transform: none;
+    cursor: not-allowed;
 }
 </style>

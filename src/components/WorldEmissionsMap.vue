@@ -203,7 +203,7 @@ function renderMap() {
         .append('svg')
         .attr('viewBox', `0 0 ${width} ${height}`)
         .attr('width', '100%')
-        .attr('height', 'auto')
+        .attr('height', '100%')
         .style('max-width', '100%')
         .style('height', 'auto')
 
@@ -377,12 +377,12 @@ onBeforeUnmount(() => {
 
 <template>
     <figure class="relative m-0 w-full newsprint-texture" aria-label="Country-level greenhouse gas emissions world map">
-        <div class="flex items-stretch gap-4 max-[720px]:flex-col">
+        <div class="flex items-stretch max-[720px]:flex-col">
             <aside
                 class="panel-newsprint flex max-w-80 flex-[0_0_min(280px,34%)] flex-col self-stretch max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
             >
                 <div class="mb-2.5 flex items-center justify-between gap-3">
-                    <span class="pl-1 font-mono text-3xl font-bold leading-none">{{ yearLabel }}</span>
+                    <span class="year-label pl-1 font-mono text-3xl font-bold leading-none">{{ yearLabel }}</span>
                     <button
                         type="button"
                         class="btn-ghost shrink-0"
@@ -392,15 +392,15 @@ onBeforeUnmount(() => {
                         {{ isPlaying ? 'Pause' : 'Play' }}
                     </button>
                 </div>
-                <div class="flex min-h-0 flex-1 flex-col gap-2">
+                <div class="newsprint-boxes-container flex min-h-0 flex-1 flex-col gap-2">
                     <div class="border border-newsprint-fg bg-newsprint-bg">
                         <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
                             >EARTH total</span
                         >
-                        <strong class="block px-2 py-2 font-mono text-lg">{{
+                        <strong class="earth-total-value block px-2 py-2 font-mono text-lg">{{
                             fmtGt(earthTotalGt)
                         }}
-                            Gt CO₂-eq / yr</strong>
+                            Gt CO₂-eq/yr</strong>
                     </div>
                     <div class="border border-newsprint-fg bg-newsprint-bg">
                         <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
@@ -434,7 +434,7 @@ onBeforeUnmount(() => {
                     </div>
                 </div>
             </aside>
-            <div class="flex min-w-0 flex-1 flex-col">
+            <div class="map-outer flex min-w-0 flex-1 flex-col">
                 <div class="mb-3.5 grid shrink-0 gap-1.5">
                     <label for="year-slider" class="sr-only">Year: {{ yearLabel }}</label>
                     <input
@@ -449,9 +449,9 @@ onBeforeUnmount(() => {
                 </div>
 
                 <div class="relative min-h-[320px] flex-1">
-                    <div ref="chartRef" class="map-container relative w-full min-h-[320px]"></div>
+                    <div ref="chartRef" class="map-container relative w-full h-full min-h-[320px]"></div>
                     <div
-                        class="absolute bottom-3 left-3 z-2 grid gap-1.5"
+                        class="zoom-controls absolute z-2 grid gap-1.5"
                         aria-label="Map zoom controls"
                     >
                         <button
@@ -484,3 +484,24 @@ onBeforeUnmount(() => {
     </figure>
 </template>
 
+<style scoped>
+.map-outer {
+    border: 1px solid var(--color-border);
+    border-left: none;
+    padding: 24px;
+
+}
+
+.zoom-controls {
+    bottom: 0;
+    left: 0;
+}
+
+.newsprint-boxes-container {
+    justify-content: space-between;
+}
+
+.year-label, .earth-total-value {
+    font-family: 'Roboto Mono', monospace;
+}
+</style>
