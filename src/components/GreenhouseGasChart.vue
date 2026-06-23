@@ -401,10 +401,26 @@ onBeforeUnmount(() => {
 
 <template>
     <figure
-        class="m-0 w-full newsprint-texture"
+        class="m-0 w-full newsprint-texture greenhouse-gas-chart"
         aria-label="Global greenhouse gas emissions for aggregate EARTH, 1880 to present"
     >
-        <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+        <div class="flex items-stretch max-[720px]:flex-col">
+            <aside
+                class="panel-newsprint newsprint-texture flex max-h-[500px] min-h-[500px] flex-[0_0_min(280px,34%)] flex-col self-stretch overflow-y-auto max-[720px]:max-h-none max-[720px]:min-h-0 max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
+            >
+                <span class="mb-2.5 min-w-0 font-serif text-base font-semibold leading-snug"
+                    >Individual Gas Breakdown</span
+                >
+                <p class="mb-3 text-sm leading-relaxed last:mb-0">
+                    Although Carbon Dioxide is the leading Greenhouse Gas contributing to global
+                    warming, it is not the only one. Move your cursor over the graph to view a
+                    breakdown of how each individual Greenhouse Gas contributes to Global Warming.
+                </p>
+            </aside>
+            <div class="gas-chart-container flex min-w-0 flex-1 flex-col">
+                <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+            </div>
+        </div>
         <figcaption class="mt-3 font-mono text-xs leading-relaxed text-neutral-500">
             <strong>Source:</strong>
             PRIMAP-hist v2.6.1 — Gütschow, Busch &amp; Pflüger (2025), Zenodo
@@ -483,4 +499,19 @@ onBeforeUnmount(() => {
     vector-effect: non-scaling-stroke;
 }
 
+.gas-chart-container {
+    border: 1px solid var(--color-border);
+    border-left: 0;
+    padding: 24px;
+    justify-content: center;
+}
+
+aside {
+    padding: 0;
+}
+
+aside p {
+    padding-left: 24px;
+    padding-right: 24px;
+}
 </style>

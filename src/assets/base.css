@@ -31,7 +31,8 @@ h1, h2 {
     @apply pl-9 pr-4 md:pl-11 md:pr-6;
 }
 
-.temperature-chart .panel-newsprint span {
+.temperature-chart .panel-newsprint span,
+.greenhouse-gas-chart .panel-newsprint span {
     @apply p-4 mb-4 bg-newsprint-muted font-mono uppercase sticky top-0 md:p-6 border-b mb-6;
 }
 

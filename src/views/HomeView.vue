@@ -100,7 +100,7 @@ onUnmounted(() => {
                                 <h2 class="section-heading mb-4 text-xl md:text-2xl">
                                     Global Land-Ocean Temperature Anomaly
                                 </h2>
-                                <p class="mb-6 max-w-3xl text-sm leading-relaxed text-neutral-600">
+                                <p class="mb-6 text-sm leading-relaxed text-neutral-600">
                                     Annual mean temperature anomaly in °C relative to the 1951–1980 average.
                                     Values above zero indicate a warmer world; the trend over the last decades
                                     is clear.
@@ -114,12 +114,12 @@ onUnmounted(() => {
                         class="carousel-slide flex h-full w-screen shrink-0 items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-16 md:px-8 md:py-20"
                         :aria-hidden="activeSlide !== 1"
                     >
-                        <div class="slide-inner mx-auto w-full max-w-[900px]">
+                        <div class="slide-inner mx-auto w-full max-w-[1200px]">
                             <section>
                                 <h2 class="section-heading mb-4 text-xl md:text-2xl">
                                     Global Greenhouse Gas Emissions (EARTH)
                                 </h2>
-                                <p class="mb-6 max-w-3xl text-sm leading-relaxed text-neutral-600">
+                                <p class="mb-6 text-sm leading-relaxed text-neutral-600">
                                     Annual emissions for the PRIMAP-hist aggregate <strong>EARTH</strong> (world
                                     total), shown as the Kyoto basket in CO₂ equivalent using AR5 GWP100. The
                                     dashed line marks the 1951-1980 average of that series so you can see how
