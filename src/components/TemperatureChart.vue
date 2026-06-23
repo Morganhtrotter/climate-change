@@ -1100,7 +1100,7 @@ onBeforeUnmount(() => {
         class="m-0 w-full temperature-chart"
         aria-label="Global land-ocean temperature anomaly from 1880 to present"
     >
-        <div class="flex items-stretch gap-4 max-[720px]:flex-col">
+        <div class="flex items-stretch max-[720px]:flex-col">
             <aside
                 class="panel-newsprint newsprint-texture flex max-h-[500px] min-h-[500px] flex-[0_0_min(280px,34%)] flex-col self-stretch overflow-y-auto max-[720px]:max-h-none max-[720px]:min-h-0 max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
                 aria-live="polite"
@@ -1135,8 +1135,8 @@ onBeforeUnmount(() => {
                     </ul>
                 </template>
             </aside>
-            <div class="flex min-w-0 flex-1 flex-col">
-                <div class="mb-2.5 ml-4 flex items-center justify-start">
+            <div class="temp-chart-container flex min-w-0 flex-1 flex-col">
+                <div class="mb-2.5 flex items-center justify-start">
                     <button
                         type="button"
                         class="btn-ghost shrink-0"
@@ -1263,5 +1263,11 @@ onBeforeUnmount(() => {
 .chart-container :deep(.extrap-line) {
     vector-effect: non-scaling-stroke;
     pointer-events: none;
+}
+
+.temp-chart-container {
+    border: 1px solid var(--color-border);
+    border-left: none;
+    padding: 24px;
 }
 </style>
