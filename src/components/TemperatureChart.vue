@@ -630,7 +630,7 @@ function buildChart(container, data, extrapolateMode) {
     d3.select(container).selectAll('*').remove()
     chartInstance = null
 
-    const margin = { top: 32, right: 24, bottom: 48, left: 52 }
+    const margin = { top: 32, right: 24, bottom: 48, left: 68 }
     const width = Math.max(320, container.clientWidth) - margin.left - margin.right
     const height = 360 - margin.top - margin.bottom
 
@@ -671,6 +671,21 @@ function buildChart(container, data, extrapolateMode) {
         .attr('class', 'axis axis-x')
         .attr('transform', `translate(0,${height})`)
         .call(xAxis)
+
+    g.append('text')
+        .attr('class', 'axis-y-label')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', -56)
+        .attr('x', -height / 2)
+        .attr('text-anchor', 'middle')
+        .text('Temperature Anomaly (°C)')
+
+    g.append('text')
+        .attr('class', 'axis-x-label')
+        .attr('x', width / 2)
+        .attr('y', height + 40)
+        .attr('text-anchor', 'middle')
+        .text('Year')
 
     const BASELINE_HIT_PX = 10
     const horizontalRefs = createHorizontalReferences(g, y, x, width, height)
@@ -1216,6 +1231,13 @@ onBeforeUnmount(() => {
 .chart-container :deep(.axis path),
 .chart-container :deep(.axis line) {
     stroke: var(--color-border);
+}
+
+.chart-container :deep(.axis-y-label),
+.chart-container :deep(.axis-x-label) {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 0.72rem;
+    fill: var(--color-muted);
 }
 
 .chart-container :deep(.baseline) {

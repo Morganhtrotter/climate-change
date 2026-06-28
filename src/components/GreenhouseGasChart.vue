@@ -133,6 +133,13 @@ function renderChart(container, data, baselineGg) {
         .attr('text-anchor', 'middle')
         .text('Gt CO₂-eq / yr')
 
+    g.append('text')
+        .attr('class', 'axis-x-label')
+        .attr('x', width / 2)
+        .attr('y', height + 40)
+        .attr('text-anchor', 'middle')
+        .text('Year')
+
     const yBaseline = y(baselineGt)
     const BASELINE_HIT_PX = 10
     const baselineInView =
@@ -458,7 +465,8 @@ onBeforeUnmount(() => {
     stroke: var(--color-border);
 }
 
-.chart-container :deep(.axis-y-label) {
+.chart-container :deep(.axis-y-label),
+.chart-container :deep(.axis-x-label) {
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 0.72rem;
     fill: var(--color-muted);
