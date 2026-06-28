@@ -225,6 +225,8 @@ const EXTRAP_TRANSITION_MS = 650
 const HOVER_IBEAM_CAP_WIDTH = 12
 
 let chartInstance = null
+let resizeObserver = null
+let resizeTimer = null
 
 function lastCalendarYearWindow(data, nYears) {
     if (!data.length) return []
@@ -630,8 +632,14 @@ function buildChart(container, data, extrapolateMode) {
     d3.select(container).selectAll('*').remove()
     chartInstance = null
 
-    const margin = { top: 32, right: 24, bottom: 48, left: 68 }
-    const width = Math.max(320, container.clientWidth) - margin.left - margin.right
+    const isMobile = container.clientWidth < 500
+    const margin = {
+        top: isMobile ? 20 : 32,
+        right: isMobile ? 10 : 24,
+        bottom: isMobile ? 36 : 48,
+        left: isMobile ? 44 : 68,
+    }
+    const width = Math.max(280, container.clientWidth) - margin.left - margin.right
     const height = 360 - margin.top - margin.bottom
 
     const extrap = extrapolationSeries(data, extrapolateMode)
@@ -663,8 +671,8 @@ function buildChart(container, data, extrapolateMode) {
 
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
 
-    const yAxis = d3.axisLeft(y).ticks(6).tickFormat((v) => `${v}°C`)
-    const xAxis = d3.axisBottom(x).ticks(10).tickFormat(d3.format('d'))
+    const yAxis = d3.axisLeft(y).ticks(isMobile ? 4 : 6).tickFormat((v) => `${v}°C`)
+    const xAxis = d3.axisBottom(x).ticks(isMobile ? 5 : 10).tickFormat(d3.format('d'))
 
     g.append('g').attr('class', 'axis axis-y').call(yAxis)
     g.append('g')
@@ -675,15 +683,15 @@ function buildChart(container, data, extrapolateMode) {
     g.append('text')
         .attr('class', 'axis-y-label')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -56)
+        .attr('y', isMobile ? -32 : -56)
         .attr('x', -height / 2)
         .attr('text-anchor', 'middle')
-        .text('Temperature Anomaly (°C)')
+        .text(isMobile ? 'Anomaly (°C)' : 'Temperature Anomaly (°C)')
 
     g.append('text')
         .attr('class', 'axis-x-label')
         .attr('x', width / 2)
-        .attr('y', height + 40)
+        .attr('y', height + (isMobile ? 28 : 40))
         .attr('text-anchor', 'middle')
         .text('Year')
 
@@ -1089,6 +1097,16 @@ onMounted(async () => {
     if (chartRef.value && annualDataRef.value.length) {
         buildChart(chartRef.value, annualDataRef.value, extrapolate.value)
     }
+
+    resizeObserver = new ResizeObserver(() => {
+        clearTimeout(resizeTimer)
+        resizeTimer = setTimeout(() => {
+            if (chartRef.value && annualDataRef.value.length) {
+                buildChart(chartRef.value, annualDataRef.value, extrapolate.value)
+            }
+        }, 80)
+    })
+    if (chartRef.value) resizeObserver.observe(chartRef.value)
 })
 
 watch(extrapolate, async (enabled) => {
@@ -1103,6 +1121,8 @@ watch(extrapolate, async (enabled) => {
 })
 
 onBeforeUnmount(() => {
+    clearTimeout(resizeTimer)
+    resizeObserver?.disconnect()
     chartInstance = null
     if (tooltipEl.value && tooltipEl.value.parentNode) {
         tooltipEl.value.remove()
@@ -1291,5 +1311,13 @@ onBeforeUnmount(() => {
     border: 1px solid var(--color-border);
     border-left: none;
     padding: 24px;
+}
+
+@media (max-width: 720px) {
+    .temp-chart-container {
+        border-left: 1px solid var(--color-border);
+        border-top: none;
+        padding: 16px;
+    }
 }
 </style>

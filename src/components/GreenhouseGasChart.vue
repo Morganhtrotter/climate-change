@@ -4,6 +4,10 @@ import * as d3 from 'd3'
 
 const chartRef = ref(null)
 const tooltipEl = ref(null)
+const chartSeriesRef = ref(null)
+const baselineGgRef = ref(null)
+let resizeObserver = null
+let resizeTimer = null
 
 const X_DOMAIN = [1880, 2025]
 
@@ -80,8 +84,14 @@ function renderChart(container, data, baselineGg) {
     if (!container || !data.length) return
     d3.select(container).selectAll('*').remove()
 
-    const margin = { top: 32, right: 24, bottom: 48, left: 56 }
-    const width = Math.max(320, container.clientWidth) - margin.left - margin.right
+    const isMobile = container.clientWidth < 500
+    const margin = {
+        top: isMobile ? 20 : 32,
+        right: isMobile ? 10 : 24,
+        bottom: isMobile ? 36 : 48,
+        left: isMobile ? 42 : 56,
+    }
+    const width = Math.max(280, container.clientWidth) - margin.left - margin.right
     const height = 360 - margin.top - margin.bottom
 
     const x = d3.scaleLinear().domain(X_DOMAIN).range([0, width])
@@ -116,8 +126,8 @@ function renderChart(container, data, baselineGg) {
 
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
 
-    const yAxis = d3.axisLeft(y).ticks(6).tickFormat((v) => `${v}`)
-    const xAxis = d3.axisBottom(x).ticks(10).tickFormat(d3.format('d'))
+    const yAxis = d3.axisLeft(y).ticks(isMobile ? 4 : 6).tickFormat((v) => `${v}`)
+    const xAxis = d3.axisBottom(x).ticks(isMobile ? 5 : 10).tickFormat(d3.format('d'))
 
     g.append('g').attr('class', 'axis axis-y').call(yAxis)
     g.append('g')
@@ -128,7 +138,7 @@ function renderChart(container, data, baselineGg) {
     g.append('text')
         .attr('class', 'axis-y-label')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -44)
+        .attr('y', isMobile ? -30 : -44)
         .attr('x', -height / 2)
         .attr('text-anchor', 'middle')
         .text('Gt CO₂-eq / yr')
@@ -136,7 +146,7 @@ function renderChart(container, data, baselineGg) {
     g.append('text')
         .attr('class', 'axis-x-label')
         .attr('x', width / 2)
-        .attr('y', height + 40)
+        .attr('y', height + (isMobile ? 28 : 40))
         .attr('text-anchor', 'middle')
         .text('Year')
 
@@ -387,6 +397,8 @@ onMounted(async () => {
     const payload = await fetch(`${base}data/earth-ghg-annual.json`).then((r) => r.json())
     const series = payload.series || []
     const baselineGg = payload.meta?.baselineAverageGgCO2e ?? null
+    chartSeriesRef.value = series
+    baselineGgRef.value = baselineGg
 
     if (!chartRef.value) return
 
@@ -397,9 +409,21 @@ onMounted(async () => {
     tooltipEl.value = tooltip
 
     renderChart(chartRef.value, series, baselineGg)
+
+    resizeObserver = new ResizeObserver(() => {
+        clearTimeout(resizeTimer)
+        resizeTimer = setTimeout(() => {
+            if (chartRef.value && chartSeriesRef.value?.length) {
+                renderChart(chartRef.value, chartSeriesRef.value, baselineGgRef.value)
+            }
+        }, 80)
+    })
+    resizeObserver.observe(chartRef.value)
 })
 
 onBeforeUnmount(() => {
+    clearTimeout(resizeTimer)
+    resizeObserver?.disconnect()
     if (tooltipEl.value && tooltipEl.value.parentNode) {
         tooltipEl.value.remove()
     }
@@ -512,6 +536,14 @@ onBeforeUnmount(() => {
     border-left: 0;
     padding: 24px;
     justify-content: center;
+}
+
+@media (max-width: 720px) {
+    .gas-chart-container {
+        border-left: 1px solid var(--color-border);
+        border-top: none;
+        padding: 16px;
+    }
 }
 
 aside {

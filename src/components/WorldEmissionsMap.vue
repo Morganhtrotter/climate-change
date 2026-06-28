@@ -379,7 +379,7 @@ onBeforeUnmount(() => {
     <figure class="relative m-0 w-full newsprint-texture" aria-label="Country-level greenhouse gas emissions world map">
         <div class="flex items-stretch max-[720px]:flex-col">
             <aside
-                class="panel-newsprint flex max-w-80 flex-[0_0_min(280px,34%)] flex-col self-stretch max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
+                class="panel-newsprint flex max-w-80 flex-[0_0_min(280px,34%)] flex-col self-stretch max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none max-[720px]:max-h-64 max-[720px]:overflow-y-auto"
             >
                 <div class="mb-2.5 flex items-center justify-between gap-3">
                     <span class="year-label pl-1 font-mono text-3xl font-bold leading-none">{{ yearLabel }}</span>
@@ -489,7 +489,14 @@ onBeforeUnmount(() => {
     border: 1px solid var(--color-border);
     border-left: none;
     padding: 24px;
+}
 
+@media (max-width: 720px) {
+    .map-outer {
+        border-left: 1px solid var(--color-border);
+        border-top: none;
+        padding: 16px;
+    }
 }
 
 .zoom-controls {

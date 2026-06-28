@@ -10,7 +10,7 @@ const showSideNav = computed(() => route.name !== 'home')
 <template>
     <div
         class="min-h-screen bg-newsprint-bg"
-        :class="showSideNav ? 'md:pl-[3.375rem]' : ''"
+        :class="showSideNav ? 'pl-[3.375rem]' : ''"
     >
         <AppSideNav v-if="showSideNav" />
         <main class="min-h-screen">

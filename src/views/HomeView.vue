@@ -92,7 +92,7 @@ onUnmounted(() => {
                     :style="{ transform: `translateX(-${activeSlide * 100}vw)` }"
                 >
                     <div
-                        class="carousel-slide flex h-full w-screen shrink-0 items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-16 md:px-8 md:py-20"
+                        class="carousel-slide flex h-full w-screen shrink-0 items-start justify-center overflow-x-hidden overflow-y-auto px-4 pt-8 pb-24 md:items-center md:px-8 md:py-20"
                         :aria-hidden="activeSlide !== 0"
                     >
                         <div class="slide-inner flex min-h-0 w-full max-w-[1200px] flex-1 flex-col">
@@ -111,7 +111,7 @@ onUnmounted(() => {
                     </div>
 
                     <div
-                        class="carousel-slide flex h-full w-screen shrink-0 items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-16 md:px-8 md:py-20"
+                        class="carousel-slide flex h-full w-screen shrink-0 items-start justify-center overflow-x-hidden overflow-y-auto px-4 pt-8 pb-24 md:items-center md:px-8 md:py-20"
                         :aria-hidden="activeSlide !== 1"
                     >
                         <div class="slide-inner mx-auto w-full max-w-[1200px]">
@@ -131,7 +131,7 @@ onUnmounted(() => {
                     </div>
 
                     <div
-                        class="carousel-slide flex h-full w-screen shrink-0 flex-col items-center justify-start overflow-x-hidden overflow-y-auto px-4 py-16 md:px-8 md:py-20"
+                        class="carousel-slide flex h-full w-screen shrink-0 flex-col items-center justify-start overflow-x-hidden overflow-y-auto px-4 pt-8 pb-24 md:px-8 md:py-20"
                         :aria-hidden="activeSlide !== 2"
                     >
                         <div
@@ -157,7 +157,7 @@ onUnmounted(() => {
 
             <button
                 type="button"
-                class="carousel-nav btn-primary hard-shadow-hover fixed top-1/2 left-2 z-20 -translate-y-1/2 px-0 pb-4 font-serif text-3xl disabled:cursor-not-allowed disabled:opacity-35 md:left-4"
+                class="carousel-nav btn-primary hard-shadow-hover fixed bottom-5 left-2 z-20 px-0 pb-4 font-serif text-3xl disabled:cursor-not-allowed disabled:opacity-35 md:top-1/2 md:bottom-auto md:-translate-y-1/2 md:left-4"
                 :disabled="!canGoPrev"
                 aria-label="Previous slide"
                 @click="goPrev"
@@ -166,7 +166,7 @@ onUnmounted(() => {
             </button>
             <button
                 type="button"
-                class="carousel-nav btn-primary hard-shadow-hover fixed top-1/2 right-2 z-20 -translate-y-1/2 px-0 pb-4 font-serif text-3xl disabled:cursor-not-allowed disabled:opacity-35 md:right-4"
+                class="carousel-nav btn-primary hard-shadow-hover fixed bottom-5 right-2 z-20 px-0 pb-4 font-serif text-3xl disabled:cursor-not-allowed disabled:opacity-35 md:top-1/2 md:bottom-auto md:-translate-y-1/2 md:right-4"
                 :disabled="!canGoNext"
                 aria-label="Next slide"
                 @click="goNext"
