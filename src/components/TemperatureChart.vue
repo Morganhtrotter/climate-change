@@ -1199,6 +1199,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .panel-newsprint {
     overscroll-behavior: none;
+    z-index: -1;
 }
 
 .chart-container :deep(.chart-overlay) {

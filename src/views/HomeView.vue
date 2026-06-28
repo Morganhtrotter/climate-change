@@ -92,7 +92,7 @@ onUnmounted(() => {
                     :style="{ transform: `translateX(-${activeSlide * 100}vw)` }"
                 >
                     <div
-                        class="carousel-slide flex h-full w-screen shrink-0 items-start justify-center overflow-x-hidden overflow-y-auto px-4 pt-8 pb-24 md:items-center md:px-8 md:py-20"
+                        class="carousel-slide flex h-full w-screen shrink-0 items-start justify-center overflow-x-hidden overflow-y-auto px-4 pt-8 pb-4 md:items-center md:px-8 md:py-20"
                         :aria-hidden="activeSlide !== 0"
                     >
                         <div class="slide-inner flex min-h-0 w-full max-w-[1200px] flex-1 flex-col">
@@ -111,7 +111,7 @@ onUnmounted(() => {
                     </div>
 
                     <div
-                        class="carousel-slide flex h-full w-screen shrink-0 items-start justify-center overflow-x-hidden overflow-y-auto px-4 pt-8 pb-24 md:items-center md:px-8 md:py-20"
+                        class="carousel-slide flex h-full w-screen shrink-0 items-start justify-center overflow-x-hidden overflow-y-auto px-4 pt-8 pb-4 md:items-center md:px-8 md:py-20"
                         :aria-hidden="activeSlide !== 1"
                     >
                         <div class="slide-inner mx-auto w-full max-w-[1200px]">
@@ -131,7 +131,7 @@ onUnmounted(() => {
                     </div>
 
                     <div
-                        class="carousel-slide flex h-full w-screen shrink-0 flex-col items-center justify-start overflow-x-hidden overflow-y-auto px-4 pt-8 pb-24 md:px-8 md:py-20"
+                        class="carousel-slide flex h-full w-screen shrink-0 flex-col items-center justify-start overflow-x-hidden overflow-y-auto px-4 pt-8 pb-4 md:px-8 md:py-20"
                         :aria-hidden="activeSlide !== 2"
                     >
                         <div
@@ -227,5 +227,19 @@ onUnmounted(() => {
     box-shadow: none;
     transform: none;
     cursor: not-allowed;
+}
+
+@media screen and (max-width: 768px) {
+    .carousel-slide {
+        padding-bottom: 0;
+        margin-bottom: 90px;
+        border-bottom: 1px solid var(--color-border);
+        height: auto;
+        box-shadow: inset 0px -4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .carousel-track {
+        height: -webkit-fill-available;
+    }
 }
 </style>
