@@ -1196,10 +1196,15 @@ onBeforeUnmount(() => {
     </figure>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .panel-newsprint {
     overscroll-behavior: none;
-    z-index: -1;
+}
+
+@media screen and (max-width: $mobile-max-width)  {
+    .panel-newsprint {
+        z-index: -1;
+    }
 }
 
 .chart-container :deep(.chart-overlay) {
@@ -1314,7 +1319,7 @@ onBeforeUnmount(() => {
     padding: 24px;
 }
 
-@media (max-width: 720px) {
+@media screen and (max-width: $mobile-max-width) {
     .temp-chart-container {
         border-left: 1px solid var(--color-border);
         border-top: none;

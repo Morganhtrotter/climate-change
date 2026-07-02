@@ -484,7 +484,7 @@ onBeforeUnmount(() => {
     </figure>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .map-outer {
     border: 1px solid var(--color-border);
     border-left: none;

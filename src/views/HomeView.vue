@@ -208,7 +208,7 @@ onUnmounted(() => {
     </Transition>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .carousel-track {
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
@@ -229,7 +229,7 @@ onUnmounted(() => {
     cursor: not-allowed;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $mobile-max-width) {
     .carousel-slide {
         padding-bottom: 0;
         margin-bottom: 90px;

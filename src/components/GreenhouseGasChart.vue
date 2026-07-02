@@ -469,7 +469,7 @@ onBeforeUnmount(() => {
     </figure>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .chart-container :deep(.hover-line) {
     pointer-events: none;
 }

@@ -1,3 +1,5 @@
+@reference "./tailwind.css";
+
 /* Semantic tokens for D3 charts and legacy var() usage — Newsprint light only */
 :root {
     --color-background: #f9f9f7;
