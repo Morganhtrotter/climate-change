@@ -95,6 +95,11 @@ input[type="reset"] {
     margin-top: 0.15rem;
 }
 
+.chart-tooltip .tooltip-label-baseline {
+    color: #111111;
+    font-weight: 600;
+}
+
 .chart-tooltip.chart-tooltip--ghg {
     white-space: normal;
     max-width: min(320px, calc(100vw - 24px));

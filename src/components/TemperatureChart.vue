@@ -309,6 +309,17 @@ function extrapolationSeries(data, enabled) {
 
 const PRE_INDUSTRIAL_ANOMALY = -0.19
 
+/** Which baseline the tooltip/I-beam are currently measured against: 0 (1951–1980) or PRE_INDUSTRIAL_ANOMALY. */
+function activeBaselineAnomaly() {
+    return Math.abs(selectedRefAnomaly.value - PRE_INDUSTRIAL_ANOMALY) < 1e-6 ? PRE_INDUSTRIAL_ANOMALY : 0
+}
+
+function baselineLabelText(baselineAnomaly) {
+    return baselineAnomaly === PRE_INDUSTRIAL_ANOMALY ? 'pre-industrial average' : '1951–1980 average'
+}
+
+const selectedBaselineLabel = computed(() => baselineLabelText(activeBaselineAnomaly()))
+
 /** Horizontal guides (°C anomaly vs 1951–1980). Warming levels ≈ pre-industrial + 1.5 / 2 / 3 / 4 °C. */
 const HORIZONTAL_REFERENCE_LINES = [
     { anomaly: 0, label: '1951–1980 average', showRefYears: true, lineClass: 'baseline' },
@@ -454,12 +465,8 @@ function createHorizontalReferences(g, y, x, width, height) {
 }
 
 function applyHorizontalRefHighlight(inst, hoverRef) {
-    const pinned =
-        selectedRefAnomaly.value != null
-            ? inst.horizontalRefs.find(
-                  (r) => r.anomaly === selectedRefAnomaly.value && r.inView,
-              )
-            : null
+    const effectiveAnomaly = selectedRefAnomaly.value ?? 0
+    const pinned = inst.horizontalRefs.find((r) => r.anomaly === effectiveAnomaly && r.inView)
     setActiveHorizontalRef(inst, hoverRef ?? pinned ?? null)
 }
 
@@ -829,9 +836,10 @@ function buildChart(container, data, extrapolateMode) {
             inst.hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
             const anomaly = point.anomaly
             const yAnomalyPx = inst.y(anomaly)
-            const yZeroPx = inst.zeroY
-            const beamTop = Math.min(yAnomalyPx, yZeroPx)
-            const beamBottom = Math.max(yAnomalyPx, yZeroPx)
+            const baselineAnomaly = activeBaselineAnomaly()
+            const yBaselinePx = baselineAnomaly === PRE_INDUSTRIAL_ANOMALY ? inst.preIndustrialY : inst.zeroY
+            const beamTop = Math.min(yAnomalyPx, yBaselinePx)
+            const beamBottom = Math.max(yAnomalyPx, yBaselinePx)
             const isExtrapPoint = extrapActive && xVal > inst.lastDataYear
             const beamStroke = isExtrapPoint
                 ? inst.colorHeading
@@ -856,11 +864,12 @@ function buildChart(container, data, extrapolateMode) {
                 .attr('y2', beamBottom)
                 .attr('stroke', beamStroke)
             inst.hoverIBeam.attr('visibility', 'visible')
-            const sign = anomaly >= 0 ? '+' : ''
+            const displayAnomaly = anomaly - baselineAnomaly
+            const sign = displayAnomaly >= 0 ? '+' : ''
             const yearLabel = String(point.year)
-            const valueStr = `${sign}${anomaly.toFixed(2)}°C`
+            const valueStr = `${sign}${displayAnomaly.toFixed(2)}°C`
             const topRow = `<div class="tooltip-top-row"><span class="tooltip-value">${valueStr}</span><span class="tooltip-year">${yearLabel}</span></div>`
-            inst.tooltip.innerHTML = `${topRow}<span class="tooltip-label">${tooltipLabel}</span>`
+            inst.tooltip.innerHTML = `${topRow}<span class="tooltip-label"><span class="tooltip-label-baseline">relative to the ${baselineLabelText(baselineAnomaly)}</span><br>${tooltipLabel}</span>`
             const offset = 12
             const svgRect = inst.svg.node()?.getBoundingClientRect()
             const ttRect = inst.tooltip.getBoundingClientRect()
@@ -1185,6 +1194,7 @@ onBeforeUnmount(() => {
                     >
                         {{ extrapolate ? 'Extrapolate on' : 'Extrapolate' }}
                     </button>
+                    <span class="ml-3 text-sm text-neutral-600">Selected baseline: {{ selectedBaselineLabel }}</span>
                 </div>
                 <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
             </div>
