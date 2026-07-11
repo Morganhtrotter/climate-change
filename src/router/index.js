@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import ExploreView from '../views/ExploreView.vue'
 import SectionPlaceholderView from '../views/SectionPlaceholderView.vue'
 import SourcesView from '../views/SourcesView.vue'
+import TippingPointsView from '../views/TippingPointsView.vue'
+import GraphsView from '../views/GraphsView.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,8 +22,7 @@ const router = createRouter({
         {
             path: '/graphs',
             name: 'graphs',
-            component: SectionPlaceholderView,
-            meta: { title: 'Graphs' },
+            component: GraphsView,
         },
         {
             path: '/predictive-data',
@@ -38,8 +39,7 @@ const router = createRouter({
         {
             path: '/tipping-points',
             name: 'tipping-points',
-            component: SectionPlaceholderView,
-            meta: { title: 'Tipping Points' },
+            component: TippingPointsView,
         },
         {
             path: '/what-can-we-do',

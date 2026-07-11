@@ -127,6 +127,24 @@
                         values as methods and reporting evolve.
                     </p>
                 </div>
+
+                <div class="mb-7 last:mb-0">
+                    <h3 class="mb-2.5 font-serif text-lg font-bold leading-snug">
+                        Climate tipping-point thresholds (Armstrong McKay et al., 2022)
+                    </h3>
+                    <p class="leading-relaxed">
+                        The Tipping Points page uses the best-estimate and range thresholds (°C of
+                        warming above pre-industrial) synthesized in Armstrong McKay et al. (2022),
+                        <em>Science</em> — the most comprehensive peer-reviewed reassessment of
+                        climate tipping elements, drawing on over 200 published studies. We chose it
+                        because it is the <strong>consensus reference</strong> most other summaries
+                        (Potsdam Institute, Wikipedia, ScienceDaily) trace back to, giving readers a
+                        single, traceable numeric source rather than a mix of secondary retellings.
+                        Per-element notes and the cascade-risk framing are cross-checked against the
+                        additional sources listed below, and repeated in full on the Tipping Points
+                        page itself so citations stay next to the claims they support.
+                    </p>
+                </div>
             </section>
 
             <section class="mb-9 last:mb-0" aria-labelledby="use-heading">
@@ -227,6 +245,27 @@
                             </tr>
                             <tr>
                                 <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    <strong class="whitespace-nowrap">Tipping Points</strong><br /><code class="font-mono text-xs"
+                                        >TippingPointsView.vue</code
+                                    >,
+                                    <code class="font-mono text-xs">TippingPointsChart.vue</code>
+                                </td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    Best-estimate and range thresholds (°C above pre-industrial) for
+                                    eleven climate tipping elements, plotted against 1.5/2/3/4°C
+                                    reference lines; tier cards and two qualitative-risk notes below
+                                    the chart.
+                                </td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    Static dataset <code>src/data/tippingPoints.js</code>, transcribed
+                                    from Armstrong McKay et al. (2022)<sup class="ml-0.5 font-semibold">[8]</sup>
+                                    and cross-checked against sources
+                                    <sup class="ml-0.5 font-semibold">[9–16]</sup>; full citations repeated
+                                    on the Tipping Points page itself.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
                                     <strong class="whitespace-nowrap">Explore</strong><br /><code class="font-mono text-xs"
                                         >ExploreView.vue</code
                                     >
@@ -260,7 +299,7 @@
 
             <section class="mb-9 last:mb-0" aria-labelledby="refs-heading">
                 <h2 id="refs-heading" class="section-heading mb-3">References</h2>
-                <ol class="m-0 list-decimal space-y-4 pl-6 leading-relaxed">
+                <ol class="m-0 list-decimal space-y-4 pl-6 leading-relaxed break-words">
                     <li>
                         <span class="mr-1.5 inline font-semibold">Global temperature (LOTI / GISTEMP).</span>
                         NASA Goddard Institute for Space Studies. <em>GISS Surface Temperature Analysis
@@ -339,6 +378,100 @@
                         accompanying national greenhouse gas reporting. (See PRIMAP column documentation
                         in the Zenodo package<sup class="ml-0.5 font-semibold">[2]</sup> for field definitions used by this
                         site.)
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Climate tipping-point thresholds (primary source).</span>
+                        Armstrong McKay, D. I., Staal, A., Abrams, J. F., Winkelmann, R., Sakschewski,
+                        B., Loriani, S., Fetzer, I., Cornell, S. E., Rockström, J., &amp; Lenton, T. M.
+                        (2022). Exceeding 1.5°C global warming could trigger multiple climate tipping
+                        points. <em>Science</em>, 377(6611), eabn7950.
+                        <a href="https://doi.org/10.1126/science.abn7950" rel="noopener noreferrer"
+                            >https://doi.org/10.1126/science.abn7950</a
+                        >. Source for every best-estimate and range value on the Tipping Points page.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Tipping points — Greenland framing.</span>
+                        Potsdam Institute for Climate Impact Research (2022, September 9). Risk of
+                        passing multiple climate tipping points escalates above 1.5°C global warming
+                        [Press release].
+                        <a
+                            href="https://www.pik-potsdam.de/en/news/latest-news/risk-of-passing-multiple-climate-tipping-points-escalates-above-1-5degc-global-warming"
+                            rel="noopener noreferrer"
+                            >pik-potsdam.de</a
+                        >.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Tipping points — general reference.</span>
+                        Wikipedia contributors. Tipping points in the climate system. <em>Wikipedia,
+                        The Free Encyclopedia</em>.
+                        <a
+                            href="https://en.wikipedia.org/wiki/Tipping_points_in_the_climate_system"
+                            rel="noopener noreferrer"
+                            >https://en.wikipedia.org/wiki/Tipping_points_in_the_climate_system</a
+                        >.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Tipping points — 1.5°C risk summary.</span>
+                        ScienceDaily (2022, September 8). Risk of multiple climate tipping points
+                        escalates above 1.5°C global warming.
+                        <a
+                            href="https://www.sciencedaily.com/releases/2022/09/220908172309.htm"
+                            rel="noopener noreferrer"
+                            >sciencedaily.com</a
+                        >.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Tipping points — cascade interactions.</span>
+                        ScienceDaily (2021, June 3). Tipping elements can destabilize each other,
+                        leading to climate domino effects.
+                        <a
+                            href="https://www.sciencedaily.com/releases/2021/06/210603170305.htm"
+                            rel="noopener noreferrer"
+                            >sciencedaily.com</a
+                        >.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Tipping points — East Antarctic subglacial basins.</span>
+                        Winkelmann, R., Garbe, J., Donges, J. F., &amp; Albrecht, T. (2026). Mapping
+                        tipping risks from Antarctic ice basins under global warming.
+                        <em>Nature Climate Change</em>.
+                        <a
+                            href="https://doi.org/10.1038/s41558-025-02554-0"
+                            rel="noopener noreferrer"
+                            >https://doi.org/10.1038/s41558-025-02554-0</a
+                        >.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Tipping points — Amazon rainforest dieback.</span>
+                        Parry, I., Ritchie, P., &amp; Cox, P. (2022). Evidence of Amazon rainforest
+                        dieback in CMIP6 models. <em>Earth System Dynamics</em>, 13, 1667–1682.
+                        <a
+                            href="https://esd.copernicus.org/articles/13/1667/2022/"
+                            rel="noopener noreferrer"
+                            >https://esd.copernicus.org/articles/13/1667/2022/</a
+                        >.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Tipping points — paper explainer.</span>
+                        Global Tipping Points Explainer (2022, September 9). Exceeding 1.5°C global
+                        warming could trigger multiple climate tipping points — paper explainer.
+                        <a
+                            href="https://climatetippingpoints.info/2022/09/09/climate-tipping-points-reassessment-explainer/"
+                            rel="noopener noreferrer"
+                            >climatetippingpoints.info</a
+                        >.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Tipping points — 45%-by-2300 cascade-risk figure.</span>
+                        Möller, T., Högner, A. E., Schleussner, C.-F., Bien, S., Kitzmann, N. H.,
+                        Lamboll, R. D., Rogelj, J., Donges, J. F., Rockström, J., &amp; Wunderling, N.
+                        (2024). Achieving net zero greenhouse gas emissions critical to limit climate
+                        tipping risks. <em>Nature Communications</em>, 15, 6192.
+                        <a
+                            href="https://doi.org/10.1038/s41467-024-49863-0"
+                            rel="noopener noreferrer"
+                            >https://doi.org/10.1038/s41467-024-49863-0</a
+                        >.
                     </li>
                 </ol>
             </section>
