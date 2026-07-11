@@ -5,6 +5,7 @@ import SectionPlaceholderView from '../views/SectionPlaceholderView.vue'
 import SourcesView from '../views/SourcesView.vue'
 import TippingPointsView from '../views/TippingPointsView.vue'
 import GraphsView from '../views/GraphsView.vue'
+import WhatCanWeDoView from '../views/WhatCanWeDoView.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,8 +45,7 @@ const router = createRouter({
         {
             path: '/what-can-we-do',
             name: 'what-can-we-do',
-            component: SectionPlaceholderView,
-            meta: { title: 'What Can We Do' },
+            component: WhatCanWeDoView,
         },
         {
             path: '/sources',

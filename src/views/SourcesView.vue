@@ -145,6 +145,27 @@
                         page itself so citations stay next to the claims they support.
                     </p>
                 </div>
+
+                <div class="mb-7 last:mb-0">
+                    <h3 class="mb-2.5 font-serif text-lg font-bold leading-snug">
+                        Mitigation solutions and potential (IPCC AR6 WG3, Project Drawdown, Wynes &amp; Nicholas)
+                    </h3>
+                    <p class="leading-relaxed">
+                        The What Can We Do page combines three sources chosen to cover three different
+                        scales of action. <strong>IPCC AR6 Working Group III</strong> (2022) provides the
+                        systemic framing — the peer-reviewed, government-approved assessment of how much
+                        mitigation is achievable by 2030 and at what cost, making it the
+                        <strong>authoritative</strong> reference for whether the problem is solvable in
+                        time. <strong>Project Drawdown's</strong> Table of Solutions provides
+                        <strong>per-solution quantification</strong> in Gt CO2-eq/yr, drawing on a
+                        transparent, peer-reviewed methodology that is <strong>widely used</strong> in
+                        climate communication precisely because it ranks options by measured impact
+                        rather than intuition. <strong>Wynes &amp; Nicholas (2017)</strong> is the
+                        standard peer-reviewed reference for individual-scale action, chosen because it
+                        directly quantifies and ranks commonly recommended personal actions rather than
+                        asserting their relative importance qualitatively.
+                    </p>
+                </div>
             </section>
 
             <section class="mb-9 last:mb-0" aria-labelledby="use-heading">
@@ -262,6 +283,26 @@
                                     and cross-checked against sources
                                     <sup class="ml-0.5 font-semibold">[9–16]</sup>; full citations repeated
                                     on the Tipping Points page itself.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    <strong class="whitespace-nowrap">What Can We Do</strong><br /><code class="font-mono text-xs"
+                                        >WhatCanWeDoView.vue</code
+                                    >,
+                                    <code class="font-mono text-xs">WhatCanWeDoChart.vue</code>
+                                </td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    Twenty mitigation solutions grouped by sector and ranked by estimated
+                                    Gt CO2-eq/yr avoided or sequestered at full deployment; sector cards;
+                                    IPCC systemic-mitigation figures; individual-action comparison cards.
+                                </td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">
+                                    Static dataset <code>src/data/whatCanWeDo.js</code>, compiled from
+                                    Project Drawdown<sup class="ml-0.5 font-semibold">[17]</sup>, IPCC AR6
+                                    WG3<sup class="ml-0.5 font-semibold">[18]</sup>, and Wynes &amp;
+                                    Nicholas (2017)<sup class="ml-0.5 font-semibold">[19]</sup>; full
+                                    citations repeated on the What Can We Do page itself.
                                 </td>
                             </tr>
                             <tr>
@@ -472,6 +513,39 @@
                             rel="noopener noreferrer"
                             >https://doi.org/10.1038/s41467-024-49863-0</a
                         >.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Mitigation solutions and impact (Project Drawdown).</span>
+                        Project Drawdown. <em>Drawdown Explorer / Table of Solutions</em>.
+                        <a href="https://drawdown.org/solutions" rel="noopener noreferrer"
+                            >https://drawdown.org/solutions</a
+                        > (accessed 2026). Successor to the peer-reviewed methodology in Hawken, P. (Ed.)
+                        (2017), <em>Drawdown: The Most Comprehensive Plan Ever Proposed to Reverse Global
+                        Warming</em>, Penguin Books, and Project Drawdown (2020), <em>The Drawdown
+                        Review: Climate Solutions for a New Decade</em>. Source for every solution's Gt
+                        CO2-eq/yr estimate on the What Can We Do page.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Systemic mitigation potential and cost (IPCC AR6 WG3).</span>
+                        IPCC (2022). <em>Climate Change 2022: Mitigation of Climate Change. Contribution
+                        of Working Group III to the Sixth Assessment Report of the Intergovernmental
+                        Panel on Climate Change.</em> Summary for Policymakers.
+                        <a
+                            href="https://www.ipcc.ch/report/ar6/wg3/downloads/report/IPCC_AR6_WGIII_SPM.pdf"
+                            rel="noopener noreferrer"
+                            >ipcc.ch</a
+                        >. Source for the peak-by-2025, 43%-cut-by-2030, 32–44 Gt CO2-eq mitigation
+                        potential, and clean-energy cost-decline figures on the What Can We Do page.
+                    </li>
+                    <li>
+                        <span class="mr-1.5 inline font-semibold">Individual-action impact ranking (Wynes &amp; Nicholas, 2017).</span>
+                        Wynes, S., &amp; Nicholas, K. A. (2017). The climate mitigation gap: education
+                        and government recommendations miss the most effective individual actions.
+                        <em>Environmental Research Letters</em>, 12(7), 074024.
+                        <a href="https://doi.org/10.1088/1748-9326/aa7541" rel="noopener noreferrer"
+                            >https://doi.org/10.1088/1748-9326/aa7541</a
+                        >. Source for every figure in the individual-actions section of the What Can We
+                        Do page.
                     </li>
                 </ol>
             </section>
