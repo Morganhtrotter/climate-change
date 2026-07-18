@@ -311,7 +311,7 @@
                                         >ExploreView.vue</code
                                     >
                                 </td>
-                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">Introductory narrative only; no quantitative series loaded.</td>
+                                <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">Site mission, editorial principles, and a guide to the other sections; no quantitative series loaded.</td>
                                 <td class="border-b border-newsprint-fg px-3 py-2.5 align-top">—</td>
                             </tr>
                             <tr>
