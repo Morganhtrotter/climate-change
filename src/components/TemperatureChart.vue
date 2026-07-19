@@ -1179,7 +1179,7 @@ onBeforeUnmount(() => {
         class="m-0 w-full temperature-chart"
         aria-label="Global land-ocean temperature anomaly from 1880 to present"
     >
-        <div class="flex items-stretch max-[720px]:flex-col">
+        <div class="chart-layout flex items-stretch max-[720px]:flex-col">
             <aside
                 class="panel-newsprint newsprint-texture flex max-h-[500px] min-h-[500px] flex-[0_0_min(280px,34%)] flex-col self-stretch overflow-y-auto max-[720px]:max-h-none max-[720px]:min-h-0 max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
                 aria-live="polite"
@@ -1253,8 +1253,20 @@ onBeforeUnmount(() => {
 }
 
 @media screen and (max-width: $mobile-max-width)  {
+    /* Bounds the aside's negative z-index to this row's own stacking context, so it doesn't
+       escape to the page root and get buried under unrelated page content on pages (like
+       GraphsView) that don't happen to wrap this component in a positioned/transformed ancestor. */
+    .chart-layout {
+        isolation: isolate;
+    }
+
     .panel-newsprint {
         z-index: -1;
+        /* On mobile the panel already grows to fit its content (no max-height cap), so it never
+           needs to scroll internally. Canceling the base overflow-y-auto here stops it from
+           acting as its own scroll container, which otherwise swallows vertical swipes instead
+           of letting them scroll the page. */
+        overflow-y: visible;
     }
 }
 
