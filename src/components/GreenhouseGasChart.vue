@@ -481,15 +481,17 @@ onBeforeUnmount(() => {
                 <span class="mb-2.5 min-w-0 font-serif text-base font-semibold leading-snug"
                     >Individual Gas Breakdown</span
                 >
-                <p class="mb-3 text-sm leading-relaxed last:mb-0">
+                <p class="newsprint-content mb-3 text-sm leading-relaxed last:mb-0">
                     Although Carbon Dioxide is the leading Greenhouse Gas contributing to global
                     warming, it is not the only one. Move your cursor over the graph to view a
                     breakdown of how each individual Greenhouse Gas contributes to Global Warming.
                 </p>
             </aside>
             <div class="gas-chart-container flex min-w-0 flex-1 flex-col">
-                <p class="chart-mobile-hint">Tap the graph to see values</p>
-                <p class="chart-mobile-hint chart-rotate-hint">↻ Rotate your phone for a landscape view</p>
+                <div class="gas-chart-header">
+                    <p class="chart-mobile-hint">Tap the graph to see values</p>
+                    <p class="chart-mobile-hint chart-rotate-hint">↻ Rotate your phone for a landscape view</p>
+                </div>
                 <div class="chart-scroll-wrapper">
                     <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
                 </div>
@@ -594,10 +596,23 @@ onBeforeUnmount(() => {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-x: contain;
+        padding-left: 16px;
     }
 
     .chart-container {
         min-width: 720px;
+    }
+
+    .newsprint-content {
+        padding-bottom: 32px;
+    }
+
+    .gas-chart-container {
+        padding: 16px 0;
+    }
+
+    .gas-chart-header {
+        padding: 0 16px;
     }
 }
 

@@ -471,18 +471,20 @@ onBeforeUnmount(() => {
                 </div>
             </aside>
             <div class="map-outer flex min-w-0 flex-1 flex-col">
-                <p class="chart-mobile-hint">Tap a country for details</p>
-                <div class="mb-3.5 grid shrink-0 gap-1.5">
-                    <label for="year-slider" class="sr-only">Year: {{ yearLabel }}</label>
-                    <input
-                        id="year-slider"
-                        v-model.number="selectedYear"
-                        type="range"
-                        class="w-full cursor-pointer accent-newsprint-fg"
-                        :min="minYear"
-                        :max="maxYear"
-                        step="1"
-                    />
+                <div class="map-header">
+                    <p class="chart-mobile-hint">Tap a country for details</p>
+                    <div class="mb-3.5 grid shrink-0 gap-1.5">
+                        <label for="year-slider" class="sr-only">Year: {{ yearLabel }}</label>
+                        <input
+                            id="year-slider"
+                            v-model.number="selectedYear"
+                            type="range"
+                            class="w-full cursor-pointer accent-newsprint-fg"
+                            :min="minYear"
+                            :max="maxYear"
+                            step="1"
+                        />
+                    </div>
                 </div>
 
                 <div class="relative min-h-[320px] flex-1">
@@ -528,11 +530,26 @@ onBeforeUnmount(() => {
     padding: 24px;
 }
 
-@media (max-width: 720px) {
+@media screen and (max-width: $mobile-max-width) {
     .map-outer {
         border-left: 1px solid var(--color-border);
         border-top: none;
-        padding: 16px;
+        padding: 16px 0;
+    }
+
+    .map-container {
+        padding-bottom: 54px;
+        min-height: unset;
+    }
+    
+    .map-header {
+        padding: 0 16px;
+    }
+
+    .zoom-controls {
+        display: flex;
+        flex-direction: row-reverse;
+        padding-left: 16px;
     }
 }
 

@@ -1215,24 +1215,26 @@ onBeforeUnmount(() => {
                 </template>
             </aside>
             <div class="temp-chart-container flex min-w-0 flex-1 flex-col">
-                <div class="mb-2.5 flex items-center justify-start">
-                    <button
-                        type="button"
-                        class="btn-ghost shrink-0"
-                        :aria-pressed="extrapolate"
-                        :aria-label="
-                            extrapolate
-                                ? 'Turn off temperature extrapolation'
-                                : 'Turn on temperature extrapolation'
-                        "
-                        @click="extrapolate = !extrapolate"
-                    >
-                        {{ extrapolate ? 'Extrapolate on' : 'Extrapolate' }}
-                    </button>
-                    <span class="ml-3 text-sm text-neutral-600">Selected baseline: {{ selectedBaselineLabel }}</span>
+                <div class="temp-chart-header">
+                    <div class="mb-2.5 flex items-center justify-start">
+                        <button
+                            type="button"
+                            class="btn-ghost shrink-0"
+                            :aria-pressed="extrapolate"
+                            :aria-label="
+                                extrapolate
+                                    ? 'Turn off temperature extrapolation'
+                                    : 'Turn on temperature extrapolation'
+                            "
+                            @click="extrapolate = !extrapolate"
+                        >
+                            {{ extrapolate ? 'Extrapolate on' : 'Extrapolate' }}
+                        </button>
+                        <span class="ml-3 text-sm text-neutral-600">Selected baseline: {{ selectedBaselineLabel }}</span>
+                    </div>
+                    <p class="chart-mobile-hint">Tap the graph to see values</p>
+                    <p class="chart-mobile-hint chart-rotate-hint">↻ Rotate your phone for a landscape view</p>
                 </div>
-                <p class="chart-mobile-hint">Tap the graph to see values</p>
-                <p class="chart-mobile-hint chart-rotate-hint">↻ Rotate your phone for a landscape view</p>
                 <div class="chart-scroll-wrapper">
                     <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
                 </div>
@@ -1372,13 +1374,18 @@ onBeforeUnmount(() => {
     .temp-chart-container {
         border-left: 1px solid var(--color-border);
         border-top: none;
-        padding: 16px;
+        padding: 16px 0;
+    }
+
+    .temp-chart-container .temp-chart-header {
+        padding: 0 16px;
     }
 
     .chart-scroll-wrapper {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-x: contain;
+        padding-left: 16px;
     }
 
     .chart-container {
