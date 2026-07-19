@@ -158,3 +158,47 @@ input[type="reset"] {
     margin-bottom: 0.3rem;
     opacity: 0.92;
 }
+
+/* Touch devices: tap-to-expand tooltip pinned to the top of the viewport instead of following the cursor. */
+@media (hover: none) and (pointer: coarse) {
+    .chart-tooltip {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: auto;
+        max-width: 100%;
+        white-space: normal;
+        border-radius: 0;
+        box-shadow: 0 4px 0 0 #111111;
+    }
+
+    /* Overrides the desktop 320px cap (.chart-tooltip--ghg) so the by-gas breakdown tooltip also spans full width. */
+    .chart-tooltip.chart-tooltip--ghg {
+        max-width: 100%;
+    }
+}
+
+/* Subtle mobile-only instructional hints (touch devices only). */
+.chart-mobile-hint {
+    display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .chart-mobile-hint {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--color-muted, #737373);
+        margin: 0.35rem 0;
+    }
+}
+
+.chart-rotate-hint {
+    display: none;
+}
+
+@media (hover: none) and (pointer: coarse) and (max-width: 768px) and (orientation: portrait) {
+    .chart-rotate-hint {
+        display: block;
+    }
+}

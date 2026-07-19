@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as d3 from 'd3'
+import { isTouchMobile } from '@/utils/device'
 
 const chartRef = ref(null)
 const tooltipEl = ref(null)
@@ -134,9 +135,11 @@ function updateFills() {
         .attr('opacity', (feature) => (getCountryRecord(feature) ? 1 : 0.55))
 }
 
+/** Cursor-relative tooltip placement used on hover (desktop). On touch devices CSS pins the tooltip to the top of the viewport instead, so this is skipped. */
 function positionTooltip(event) {
     const tooltip = tooltipEl.value
     if (!tooltip) return
+    if (isTouchMobile()) return
     const offset = 12
     const vw = window.innerWidth
     const vh = window.innerHeight
@@ -219,7 +222,10 @@ function renderMap() {
 
     const zoomLayer = svg.append('g').attr('class', 'zoom-layer')
     countriesLayer = zoomLayer.append('g').attr('class', 'countries-layer')
-    countriesLayer
+
+    const touchMobile = isTouchMobile()
+
+    const countryPaths = countriesLayer
         .selectAll('path')
         .data(geoFeatures)
         .join('path')
@@ -228,7 +234,10 @@ function renderMap() {
         .attr('stroke', 'var(--color-border)')
         .attr('stroke-width', 0.55)
         .attr('vector-effect', 'non-scaling-stroke')
-        .on('mouseenter', (event, feature) => {
+
+    if (touchMobile) {
+        countryPaths.on('click', (event, feature) => {
+            event.stopPropagation()
             countriesLayer.selectAll('path.country').attr('stroke-width', 0.55)
             d3.select(event.currentTarget)
                 .attr('stroke', 'var(--color-border)')
@@ -237,16 +246,32 @@ function renderMap() {
             tooltipEl.value?.classList.add('visible')
             updateTooltip(event, feature)
         })
-        .on('mousemove', (event, feature) => updateTooltip(event, feature))
-        .on('mouseleave', (event) => {
-            d3.select(event.currentTarget).attr('stroke', 'var(--color-border)').attr('stroke-width', 0.55)
+        svg.on('click', () => {
+            countriesLayer.selectAll('path.country').attr('stroke-width', 0.55)
             tooltipEl.value?.classList.remove('visible')
         })
+    } else {
+        countryPaths
+            .on('mouseenter', (event, feature) => {
+                countriesLayer.selectAll('path.country').attr('stroke-width', 0.55)
+                d3.select(event.currentTarget)
+                    .attr('stroke', 'var(--color-border)')
+                    .attr('stroke-width', 1.8)
+                    .raise()
+                tooltipEl.value?.classList.add('visible')
+                updateTooltip(event, feature)
+            })
+            .on('mousemove', (event, feature) => updateTooltip(event, feature))
+            .on('mouseleave', (event) => {
+                d3.select(event.currentTarget).attr('stroke', 'var(--color-border)').attr('stroke-width', 0.55)
+                tooltipEl.value?.classList.remove('visible')
+            })
 
-    svg.on('mouseleave', () => {
-        countriesLayer.selectAll('path.country').attr('stroke-width', 0.55)
-        tooltipEl.value?.classList.remove('visible')
-    })
+        svg.on('mouseleave', () => {
+            countriesLayer.selectAll('path.country').attr('stroke-width', 0.55)
+            tooltipEl.value?.classList.remove('visible')
+        })
+    }
 
     updateFills()
 
@@ -308,6 +333,14 @@ function togglePlayback() {
     }
 }
 
+/** Tapping outside the map on a touch device dismisses the pinned tooltip. */
+function handleDocumentTapDismiss(event) {
+    if (!isTouchMobile()) return
+    if (chartRef.value && chartRef.value.contains(event.target)) return
+    countriesLayer?.selectAll('path.country').attr('stroke-width', 0.55)
+    tooltipEl.value?.classList.remove('visible')
+}
+
 onMounted(async () => {
     const base = import.meta.env.BASE_URL
     const [worldData, emissionsData, earthPayload] = await Promise.all([
@@ -355,6 +388,8 @@ onMounted(async () => {
     renderMap()
     resizeHandler = () => renderMap()
     window.addEventListener('resize', resizeHandler)
+
+    document.addEventListener('click', handleDocumentTapDismiss)
 })
 
 watch(selectedYear, () => {
@@ -368,6 +403,7 @@ onBeforeUnmount(() => {
     if (resizeHandler) {
         window.removeEventListener('resize', resizeHandler)
     }
+    document.removeEventListener('click', handleDocumentTapDismiss)
     if (tooltipEl.value && tooltipEl.value.parentNode) {
         tooltipEl.value.remove()
     }
@@ -379,7 +415,7 @@ onBeforeUnmount(() => {
     <figure class="relative m-0 w-full newsprint-texture" aria-label="Country-level greenhouse gas emissions world map">
         <div class="flex items-stretch max-[720px]:flex-col">
             <aside
-                class="panel-newsprint flex max-w-80 flex-[0_0_min(280px,34%)] flex-col self-stretch max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none max-[720px]:max-h-64 max-[720px]:overflow-y-auto"
+                class="panel-newsprint flex max-w-80 flex-[0_0_min(280px,34%)] flex-col self-stretch max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
             >
                 <div class="mb-2.5 flex items-center justify-between gap-3">
                     <span class="year-label pl-1 font-mono text-3xl font-bold leading-none">{{ yearLabel }}</span>
@@ -435,6 +471,7 @@ onBeforeUnmount(() => {
                 </div>
             </aside>
             <div class="map-outer flex min-w-0 flex-1 flex-col">
+                <p class="chart-mobile-hint">Tap a country for details</p>
                 <div class="mb-3.5 grid shrink-0 gap-1.5">
                     <label for="year-slider" class="sr-only">Year: {{ yearLabel }}</label>
                     <input
@@ -502,6 +539,13 @@ onBeforeUnmount(() => {
 .zoom-controls {
     bottom: 0;
     left: 0;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .zoom-controls button {
+        width: 44px;
+        height: 44px;
+    }
 }
 
 .newsprint-boxes-container {

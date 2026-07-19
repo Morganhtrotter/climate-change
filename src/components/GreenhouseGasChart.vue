@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as d3 from 'd3'
+import { isTouchMobile } from '@/utils/device'
 
 const chartRef = ref(null)
 const tooltipEl = ref(null)
@@ -8,6 +9,8 @@ const chartSeriesRef = ref(null)
 const baselineGgRef = ref(null)
 let resizeObserver = null
 let resizeTimer = null
+/** Refs from the most recent renderChart() call, needed by the tap-outside-to-dismiss handler. */
+let currentRenderRefs = null
 
 const X_DOMAIN = [1880, 2025]
 
@@ -253,143 +256,176 @@ function renderChart(container, data, baselineGg) {
     const tooltip = tooltipEl.value
     if (!tooltip) return
 
-    g.append('rect')
+    /** Hit-tests the baseline row, resolves the nearest data point at pointer-x `mx`, and updates the hover line/stack/tooltip HTML. Returns the point's pixel x, or null if there's no data. */
+    function updatePointAtXY(mx, my) {
+        const onBaseline =
+            baselineLine && baselineLabel && Math.abs(my - yBaseline) <= BASELINE_HIT_PX
+        if (onBaseline) {
+            baselineLine.attr('stroke-dasharray', null)
+            baselineLabel.attr('visibility', 'visible')
+            refLine1951?.attr('visibility', 'visible')
+            refLine1980?.attr('visibility', 'visible')
+            refYearLabel1951?.attr('visibility', 'visible')
+            refYearLabel1980?.attr('visibility', 'visible')
+        } else if (baselineLine && baselineLabel) {
+            baselineLine.attr('stroke-dasharray', '6 4')
+            baselineLabel.attr('visibility', 'hidden')
+            refLine1951?.attr('visibility', 'hidden')
+            refLine1980?.attr('visibility', 'hidden')
+            refYearLabel1951?.attr('visibility', 'hidden')
+            refYearLabel1980?.attr('visibility', 'hidden')
+        }
+        const yearFloat = x.invert(mx)
+        const point = nearestByYear(data, yearFloat)
+        if (!point) return null
+        const xPos = x(point.year)
+        hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
+
+        const totalGt = ggToGt(point.total)
+        const rows = BREAKDOWN_ORDER.map(([key, sym]) => {
+            const raw = point.breakdown?.[key]
+            if (raw == null) return ''
+            const gtCo2e = ggToGt(breakdownGgToGgCo2e(key, raw))
+            const col = GAS_COLOR[key] || '#888'
+            return `<li><span class="tt-gas" style="color:${col}">${escapeHtml(sym)}</span> <span class="tt-co2e">${escapeHtml(fmtGt(gtCo2e))} Gt CO₂-eq / yr</span></li>`
+        }).join('')
+
+        const yTotal = y(totalGt)
+        const stackSpan = height - yTotal
+        if (
+            !Number.isFinite(yTotal) ||
+            stackSpan <= 0 ||
+            totalGt <= 0 ||
+            !Number.isFinite(totalGt)
+        ) {
+            hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
+        } else {
+            const parts = []
+            for (const [key] of BREAKDOWN_ORDER) {
+                const raw = point.breakdown?.[key]
+                if (raw == null) continue
+                const v = ggToGt(breakdownGgToGgCo2e(key, raw))
+                parts.push({ key, v })
+            }
+            if (!parts.length) {
+                hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
+            } else {
+                const heights = parts.map(({ v }) => (v / totalGt) * stackSpan)
+                const hSum = d3.sum(heights)
+                heights[heights.length - 1] += stackSpan - hSum
+
+                const xLeft = xPos - HOVER_STACK_WIDTH / 2
+                let acc = 0
+                const rects = parts.map((p, i) => {
+                    const h = Math.max(0, heights[i])
+                    const yRect = height - acc - h
+                    acc += h
+                    return {
+                        key: p.key,
+                        x: xLeft,
+                        y: yRect,
+                        w: HOVER_STACK_WIDTH,
+                        h,
+                    }
+                })
+
+                hoverStack.attr('visibility', 'visible')
+                hoverStack
+                    .selectAll('rect')
+                    .data(rects)
+                    .join('rect')
+                    .attr('x', (d) => d.x)
+                    .attr('y', (d) => d.y)
+                    .attr('width', (d) => d.w)
+                    .attr('height', (d) => d.h)
+                    .attr('fill', (d) => GAS_COLOR[d.key] || '#888')
+                    .attr('stroke', 'var(--color-border)')
+                    .attr('stroke-width', 0.75)
+            }
+        }
+
+        tooltip.innerHTML = `
+            <div class="tooltip-top-row">
+                <div class="tooltip-ghg-main">
+                    <span class="tooltip-total">${escapeHtml(fmtGt(totalGt))} Gt CO₂-eq / yr</span>
+                    <span class="tooltip-sub">By gas</span>
+                    <ul class="tooltip-breakdown">${rows}</ul>
+                </div>
+                <span class="tooltip-year">${escapeHtml(String(point.year))}</span>
+            </div>
+        `
+        return xPos
+    }
+
+    /** Cursor-relative tooltip placement used on hover (desktop). On touch devices CSS pins the tooltip to the top of the viewport instead. */
+    function positionTooltipNearX(xPos) {
+        const offset = 12
+        const svgRect = svg.node()?.getBoundingClientRect()
+        const ttRect = tooltip.getBoundingClientRect()
+        if (!svgRect) return
+        const plotLeft = svgRect.left + margin.left
+        const plotRight = plotLeft + width
+        const lineX = plotLeft + xPos
+
+        let left = lineX + offset
+        if (left + ttRect.width > plotRight) {
+            left = lineX - offset - ttRect.width
+        }
+        left = Math.max(plotLeft, left)
+
+        const top = Math.max(8, svgRect.top + margin.top + 8)
+        tooltip.style.left = `${left}px`
+        tooltip.style.top = `${top}px`
+    }
+
+    function hidePointVisuals() {
+        hoverLine.attr('visibility', 'hidden')
+        hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
+        tooltip.classList.remove('visible')
+        if (baselineLine && baselineLabel) {
+            baselineLine.attr('stroke-dasharray', '6 4')
+            baselineLabel.attr('visibility', 'hidden')
+        }
+        refLine1951?.attr('visibility', 'hidden')
+        refLine1980?.attr('visibility', 'hidden')
+        refYearLabel1951?.attr('visibility', 'hidden')
+        refYearLabel1980?.attr('visibility', 'hidden')
+    }
+
+    const touchMobile = isTouchMobile()
+    const overlay = g
+        .append('rect')
         .attr('class', 'chart-overlay')
         .attr('width', width)
         .attr('height', height)
         .attr('fill', 'none')
         .attr('pointer-events', 'all')
-        .on('mouseenter', () => tooltip.classList.add('visible'))
-        .on('mousemove', function (event) {
+
+    if (touchMobile) {
+        overlay.on('click', function (event) {
             const [mx, my] = d3.pointer(event, this)
-            const onBaseline =
-                baselineLine && baselineLabel && Math.abs(my - yBaseline) <= BASELINE_HIT_PX
-            if (onBaseline) {
-                baselineLine.attr('stroke-dasharray', null)
-                baselineLabel.attr('visibility', 'visible')
-                refLine1951?.attr('visibility', 'visible')
-                refLine1980?.attr('visibility', 'visible')
-                refYearLabel1951?.attr('visibility', 'visible')
-                refYearLabel1980?.attr('visibility', 'visible')
-            } else if (baselineLine && baselineLabel) {
-                baselineLine.attr('stroke-dasharray', '6 4')
-                baselineLabel.attr('visibility', 'hidden')
-                refLine1951?.attr('visibility', 'hidden')
-                refLine1980?.attr('visibility', 'hidden')
-                refYearLabel1951?.attr('visibility', 'hidden')
-                refYearLabel1980?.attr('visibility', 'hidden')
-            }
-            const yearFloat = x.invert(mx)
-            const point = nearestByYear(data, yearFloat)
-            if (!point) return
-            const xPos = x(point.year)
-            hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
-
-            const totalGt = ggToGt(point.total)
-            const rows = BREAKDOWN_ORDER.map(([key, sym]) => {
-                const raw = point.breakdown?.[key]
-                if (raw == null) return ''
-                const gtCo2e = ggToGt(breakdownGgToGgCo2e(key, raw))
-                const col = GAS_COLOR[key] || '#888'
-                return `<li><span class="tt-gas" style="color:${col}">${escapeHtml(sym)}</span> <span class="tt-co2e">${escapeHtml(fmtGt(gtCo2e))} Gt CO₂-eq / yr</span></li>`
-            }).join('')
-
-            const yTotal = y(totalGt)
-            const stackSpan = height - yTotal
-            if (
-                !Number.isFinite(yTotal) ||
-                stackSpan <= 0 ||
-                totalGt <= 0 ||
-                !Number.isFinite(totalGt)
-            ) {
-                hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
-            } else {
-                const parts = []
-                for (const [key] of BREAKDOWN_ORDER) {
-                    const raw = point.breakdown?.[key]
-                    if (raw == null) continue
-                    const v = ggToGt(breakdownGgToGgCo2e(key, raw))
-                    parts.push({ key, v })
-                }
-                if (!parts.length) {
-                    hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
-                } else {
-                    const heights = parts.map(({ v }) => (v / totalGt) * stackSpan)
-                    const hSum = d3.sum(heights)
-                    heights[heights.length - 1] += stackSpan - hSum
-
-                    const xLeft = xPos - HOVER_STACK_WIDTH / 2
-                    let acc = 0
-                    const rects = parts.map((p, i) => {
-                        const h = Math.max(0, heights[i])
-                        const yRect = height - acc - h
-                        acc += h
-                        return {
-                            key: p.key,
-                            x: xLeft,
-                            y: yRect,
-                            w: HOVER_STACK_WIDTH,
-                            h,
-                        }
-                    })
-
-                    hoverStack.attr('visibility', 'visible')
-                    hoverStack
-                        .selectAll('rect')
-                        .data(rects)
-                        .join('rect')
-                        .attr('x', (d) => d.x)
-                        .attr('y', (d) => d.y)
-                        .attr('width', (d) => d.w)
-                        .attr('height', (d) => d.h)
-                        .attr('fill', (d) => GAS_COLOR[d.key] || '#888')
-                        .attr('stroke', 'var(--color-border)')
-                        .attr('stroke-width', 0.75)
-                }
-            }
-
-            tooltip.innerHTML = `
-                <div class="tooltip-top-row">
-                    <div class="tooltip-ghg-main">
-                        <span class="tooltip-total">${escapeHtml(fmtGt(totalGt))} Gt CO₂-eq / yr</span>
-                        <span class="tooltip-sub">By gas</span>
-                        <ul class="tooltip-breakdown">${rows}</ul>
-                    </div>
-                    <span class="tooltip-year">${escapeHtml(String(point.year))}</span>
-                </div>
-            `
-
-            const offset = 12
-            const svgRect = svg.node()?.getBoundingClientRect()
-            const ttRect = tooltip.getBoundingClientRect()
-            if (!svgRect) return
-            const plotLeft = svgRect.left + margin.left
-            const plotRight = plotLeft + width
-            const lineX = plotLeft + xPos
-
-            let left = lineX + offset
-            if (left + ttRect.width > plotRight) {
-                left = lineX - offset - ttRect.width
-            }
-            left = Math.max(plotLeft, left)
-
-            const top = Math.max(8, svgRect.top + margin.top + 8)
-            tooltip.style.left = `${left}px`
-            tooltip.style.top = `${top}px`
+            const xPos = updatePointAtXY(mx, my)
+            if (xPos != null) tooltip.classList.add('visible')
         })
-        .on('mouseleave', () => {
-            hoverLine.attr('visibility', 'hidden')
-            hoverStack.attr('visibility', 'hidden').selectAll('rect').remove()
-            tooltip.classList.remove('visible')
-            if (baselineLine && baselineLabel) {
-                baselineLine.attr('stroke-dasharray', '6 4')
-                baselineLabel.attr('visibility', 'hidden')
-            }
-            refLine1951?.attr('visibility', 'hidden')
-            refLine1980?.attr('visibility', 'hidden')
-            refYearLabel1951?.attr('visibility', 'hidden')
-            refYearLabel1980?.attr('visibility', 'hidden')
-        })
+    } else {
+        overlay
+            .on('mouseenter', () => tooltip.classList.add('visible'))
+            .on('mousemove', function (event) {
+                const [mx, my] = d3.pointer(event, this)
+                const xPos = updatePointAtXY(mx, my)
+                if (xPos != null) positionTooltipNearX(xPos)
+            })
+            .on('mouseleave', hidePointVisuals)
+    }
+
+    currentRenderRefs = { hidePointVisuals }
+}
+
+/** Tapping outside the chart on a touch device dismisses the pinned tooltip/hover visuals. */
+function handleDocumentTapDismiss(event) {
+    if (!currentRenderRefs || !isTouchMobile()) return
+    if (chartRef.value && chartRef.value.contains(event.target)) return
+    currentRenderRefs.hidePointVisuals()
 }
 
 onMounted(async () => {
@@ -419,11 +455,14 @@ onMounted(async () => {
         }, 80)
     })
     resizeObserver.observe(chartRef.value)
+
+    document.addEventListener('click', handleDocumentTapDismiss)
 })
 
 onBeforeUnmount(() => {
     clearTimeout(resizeTimer)
     resizeObserver?.disconnect()
+    document.removeEventListener('click', handleDocumentTapDismiss)
     if (tooltipEl.value && tooltipEl.value.parentNode) {
         tooltipEl.value.remove()
     }
@@ -449,7 +488,11 @@ onBeforeUnmount(() => {
                 </p>
             </aside>
             <div class="gas-chart-container flex min-w-0 flex-1 flex-col">
-                <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+                <p class="chart-mobile-hint">Tap the graph to see values</p>
+                <p class="chart-mobile-hint chart-rotate-hint">↻ Rotate your phone for a landscape view</p>
+                <div class="chart-scroll-wrapper">
+                    <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+                </div>
             </div>
         </div>
         <figcaption class="mt-3 font-mono text-xs leading-relaxed text-neutral-500">
@@ -543,6 +586,18 @@ onBeforeUnmount(() => {
         border-left: 1px solid var(--color-border);
         border-top: none;
         padding: 16px;
+    }
+}
+
+@media screen and (max-width: $mobile-max-width) {
+    .chart-scroll-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+    }
+
+    .chart-container {
+        min-width: 720px;
     }
 }
 

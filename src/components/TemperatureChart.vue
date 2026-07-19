@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import * as d3 from 'd3'
+import { isTouchMobile } from '@/utils/device'
 
 const chartRef = ref(null)
 const tooltipEl = ref(null)
@@ -634,6 +635,83 @@ function updateHorizontalRefPositions(inst, transition) {
     applyHorizontalRefHighlight(inst, null)
 }
 
+/** Resolves the data (or extrapolated) point under pointer-x `mx`, updates the hover line/I-beam/tooltip HTML, and returns the point's pixel x. */
+function renderPointAtX(inst, mx) {
+    const xVal = inst.x.invert(mx)
+    let point
+    let xPos
+    let tooltipLabel = 'Global mean temp. index'
+    const extrapActive = inst.extrapolateMode && inst.extrap
+    if (extrapActive && xVal > inst.lastDataYear) {
+        const xEx = Math.min(xVal, inst.extrap.endYear)
+        const yHat = inst.extrap.lastAnomaly + inst.extrap.slope * (xEx - inst.extrap.lastYear)
+        point = { year: Math.round(xEx), anomaly: yHat }
+        xPos = inst.x(xEx)
+        tooltipLabel = 'Linear extrapolation (40-yr trend)'
+    } else {
+        const i = Math.max(0, Math.min(inst.bisect(inst.data, xVal), inst.data.length - 1))
+        point = inst.data[i]
+        xPos = inst.x(point.year)
+    }
+    inst.hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
+    const anomaly = point.anomaly
+    const yAnomalyPx = inst.y(anomaly)
+    const baselineAnomaly = activeBaselineAnomaly()
+    const yBaselinePx = baselineAnomaly === PRE_INDUSTRIAL_ANOMALY ? inst.preIndustrialY : inst.zeroY
+    const beamTop = Math.min(yAnomalyPx, yBaselinePx)
+    const beamBottom = Math.max(yAnomalyPx, yBaselinePx)
+    const isExtrapPoint = extrapActive && xVal > inst.lastDataYear
+    const beamStroke = isExtrapPoint ? inst.colorHeading : inst.colorForAnomaly(anomaly)
+    const capHalf = HOVER_IBEAM_CAP_WIDTH / 2
+    inst.hoverIBeamStem
+        .attr('x1', xPos)
+        .attr('x2', xPos)
+        .attr('y1', beamTop)
+        .attr('y2', beamBottom)
+        .attr('stroke', beamStroke)
+    inst.hoverIBeamCapTop
+        .attr('x1', xPos - capHalf)
+        .attr('x2', xPos + capHalf)
+        .attr('y1', beamTop)
+        .attr('y2', beamTop)
+        .attr('stroke', beamStroke)
+    inst.hoverIBeamCapBottom
+        .attr('x1', xPos - capHalf)
+        .attr('x2', xPos + capHalf)
+        .attr('y1', beamBottom)
+        .attr('y2', beamBottom)
+        .attr('stroke', beamStroke)
+    inst.hoverIBeam.attr('visibility', 'visible')
+    const displayAnomaly = anomaly - baselineAnomaly
+    const sign = displayAnomaly >= 0 ? '+' : ''
+    const yearLabel = String(point.year)
+    const valueStr = `${sign}${displayAnomaly.toFixed(2)}°C`
+    const topRow = `<div class="tooltip-top-row"><span class="tooltip-value">${valueStr}</span><span class="tooltip-year">${yearLabel}</span></div>`
+    inst.tooltip.innerHTML = `${topRow}<span class="tooltip-label"><span class="tooltip-label-baseline">relative to the ${baselineLabelText(baselineAnomaly)}</span><br>${tooltipLabel}</span>`
+    return xPos
+}
+
+/** Cursor-relative tooltip placement used on hover (desktop). On touch devices CSS pins the tooltip to the top of the viewport instead. */
+function positionTooltipNearX(inst, xPos) {
+    const offset = 12
+    const svgRect = inst.svg.node()?.getBoundingClientRect()
+    const ttRect = inst.tooltip.getBoundingClientRect()
+    if (!svgRect) return
+    const plotLeft = svgRect.left + inst.margin.left
+    const plotRight = plotLeft + inst.width
+    const lineX = plotLeft + xPos
+
+    let left = lineX + offset
+    if (left + ttRect.width > plotRight) {
+        left = lineX - offset - ttRect.width
+    }
+    left = Math.max(plotLeft, left)
+
+    const top = Math.max(8, svgRect.top + inst.margin.top + 8)
+    inst.tooltip.style.left = `${left}px`
+    inst.tooltip.style.top = `${top}px`
+}
+
 function buildChart(container, data, extrapolateMode) {
     if (!container || !data.length) return
     d3.select(container).selectAll('*').remove()
@@ -802,114 +880,58 @@ function buildChart(container, data, extrapolateMode) {
     const tooltip = tooltipEl.value
     if (!tooltip) return
 
-    g.append('rect')
+    const touchMobile = isTouchMobile()
+
+    const overlay = g
+        .append('rect')
         .attr('class', 'chart-overlay')
         .attr('width', width)
         .attr('height', height)
         .attr('fill', 'none')
         .attr('pointer-events', 'all')
-        .on('mouseenter', () => tooltip.classList.add('visible'))
-        .on('mousemove', function (event) {
-            const inst = chartInstance
-            if (!inst) return
-            const [mx, my] = d3.pointer(event, this)
-            const hoverRef = hitHorizontalRef(inst, my)
-            applyHorizontalRefHighlight(inst, hoverRef)
-            this.style.cursor = hoverRef ? 'pointer' : 'default'
-            const xVal = inst.x.invert(mx)
-            let point
-            let xPos
-            let tooltipLabel = 'Global mean temp. index'
-            const extrapActive = inst.extrapolateMode && inst.extrap
-            if (extrapActive && xVal > inst.lastDataYear) {
-                const xEx = Math.min(xVal, inst.extrap.endYear)
-                const yHat =
-                    inst.extrap.lastAnomaly + inst.extrap.slope * (xEx - inst.extrap.lastYear)
-                point = { year: Math.round(xEx), anomaly: yHat }
-                xPos = inst.x(xEx)
-                tooltipLabel = 'Linear extrapolation (40-yr trend)'
-            } else {
-                const i = Math.max(0, Math.min(inst.bisect(inst.data, xVal), inst.data.length - 1))
-                point = inst.data[i]
-                xPos = inst.x(point.year)
-            }
-            inst.hoverLine.attr('x1', xPos).attr('x2', xPos).attr('visibility', 'visible')
-            const anomaly = point.anomaly
-            const yAnomalyPx = inst.y(anomaly)
-            const baselineAnomaly = activeBaselineAnomaly()
-            const yBaselinePx = baselineAnomaly === PRE_INDUSTRIAL_ANOMALY ? inst.preIndustrialY : inst.zeroY
-            const beamTop = Math.min(yAnomalyPx, yBaselinePx)
-            const beamBottom = Math.max(yAnomalyPx, yBaselinePx)
-            const isExtrapPoint = extrapActive && xVal > inst.lastDataYear
-            const beamStroke = isExtrapPoint
-                ? inst.colorHeading
-                : inst.colorForAnomaly(anomaly)
-            const capHalf = HOVER_IBEAM_CAP_WIDTH / 2
-            inst.hoverIBeamStem
-                .attr('x1', xPos)
-                .attr('x2', xPos)
-                .attr('y1', beamTop)
-                .attr('y2', beamBottom)
-                .attr('stroke', beamStroke)
-            inst.hoverIBeamCapTop
-                .attr('x1', xPos - capHalf)
-                .attr('x2', xPos + capHalf)
-                .attr('y1', beamTop)
-                .attr('y2', beamTop)
-                .attr('stroke', beamStroke)
-            inst.hoverIBeamCapBottom
-                .attr('x1', xPos - capHalf)
-                .attr('x2', xPos + capHalf)
-                .attr('y1', beamBottom)
-                .attr('y2', beamBottom)
-                .attr('stroke', beamStroke)
-            inst.hoverIBeam.attr('visibility', 'visible')
-            const displayAnomaly = anomaly - baselineAnomaly
-            const sign = displayAnomaly >= 0 ? '+' : ''
-            const yearLabel = String(point.year)
-            const valueStr = `${sign}${displayAnomaly.toFixed(2)}°C`
-            const topRow = `<div class="tooltip-top-row"><span class="tooltip-value">${valueStr}</span><span class="tooltip-year">${yearLabel}</span></div>`
-            inst.tooltip.innerHTML = `${topRow}<span class="tooltip-label"><span class="tooltip-label-baseline">relative to the ${baselineLabelText(baselineAnomaly)}</span><br>${tooltipLabel}</span>`
-            const offset = 12
-            const svgRect = inst.svg.node()?.getBoundingClientRect()
-            const ttRect = inst.tooltip.getBoundingClientRect()
-            if (!svgRect) return
-            const plotLeft = svgRect.left + inst.margin.left
-            const plotRight = plotLeft + inst.width
-            const lineX = plotLeft + xPos
 
-            let left = lineX + offset
-            if (left + ttRect.width > plotRight) {
-                left = lineX - offset - ttRect.width
-            }
-            left = Math.max(plotLeft, left)
+    if (!touchMobile) {
+        overlay
+            .on('mouseenter', () => tooltip.classList.add('visible'))
+            .on('mousemove', function (event) {
+                const inst = chartInstance
+                if (!inst) return
+                const [mx, my] = d3.pointer(event, this)
+                const hoverRef = hitHorizontalRef(inst, my)
+                applyHorizontalRefHighlight(inst, hoverRef)
+                this.style.cursor = hoverRef ? 'pointer' : 'default'
+                const xPos = renderPointAtX(inst, mx)
+                positionTooltipNearX(inst, xPos)
+            })
+            .on('mouseleave', () => {
+                const inst = chartInstance
+                if (!inst) return
+                inst.hoverLine.attr('visibility', 'hidden')
+                inst.hoverIBeam?.attr('visibility', 'hidden')
+                inst.tooltip.classList.remove('visible')
+                applyHorizontalRefHighlight(inst, null)
+            })
+    }
 
-            const top = Math.max(8, svgRect.top + inst.margin.top + 8)
-            inst.tooltip.style.left = `${left}px`
-            inst.tooltip.style.top = `${top}px`
-        })
-        .on('click', function (event) {
-            const inst = chartInstance
-            if (!inst) return
-            const [, my] = d3.pointer(event, this)
-            const hit = hitHorizontalRef(inst, my)
-            const alreadySelected =
-                hit != null &&
-                selectedRefAnomaly.value != null &&
-                Math.abs(hit.anomaly - selectedRefAnomaly.value) < 1e-6
-            const nextSelection = !hit || alreadySelected ? null : hit.anomaly
-            selectedRefAnomaly.value = nextSelection
-            applyHorizontalRefHighlight(inst, nextSelection != null ? hit : null)
-            updateLatestRefIndicator(inst)
-        })
-        .on('mouseleave', () => {
-            const inst = chartInstance
-            if (!inst) return
-            inst.hoverLine.attr('visibility', 'hidden')
-            inst.hoverIBeam?.attr('visibility', 'hidden')
-            inst.tooltip.classList.remove('visible')
-            applyHorizontalRefHighlight(inst, null)
-        })
+    overlay.on('click', function (event) {
+        const inst = chartInstance
+        if (!inst) return
+        const [mx, my] = d3.pointer(event, this)
+        const hit = hitHorizontalRef(inst, my)
+        const alreadySelected =
+            hit != null &&
+            selectedRefAnomaly.value != null &&
+            Math.abs(hit.anomaly - selectedRefAnomaly.value) < 1e-6
+        const nextSelection = !hit || alreadySelected ? null : hit.anomaly
+        selectedRefAnomaly.value = nextSelection
+        applyHorizontalRefHighlight(inst, nextSelection != null ? hit : null)
+        updateLatestRefIndicator(inst)
+
+        if (touchMobile && !hit) {
+            renderPointAtX(inst, mx)
+            inst.tooltip.classList.add('visible')
+        }
+    })
 
     chartInstance = {
         container,
@@ -1084,6 +1106,16 @@ function setExtrapolateMode(enabled, animate = true) {
     }
 }
 
+/** Tapping outside the chart on a touch device dismisses the pinned tooltip/hover visuals. */
+function handleDocumentTapDismiss(event) {
+    if (!chartInstance || !isTouchMobile()) return
+    if (chartRef.value && chartRef.value.contains(event.target)) return
+    chartInstance.hoverLine?.attr('visibility', 'hidden')
+    chartInstance.hoverIBeam?.attr('visibility', 'hidden')
+    chartInstance.tooltip?.classList.remove('visible')
+    applyHorizontalRefHighlight(chartInstance, null)
+}
+
 onMounted(async () => {
     const base = import.meta.env.BASE_URL
     const raw = await fetch(`${base}data/GLB.Ts+dSST.csv`).then((r) => r.text())
@@ -1116,6 +1148,8 @@ onMounted(async () => {
         }, 80)
     })
     if (chartRef.value) resizeObserver.observe(chartRef.value)
+
+    document.addEventListener('click', handleDocumentTapDismiss)
 })
 
 watch(extrapolate, async (enabled) => {
@@ -1132,6 +1166,7 @@ watch(extrapolate, async (enabled) => {
 onBeforeUnmount(() => {
     clearTimeout(resizeTimer)
     resizeObserver?.disconnect()
+    document.removeEventListener('click', handleDocumentTapDismiss)
     chartInstance = null
     if (tooltipEl.value && tooltipEl.value.parentNode) {
         tooltipEl.value.remove()
@@ -1196,7 +1231,11 @@ onBeforeUnmount(() => {
                     </button>
                     <span class="ml-3 text-sm text-neutral-600">Selected baseline: {{ selectedBaselineLabel }}</span>
                 </div>
-                <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+                <p class="chart-mobile-hint">Tap the graph to see values</p>
+                <p class="chart-mobile-hint chart-rotate-hint">↻ Rotate your phone for a landscape view</p>
+                <div class="chart-scroll-wrapper">
+                    <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+                </div>
             </div>
         </div>
         <figcaption class="mt-3 font-mono text-xs leading-snug text-neutral-500">
@@ -1334,6 +1373,16 @@ onBeforeUnmount(() => {
         border-left: 1px solid var(--color-border);
         border-top: none;
         padding: 16px;
+    }
+
+    .chart-scroll-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+    }
+
+    .chart-container {
+        min-width: 720px;
     }
 }
 </style>
