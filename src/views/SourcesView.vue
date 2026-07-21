@@ -1,11 +1,11 @@
 <template>
     <Transition name="carousel-fade" appear>
         <article class="page-container max-w-[1440px] newsprint-texture">
-            <header class="mb-8 border-b-4 border-newsprint-fg pb-6">
+            <header class="border-newsprint-fg pb-6">
                 <h1 class="mb-3 font-serif text-3xl font-black leading-tight lg:text-4xl">
                     Data sources and references
                 </h1>
-                <p class="m-0 max-w-3xl leading-relaxed">
+                <p class="m-0 leading-relaxed">
                     This appendix lists primary observational datasets, derived files stored in this
                     repository, and methodological references underpinning the figures. Citations follow
                     a conventional numbered format so readers can trace each visualization to its

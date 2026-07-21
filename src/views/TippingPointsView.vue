@@ -20,19 +20,19 @@ function fmtRange(el) {
 <template>
     <Transition name="carousel-fade" appear>
         <article class="page-container max-w-[1440px] newsprint-texture">
-            <header class="mb-8 border-b-4 border-newsprint-fg pb-6">
+            <header class="border-newsprint-fg pb-6">
                 <RouterLink class="link-back mb-4 inline-block" to="/">← Climate data</RouterLink>
-                <h1 class="mb-3 font-serif text-3xl font-black leading-tight lg:text-4xl">
+                <h1 class="mb-10 font-serif text-3xl font-black leading-tight lg:text-4xl">
                     Tipping Points
                 </h1>
-                <p class="drop-cap m-0 max-w-3xl leading-relaxed">
+                <p class="m-0 leading-relaxed inverted-section text-neutral-400">
                     A climate tipping point is a threshold beyond which a part of the climate system
                     changes state — often abruptly, and in ways that become self-perpetuating even
                     without further warming. Once triggered, these shifts continue on their own
                     momentum, which is what makes them different from ordinary, reversible climate
                     impacts.
                 </p>
-                <p class="mt-4 max-w-3xl leading-relaxed">
+                <p class="mt-4 leading-relaxed">
                     The estimates below come from Armstrong McKay et al. (2022) in
                     <em>Science</em> — the most comprehensive peer-reviewed reassessment of tipping-point
                     thresholds, synthesizing over 200 papers. Each element has a
@@ -47,7 +47,7 @@ function fmtRange(el) {
                 <h2 id="chart-heading" class="section-heading mb-3">
                     Where the evidence points
                 </h2>
-                <p class="mb-6 max-w-3xl text-sm leading-relaxed text-neutral-600">
+                <p class="mb-6 text-sm leading-relaxed text-neutral-600">
                     Eleven tipping elements with quantified thresholds, ordered by best estimate.
                     Hover or focus a row for the full range and a short description. Dashed lines mark
                     1.5°C, 2°C, 3°C, and 4°C of warming above pre-industrial — the same reference levels
@@ -66,7 +66,7 @@ function fmtRange(el) {
                 <h2 :id="`${tier.id}-heading`" class="section-heading mb-3">
                     {{ tier.title }}
                 </h2>
-                <p class="mb-6 max-w-3xl leading-relaxed text-neutral-600">
+                <p class="mb-6 leading-relaxed text-neutral-600">
                     {{ tier.intro }}
                 </p>
 
@@ -74,7 +74,7 @@ function fmtRange(el) {
                     <div
                         v-for="el in tier.items"
                         :key="el.name"
-                        class="panel-newsprint hard-shadow-hover"
+                        class="panel-newsprint"
                     >
                         <h3 class="mb-1.5 font-serif text-lg font-bold leading-snug">
                             {{ el.name }}

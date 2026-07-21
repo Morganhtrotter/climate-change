@@ -19,12 +19,12 @@ function fmtGt(s) {
 <template>
     <Transition name="carousel-fade" appear>
         <article class="page-container max-w-[1440px] newsprint-texture">
-            <header class="mb-8 border-b-4 border-newsprint-fg pb-6">
+            <header class="border-newsprint-fg pb-6">
                 <RouterLink class="link-back mb-4 inline-block" to="/">← Climate data</RouterLink>
-                <h1 class="mb-3 font-serif text-3xl font-black leading-tight lg:text-4xl">
+                <h1 class="mb-10 font-serif text-3xl font-black leading-tight lg:text-4xl">
                     What Can We Do
                 </h1>
-                <p class="drop-cap m-0 max-w-3xl leading-relaxed">
+                <p class="m-0 leading-relaxed inverted-section text-neutral-400">
                     Climate change is often reported as a diagnosis without a prescription. It has one:
                     a well-studied set of technologies and practices, deployable today, whose combined
                     potential exceeds what is needed to bend the emissions curve down this decade. The
@@ -60,7 +60,7 @@ function fmtGt(s) {
                         <p class="mt-1 text-sm text-neutral-600">by 2030, across all sectors, more than half below $20/tonne</p>
                     </div>
                 </div>
-                <p class="mt-4 max-w-3xl text-sm leading-relaxed text-neutral-600">
+                <p class="mt-4 text-sm leading-relaxed text-neutral-600">
                     The IPCC's Sixth Assessment Report (2022) concluded that the technical and economic
                     potential to halve emissions by 2030 already exists in every sector — the gap is one
                     of deployment and policy, not invention. Clean-energy costs have fallen accordingly:
@@ -71,7 +71,7 @@ function fmtGt(s) {
 
             <section class="mb-12" aria-labelledby="chart-heading">
                 <h2 id="chart-heading" class="section-heading mb-3">Where the biggest levers are</h2>
-                <p class="mb-6 max-w-3xl text-sm leading-relaxed text-neutral-600">
+                <p class="mb-6 text-sm leading-relaxed text-neutral-600">
                     Twenty solutions grouped by sector, ranked within each group by estimated impact.
                     Bars show Project Drawdown's estimated range of Gt CO2-eq avoided or sequestered per
                     year at full projected deployment<sup class="ml-0.5 font-semibold">[2]</sup>. Hover
@@ -88,13 +88,13 @@ function fmtGt(s) {
             >
                 <p class="label-meta mb-2 text-newsprint-accent">{{ sector.tag }}</p>
                 <h2 :id="`${sector.id}-heading`" class="section-heading mb-3">{{ sector.title }}</h2>
-                <p class="mb-6 max-w-3xl leading-relaxed text-neutral-600">{{ sector.intro }}</p>
+                <p class="mb-6 leading-relaxed text-neutral-600">{{ sector.intro }}</p>
 
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div
                         v-for="s in sector.items"
                         :key="s.name"
-                        class="panel-newsprint hard-shadow-hover"
+                        class="panel-newsprint"
                     >
                         <h3 class="mb-1.5 font-serif text-lg font-bold leading-snug">{{ s.name }}</h3>
                         <p class="label-meta mb-3">{{ fmtGt(s) }} avoided or sequestered</p>
@@ -127,7 +127,7 @@ function fmtGt(s) {
 
             <section class="mb-12" aria-labelledby="individual-heading">
                 <h2 id="individual-heading" class="section-heading mb-3">What one person's choices are worth</h2>
-                <p class="mb-6 max-w-3xl leading-relaxed text-neutral-600">
+                <p class="mb-6 leading-relaxed text-neutral-600">
                     Wynes &amp; Nicholas (2017) compared the annual emissions impact of dozens of
                     commonly recommended individual actions and found the effective ones cluster far
                     from the ones most often promoted<sup class="ml-0.5 font-semibold">[3]</sup>. Figures
@@ -160,7 +160,7 @@ function fmtGt(s) {
 
             <section class="mb-12" aria-labelledby="caveat-heading">
                 <h2 id="caveat-heading" class="section-heading mb-3">How to read these numbers</h2>
-                <p class="mb-4 max-w-3xl leading-relaxed text-neutral-600">
+                <p class="mb-4 leading-relaxed text-neutral-600">
                     Every figure above is a <strong>technical or economic potential</strong>, not a
                     guarantee — it describes what a solution could deliver if deployed at the scale
                     modeled, not what current policy trajectories will actually achieve. Solution

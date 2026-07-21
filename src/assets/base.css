@@ -41,3 +41,7 @@ h1, h2 {
 .temperature-chart .panel-newsprint {
     @apply p-0 pb-8;
 }
+
+p.inverted-section {
+    @apply font-mono uppercase font-light tracking-wider mb-10
+}

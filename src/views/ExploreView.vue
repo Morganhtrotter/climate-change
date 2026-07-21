@@ -47,10 +47,10 @@ const GUIDE = [
 <template>
     <Transition name="carousel-fade" appear>
         <article class="page-container max-w-[1440px] newsprint-texture">
-            <header class="mb-8 border-b-4 border-newsprint-fg pb-6">
+            <header class="border-newsprint-fg pb-6">
                 <RouterLink class="link-back mb-4 inline-block" to="/">← Climate data</RouterLink>
-                <h1 class="mb-3 font-serif text-3xl font-black leading-tight lg:text-4xl">Explore</h1>
-                <p class="drop-cap m-0 max-w-3xl leading-relaxed">
+                <h1 class="mb-10 font-serif text-3xl font-black leading-tight lg:text-4xl">Explore</h1>
+                <p class="explore-subheader inverted-section m-0 leading-relaxed text-neutral-400">
                     Climate change is not an abstract future risk; it is already reshaping weather,
                     coastlines, agriculture, and health. Most people encounter it as headlines and
                     disaster footage — vivid, but hard to reason about. This site exists to close that
@@ -61,8 +61,7 @@ const GUIDE = [
             </header>
 
             <section class="mb-12" aria-labelledby="why-heading">
-                <h2 id="why-heading" class="section-heading mb-3">Why this site exists</h2>
-                <p class="mb-4 max-w-3xl leading-relaxed">
+                <p class="mb-4 leading-relaxed">
                     For more than a century, human activities have added greenhouse gases such as
                     carbon dioxide and methane to the atmosphere. Those gases trap outgoing heat, so
                     more emissions mean more energy retained near the surface. Over decades, that
@@ -71,7 +70,7 @@ const GUIDE = [
                     long-term warming trend tracks the growth in greenhouse gases far more closely than
                     it does natural cycles alone.
                 </p>
-                <p class="mb-0 max-w-3xl leading-relaxed">
+                <p class="mb-0 leading-relaxed">
                     That evidence lives in datasets that are public, well-documented, and updated on a
                     known schedule — but they are built for researchers, not browsers. Reading them
                     usually means opening a CSV, a Zenodo record, or a 3,000-page IPCC report. This site
@@ -82,7 +81,7 @@ const GUIDE = [
 
             <section class="mb-12" aria-labelledby="approach-heading">
                 <h2 id="approach-heading" class="section-heading mb-3">How this site is built</h2>
-                <p class="mb-6 max-w-3xl leading-relaxed text-neutral-600">
+                <p class="mb-6 leading-relaxed text-neutral-600">
                     Four rules shape every page on this site, from the temperature chart on the home
                     page to the citation list on the Sources page.
                 </p>
@@ -90,7 +89,7 @@ const GUIDE = [
                     <div
                         v-for="p in PRINCIPLES"
                         :key="p.title"
-                        class="panel-newsprint hard-shadow-hover"
+                        class="panel-newsprint"
                     >
                         <h3 class="mb-1.5 font-serif text-lg font-bold leading-snug">{{ p.title }}</h3>
                         <p class="m-0 text-sm leading-relaxed">{{ p.body }}</p>
@@ -100,7 +99,7 @@ const GUIDE = [
 
             <section class="mb-12" aria-labelledby="guide-heading">
                 <h2 id="guide-heading" class="section-heading mb-3">Where to go next</h2>
-                <p class="mb-6 max-w-3xl leading-relaxed text-neutral-600">
+                <p class="mb-6 leading-relaxed text-neutral-600">
                     Use the menu at any time, or jump straight to a section from here.
                 </p>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -140,3 +139,12 @@ const GUIDE = [
         </article>
     </Transition>
 </template>
+
+<style scoped lang="scss">
+.explore-subheader {
+    padding: 40px 40px;
+    line-height: 2;
+    border: 1px solid #010101;
+    text-align: justify;
+}
+</style>
