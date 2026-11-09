@@ -116,9 +116,9 @@ function buildChart(container) {
     rows
         .append('rect')
         .attr('class', 'tp-row-bg')
-        .attr('x', 0)
+        .attr('x', -m.left)
         .attr('y', 0)
-        .attr('width', width)
+        .attr('width', width + m.left + m.right)
         .attr('height', rh)
         .attr('fill', 'transparent')
 
@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
                     {{ d.name }}
                 </div>
             </div>
-            <div ref="chartRef" class="tp-plot min-w-0 flex-1 py-2"></div>
+            <div ref="chartRef" class="tp-plot min-w-0 flex-1"></div>
         </div>
         <div class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1.5 font-mono text-[0.68rem] uppercase tracking-widest text-neutral-500">
             <span class="inline-flex items-center gap-1.5"

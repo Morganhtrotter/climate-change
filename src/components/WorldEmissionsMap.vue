@@ -422,6 +422,7 @@ onBeforeUnmount(() => {
                     <button
                         type="button"
                         class="btn-ghost shrink-0"
+                        data-tour="map-play"
                         :aria-label="isPlaying ? 'Pause year playback' : 'Play year playback'"
                         @click="togglePlayback"
                     >
@@ -429,16 +430,16 @@ onBeforeUnmount(() => {
                     </button>
                 </div>
                 <div class="newsprint-boxes-container flex min-h-0 flex-1 flex-col gap-2">
-                    <div class="border border-newsprint-fg bg-newsprint-bg">
+                    <div class="border border-newsprint-fg bg-newsprint-bg" data-tour="map-total">
                         <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
-                            >EARTH total</span
+                            >World total</span
                         >
                         <strong class="earth-total-value block px-2 py-2 font-mono text-lg">{{
                             fmtGt(earthTotalGt)
                         }}
                             Gt CO₂-eq/yr</strong>
                     </div>
-                    <div class="border border-newsprint-fg bg-newsprint-bg">
+                    <div class="border border-newsprint-fg bg-newsprint-bg" data-tour="map-continents">
                         <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
                             >Continents</span
                         >
@@ -453,7 +454,7 @@ onBeforeUnmount(() => {
                             </li>
                         </ul>
                     </div>
-                    <div class="border border-newsprint-fg bg-newsprint-bg">
+                    <div class="border border-newsprint-fg bg-newsprint-bg" data-tour="map-top5">
                         <span class="label-meta block border-b border-newsprint-fg px-2 py-1.5"
                             >Top 5 countries</span
                         >
@@ -473,7 +474,7 @@ onBeforeUnmount(() => {
             <div class="map-outer flex min-w-0 flex-1 flex-col">
                 <div class="map-header">
                     <p class="chart-mobile-hint">Tap a country for details</p>
-                    <div class="mb-3.5 grid shrink-0 gap-1.5">
+                    <div class="mb-3.5 grid shrink-0 gap-1.5" data-tour="map-slider">
                         <label for="year-slider" class="sr-only">Year: {{ yearLabel }}</label>
                         <input
                             id="year-slider"
@@ -488,7 +489,11 @@ onBeforeUnmount(() => {
                 </div>
 
                 <div class="relative min-h-[320px] flex-1">
-                    <div ref="chartRef" class="map-container relative w-full h-full min-h-[320px]"></div>
+                    <div
+                        ref="chartRef"
+                        class="map-container relative w-full h-full min-h-[320px]"
+                        data-tour="map-area"
+                    ></div>
                     <div
                         class="zoom-controls absolute z-2 grid gap-1.5"
                         aria-label="Map zoom controls"
