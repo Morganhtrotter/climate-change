@@ -4,6 +4,12 @@ import { RouterLink } from 'vue-router'
 import TemperatureChart from '../components/TemperatureChart.vue'
 import GreenhouseGasChart from '../components/GreenhouseGasChart.vue'
 import WorldEmissionsMap from '../components/WorldEmissionsMap.vue'
+import GuidedTour from '../components/GuidedTour.vue'
+import {
+    buildTemperatureTourSteps,
+    buildGhgTourSteps,
+    buildMapTourSteps,
+} from '../data/chartTutorials.js'
 
 const entered = ref(false)
 const activeSlide = ref(0)
@@ -13,6 +19,47 @@ const thirdSlideReached = ref(false)
 
 const canGoPrev = computed(() => activeSlide.value > 0)
 const canGoNext = computed(() => activeSlide.value < slideCount - 1)
+
+const tempChartRef = ref(null)
+const ghgChartRef = ref(null)
+const mapChartRef = ref(null)
+
+const tempTourActive = ref(false)
+const ghgTourActive = ref(false)
+const mapTourActive = ref(false)
+const anyTourActive = computed(
+    () => tempTourActive.value || ghgTourActive.value || mapTourActive.value,
+)
+
+const tempTourSteps = buildTemperatureTourSteps(tempChartRef)
+const ghgTourSteps = buildGhgTourSteps(ghgChartRef)
+const mapTourSteps = buildMapTourSteps()
+
+const AUTO_TOUR_SLIDES = [
+    { key: 'climate-tour-seen-temperature', active: tempTourActive },
+    { key: 'climate-tour-seen-ghg', active: ghgTourActive },
+    { key: 'climate-tour-seen-map', active: mapTourActive },
+]
+
+function maybeAutoStartTour(index) {
+    const entry = AUTO_TOUR_SLIDES[index]
+    if (!entry || anyTourActive.value) return
+    let seen = true
+    try {
+        seen = localStorage.getItem(entry.key) === '1'
+    } catch {
+        seen = true
+    }
+    if (seen) return
+    try {
+        localStorage.setItem(entry.key, '1')
+    } catch {
+        /* private browsing or storage disabled — tour just won't auto-start next time either */
+    }
+    setTimeout(() => {
+        if (activeSlide.value === index) entry.active.value = true
+    }, 900)
+}
 
 function enter() {
     entered.value = true
@@ -31,7 +78,7 @@ function goToSlide(index) {
 }
 
 function onKeydown(e) {
-    if (!entered.value) return
+    if (!entered.value || anyTourActive.value) return
     if (e.key === 'ArrowLeft') {
         e.preventDefault()
         goPrev()
@@ -43,10 +90,12 @@ function onKeydown(e) {
 
 watch(entered, (v) => {
     document.body.style.overflow = v ? 'hidden' : ''
+    if (v) maybeAutoStartTour(activeSlide.value)
 })
 
 watch(activeSlide, (s) => {
     if (s === 2) thirdSlideReached.value = true
+    if (entered.value) maybeAutoStartTour(s)
 })
 
 onMounted(() => {
@@ -97,15 +146,25 @@ onUnmounted(() => {
                     >
                         <div class="slide-inner flex min-h-0 w-full max-w-[1200px] flex-1 flex-col">
                             <section>
-                                <h2 class="section-heading mb-4 text-xl md:text-2xl">
-                                    Global Land-Ocean Temperature Anomaly
-                                </h2>
+                                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                                    <h2 class="section-heading !mb-0 text-xl md:text-2xl">
+                                        How Much Has the World Warmed?
+                                    </h2>
+                                    <button
+                                        type="button"
+                                        class="btn-ghost shrink-0"
+                                        @click="tempTourActive = true"
+                                    >
+                                        Take the Tour
+                                    </button>
+                                </div>
                                 <p class="mb-6 text-sm leading-relaxed text-neutral-600">
-                                    Annual mean temperature anomaly in °C relative to the 1951–1980 average.
-                                    Values above zero indicate a warmer world; the trend over the last decades
-                                    is clear.
+                                    Each point shows how much warmer or cooler that year was compared with
+                                    the mid-20th-century average (1951–1980), in °C. Zero is "normal" for
+                                    that baseline — everything above it is extra warming, and the trend over
+                                    the last few decades is unmistakable.
                                 </p>
-                                <TemperatureChart />
+                                <TemperatureChart ref="tempChartRef" />
                             </section>
                         </div>
                     </div>
@@ -116,16 +175,26 @@ onUnmounted(() => {
                     >
                         <div class="slide-inner mx-auto w-full max-w-[1200px]">
                             <section>
-                                <h2 class="section-heading mb-4 text-xl md:text-2xl">
-                                    Global Greenhouse Gas Emissions (EARTH)
-                                </h2>
+                                <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                                    <h2 class="section-heading !mb-0 text-xl md:text-2xl">
+                                        What's Driving the Warming: Greenhouse Gases
+                                    </h2>
+                                    <button
+                                        type="button"
+                                        class="btn-ghost shrink-0"
+                                        @click="ghgTourActive = true"
+                                    >
+                                        Take the Tour
+                                    </button>
+                                </div>
                                 <p class="mb-6 text-sm leading-relaxed text-neutral-600">
-                                    Annual emissions for the PRIMAP-hist aggregate <strong>EARTH</strong> (world
-                                    total), shown as the Kyoto basket in CO₂ equivalent using AR5 GWP100. The
-                                    dashed line marks the 1951-1980 average of that series so you can see how
-                                    quickly totals have risen past the mid-century baseline.
+                                    The total greenhouse gases released worldwide each year, converted into
+                                    one common unit (CO₂-equivalent) so gases like methane and CO₂ can be
+                                    added together and compared. The dashed line marks the mid-20th-century
+                                    average, so you can see how far — and how fast — emissions have climbed
+                                    past it.
                                 </p>
-                                <GreenhouseGasChart />
+                                <GreenhouseGasChart ref="ghgChartRef" />
                             </section>
                         </div>
                     </div>
@@ -139,15 +208,25 @@ onUnmounted(() => {
                         >
                             <div class="min-h-0 flex-1 overflow-y-auto">
                                 <section>
-                                    <h2 class="section-heading mb-4 text-xl md:text-2xl">
-                                        Country Greenhouse Gas Emissions World Map
-                                    </h2>
+                                    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                                        <h2 class="section-heading !mb-0 text-xl md:text-2xl">
+                                            World Map: Who's Emitting the Most?
+                                        </h2>
+                                        <button
+                                            type="button"
+                                            class="btn-ghost shrink-0"
+                                            @click="mapTourActive = true"
+                                        >
+                                            Take the Tour
+                                        </button>
+                                    </div>
                                     <p class="mb-6 max-w-3xl text-sm leading-relaxed text-neutral-600">
-                                        Annual country-level greenhouse gas totals from PRIMAP-hist (Kyoto basket,
-                                        AR5 GWP100). Use the year slider to see how national emissions patterns shift
-                                        over time, then hover a country for gas-level details in the tooltip.
+                                        Every country's greenhouse gas emissions, year by year — darker
+                                        shading means more emissions. Drag the year slider to watch the
+                                        picture shift over time, then hover or tap a country to see its
+                                        breakdown by gas.
                                     </p>
-                                    <WorldEmissionsMap />
+                                    <WorldEmissionsMap ref="mapChartRef" />
                                 </section>
                             </div>
                         </div>
@@ -204,6 +283,10 @@ onUnmounted(() => {
                     @click="goToSlide(n - 1)"
                 />
             </div>
+
+            <GuidedTour v-model:active="tempTourActive" :steps="tempTourSteps" />
+            <GuidedTour v-model:active="ghgTourActive" :steps="ghgTourSteps" />
+            <GuidedTour v-model:active="mapTourActive" :steps="mapTourSteps" />
         </div>
     </Transition>
 </template>

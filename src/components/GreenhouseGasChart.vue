@@ -170,6 +170,7 @@ function renderChart(container, data, baselineGg) {
         baselineLine = g
             .append('line')
             .attr('class', 'baseline-ref')
+            .attr('data-tour', 'ghg-baseline')
             .attr('x1', 0)
             .attr('x2', width)
             .attr('y1', yBaseline)
@@ -418,7 +419,19 @@ function renderChart(container, data, baselineGg) {
             .on('mouseleave', hidePointVisuals)
     }
 
-    currentRenderRefs = { hidePointVisuals }
+    currentRenderRefs = {
+        hidePointVisuals,
+        previewYear(year) {
+            if (!svg.node()) return
+            const mx = x(Math.max(X_DOMAIN[0], Math.min(X_DOMAIN[1], year)))
+            const my = height / 2
+            const xPos = updatePointAtXY(mx, my)
+            if (xPos != null) {
+                tooltip.classList.add('visible')
+                positionTooltipNearX(xPos)
+            }
+        },
+    }
 }
 
 /** Tapping outside the chart on a touch device dismisses the pinned tooltip/hover visuals. */
@@ -467,16 +480,30 @@ onBeforeUnmount(() => {
         tooltipEl.value.remove()
     }
 })
+
+/** Driven by GuidedTour: pins the hover tooltip/breakdown on the most recent year without a real pointer event. */
+function previewLatestYear() {
+    const series = chartSeriesRef.value
+    if (!series?.length) return
+    currentRenderRefs?.previewYear(series[series.length - 1].year)
+}
+
+function clearPreview() {
+    currentRenderRefs?.hidePointVisuals?.()
+}
+
+defineExpose({ previewLatestYear, clearPreview })
 </script>
 
 <template>
     <figure
         class="m-0 w-full newsprint-texture greenhouse-gas-chart"
-        aria-label="Global greenhouse gas emissions for aggregate EARTH, 1880 to present"
+        aria-label="Global greenhouse gas emissions, 1880 to present"
     >
         <div class="flex items-stretch max-[720px]:flex-col">
             <aside
                 class="panel-newsprint newsprint-texture flex max-h-[500px] min-h-[500px] flex-[0_0_min(280px,34%)] flex-col self-stretch overflow-y-auto max-[720px]:max-h-none max-[720px]:min-h-0 max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
+                data-tour="ghg-intro"
             >
                 <span class="mb-2.5 min-w-0 font-serif text-base font-semibold leading-snug"
                     >Individual Gas Breakdown</span
@@ -493,7 +520,11 @@ onBeforeUnmount(() => {
                     <p class="chart-mobile-hint chart-rotate-hint">↻ Rotate your phone for a landscape view</p>
                 </div>
                 <div class="chart-scroll-wrapper">
-                    <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+                    <div
+                        ref="chartRef"
+                        class="chart-container relative w-full min-h-[360px]"
+                        data-tour="ghg-chart-area"
+                    ></div>
                 </div>
             </div>
         </div>

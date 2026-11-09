@@ -1172,6 +1172,29 @@ onBeforeUnmount(() => {
         tooltipEl.value.remove()
     }
 })
+
+/** Driven by GuidedTour: pins a horizontal reference line (baseline or tipping-point) as if clicked. */
+function focusReference(anomaly) {
+    selectedRefAnomaly.value = anomaly
+    if (chartInstance) {
+        applyHorizontalRefHighlight(chartInstance, null)
+        updateLatestRefIndicator(chartInstance)
+    }
+}
+
+function clearReference() {
+    selectedRefAnomaly.value = null
+    if (chartInstance) {
+        applyHorizontalRefHighlight(chartInstance, null)
+        updateLatestRefIndicator(chartInstance)
+    }
+}
+
+function setExtrapolate(enabled) {
+    extrapolate.value = enabled
+}
+
+defineExpose({ focusReference, clearReference, setExtrapolate })
 </script>
 
 <template>
@@ -1183,6 +1206,7 @@ onBeforeUnmount(() => {
             <aside
                 class="panel-newsprint newsprint-texture flex max-h-[500px] min-h-[500px] flex-[0_0_min(280px,34%)] flex-col self-stretch overflow-y-auto max-[720px]:max-h-none max-[720px]:min-h-0 max-[720px]:w-full max-[720px]:max-w-none max-[720px]:flex-none"
                 aria-live="polite"
+                data-tour="temp-intro"
             >
                 <span class="mb-2.5 min-w-0 font-serif text-base font-semibold leading-snug">{{
                     guidePanel.title
@@ -1220,6 +1244,7 @@ onBeforeUnmount(() => {
                         <button
                             type="button"
                             class="btn-ghost shrink-0"
+                            data-tour="temp-extrapolate"
                             :aria-pressed="extrapolate"
                             :aria-label="
                                 extrapolate
@@ -1236,7 +1261,11 @@ onBeforeUnmount(() => {
                     <p class="chart-mobile-hint chart-rotate-hint">↻ Rotate your phone for a landscape view</p>
                 </div>
                 <div class="chart-scroll-wrapper">
-                    <div ref="chartRef" class="chart-container relative w-full min-h-[360px]"></div>
+                    <div
+                        ref="chartRef"
+                        class="chart-container relative w-full min-h-[360px]"
+                        data-tour="temp-chart-area"
+                    ></div>
                 </div>
             </div>
         </div>
